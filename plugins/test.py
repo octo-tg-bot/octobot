@@ -1,22 +1,29 @@
-from octobot.handlers import CommandHandler
+from octobot.handlers import CommandHandler, InlineButtonHandler
+import telegram
 
 
 @CommandHandler(command="test", description="Test")
 def test(bot, context):
-    context.reply("Hello world!")
+    context.reply("Hello world!",
+                  reply_markup=telegram.InlineKeyboardMarkup([
+                      [telegram.InlineKeyboardButton(callback_data="test:", text="Change text")]
+                  ])
+                  )
+
 
 @CommandHandler(command="imgtest", description="Test image handling")
 def imgtest(bot, context):
-    context.reply("Test!", photo_url="https://via.placeholder.com/150")
+    context.reply("Test!", photo_url="https://picsum.photos/seed/test/200/200",
+                  reply_markup=telegram.InlineKeyboardMarkup([
+                      [telegram.InlineKeyboardButton(callback_data="imgtest:", text="Change image and text")]
+                  ]))
 
-@CommandHandler(command="bigimg", description="Really big image")
-def longimg(bot, context):
-    context.reply("Test!", photo_url="https://picsum.photos/seed/picsum/6000/6000")
+@InlineButtonHandler(prefix="imgtest:")
+def imgtest_button(bot, context):
+    context.edit("Test! Test!", photo_url="https://picsum.photos/seed/test2/200/200")
+    context.reply("Changed image!")
 
-@CommandHandler(command="longimg", description="Really long image")
-def longimg(bot, context):
-    context.reply("Test!", photo_url="https://picsum.photos/seed/picsum/5000/50")
-
-@CommandHandler(command="tallimg", description="Really tall image")
-def longimg(bot, context):
-    context.reply("Test!", photo_url="https://picsum.photos/seed/picsum/50/5000")
+@InlineButtonHandler(prefix="test:")
+def imgtest_button(bot, context):
+    context.edit("Test! Test!")
+    context.reply("Changed text!")

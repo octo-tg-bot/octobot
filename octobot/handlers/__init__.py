@@ -9,9 +9,11 @@ class BaseHandler():
         self.function = args[0]
         return self
 
+
 class MessageHandler(BaseHandler):
     def handle_update(self, bot, update):
         if update.message:
             self.function(bot, update)
 
+from octobot.handlers.buttonhandle import InlineButtonHandler
 from octobot.handlers.commandhandle import CommandHandler
