@@ -17,17 +17,11 @@ class CommandHandler(BaseHandler):
     def execute_function_textmode(self, bot, context):
         self.function(bot, context)
 
-    def handle_update(self, bot, context):
+    @staticmethod
+    def check_command(prefix, command_aliases, bot, context):
         incmd = context.text
-        if context.update_type == octobot.UpdateType.button_press:
-            return
-        elif context.update_type == octobot.UpdateType.inline_query:
-            prefix = ''
-        else:
-            prefix = self.prefix
-        print('prefix:', repr(prefix))
         if incmd.startswith(prefix):
-            for command in self.command:
+            for command in command_aliases:
                 command = prefix + command
                 state_only_command = incmd == command or incmd.startswith(
                     command + " ")
@@ -36,4 +30,15 @@ class CommandHandler(BaseHandler):
                 state_mention_command = incmd.startswith(
                     command + "@" + bot.me.username)
                 if state_only_command or state_word_swap or state_mention_command:
-                    self.execute_function_textmode(bot, context)
+                    return True
+        return False
+
+    def handle_update(self, bot, context):
+        if context.update_type == octobot.UpdateType.button_press:
+            return
+        elif context.update_type == octobot.UpdateType.inline_query:
+            prefix = ''
+        else:
+            prefix = self.prefix
+        if self.check_command(prefix, self.command, bot, context):
+            self.execute_function_textmode(bot, context)

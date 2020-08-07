@@ -92,10 +92,12 @@ class OctoBot(telegram.Bot):
         return
 
     def handle_update(self, bot, update):
+        logger.debug("handling update %s", update.to_dict())
         try:
             ctx = octobot.Context(update)
         except octobot.UnknownUpdate:
             logger.warning("Failed to determine update type: %s", update.to_dict())
+            return
         for handlers in self.handlers.values():
             try:
                 for handler in handlers:

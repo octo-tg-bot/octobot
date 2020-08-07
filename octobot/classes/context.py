@@ -1,15 +1,11 @@
 import html
+import shlex
 
 import telegram
 
 import octobot
 from octobot.classes import UpdateType
-
-
-def add_photo_to_text(text, photo_url):
-    text = f'<a href="{photo_url}">\u200b</a>' + text
-    print(repr(text))
-    return text
+from octobot.utils import add_photo_to_text
 
 
 class Context:
@@ -32,8 +28,10 @@ class Context:
             self.update_type = UpdateType.message
         else:
             raise octobot.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
+        self.query = " ".join(self.text.split(" ")[1:])
+        self.args = shlex.split(self.query)
 
-    def reply(self, text, photo_url=None, reply_to_previous=True, reply_markup=None, parse_mode=None, no_preview=False,
+    def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
               title=None):
         if photo_url:
             if parse_mode != "html":
@@ -66,14 +64,13 @@ class Context:
                                                            input_message_content=inline_content,
                                                            reply_markup=reply_markup)
             else:
-                result = telegram.InlineQueryResultPhoto(self.update.inline_query.query,
+                result = telegram.InlineQueryResultArticle(self.update.inline_query.query,
                                                          photo_url=photo_url,
                                                          thumb_url=photo_url,
                                                          title=title,
                                                          description=text.split("\n")[0],
                                                          input_message_content=inline_content)
             self.update.inline_query.answer([result])
-
         elif self.update_type == UpdateType.button_press:
             self.update.callback_query.answer(text)
 

@@ -14,7 +14,6 @@ import telegram
 import octobot
 from settings import Settings
 import logging
-
 logger = logging.getLogger("Bot")
 
 
