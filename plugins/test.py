@@ -24,6 +24,6 @@ def imgtest_button(bot, context):
     context.reply("Changed image!")
 
 @InlineButtonHandler(prefix="test:")
-def imgtest_button(bot, context):
+def test_button(bot, context):
     context.edit("Test! Test!")
     context.reply("Changed text!")
