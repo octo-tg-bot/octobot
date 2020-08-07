@@ -4,5 +4,7 @@
   // Telegram bot owner ID,
   "owner": 0,
   // Update handler thread amount
-  "threads": 4
+  "threads": 4,
+  // Plugins not to load
+  "exclude_plugins": []
 }

@@ -9,6 +9,8 @@ import octobot.handlers
 import logging
 import jstyleson as json
 
+from settings import Settings
+
 logger = logging.getLogger("Loader")
 
 
@@ -44,31 +46,12 @@ class OctoBot(telegram.Bot):
 
     @staticmethod
     def discover_plugins():
-        if os.path.exists("plugins/load_list.json"):
-            with open("plugins/load_list.json") as f:
-                load_list = json.load(f)
-            plugin_list = []
-            for plugin in glob("plugins/*.py"):
-                plugin_list.append(path_to_module(plugin))
-            plugin_list_diff = list(set(plugin_list) - set(load_list["load_order"]))
-            logger.debug("diff: %s, pl: %s", plugin_list_diff, plugin_list)
-            if len(plugin_list_diff) > 0:
-                logger.warning(
-                    "load_order doesnt contain all the files from plugins, adding them into load_order, please check manually")
-                load_list["load_order"] += plugin_list_diff
-        else:
-            logger.error("Failed to find load_list.json, creating one...")
-            load_list = {"exclude": [], "load_order": []}
-            for item in glob("plugins/*.py"):
-                load_list["load_order"].append(item)
-        new_ll = []
-        for plugin in load_list["load_order"]:
-
+        modlist = []
+        for plugin in glob('plugins/*.py'):
             plugin = path_to_module(plugin)
-            new_ll.append(plugin)
-        load_list["load_order"] = new_ll
-        with open("plugins/load_list.json", 'w') as f:
-            json.dump(load_list, f)
+            modlist.append(plugin)
+        load_list = dict(exclude=Settings.exclude_plugins, load_order=modlist)
+
         return load_list
 
     def update_handlers(self):
