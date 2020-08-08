@@ -1,4 +1,3 @@
-import os
 from enum import Enum
 from glob import glob
 import importlib
@@ -7,8 +6,8 @@ import telegram
 
 import octobot.handlers
 import logging
-import jstyleson as json
 
+from octobot.utils import path_to_module
 from settings import Settings
 
 logger = logging.getLogger("Loader")
@@ -19,10 +18,6 @@ class PluginStates(Enum):
     unknown = 1
     error = 2
     notfound = 3
-
-
-def path_to_module(path: str):
-    return path.replace("\\", "/").replace("/", ".").replace(".py", "")
 
 
 class OctoBot(telegram.Bot):
@@ -57,10 +52,11 @@ class OctoBot(telegram.Bot):
     def update_handlers(self):
         self.handlers = {}
         for plugin in self.plugins.values():
-            plugin = plugin["module"]
-            for var_name in dir(plugin):
-                var = getattr(plugin, var_name)
+            module = plugin["module"]
+            for var_name in dir(module):
+                var = getattr(module, var_name)
                 if isinstance(var, octobot.handlers.BaseHandler):
+                    var.plugin_name = plugin["name"]
                     if var.priority not in self.handlers:
                         self.handlers[var.priority] = []
                     self.handlers[var.priority].append(var)
@@ -102,6 +98,7 @@ class OctoBot(telegram.Bot):
             try:
                 for handler in handlers:
                     try:
+                        ctx._plugin = handler.plugin_name
                         handler.handle_update(bot, ctx)
                     except octobot.StopHandling as e:
                         raise e

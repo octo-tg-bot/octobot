@@ -1,4 +1,5 @@
 class BaseHandler():
+    plugin_name = "unknown"
     def __init__(self, priority=0):
         self.priority = priority
 

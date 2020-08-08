@@ -1,14 +1,16 @@
 import html
 import shlex
+import gettext
 
 import telegram
 
 import octobot
 from octobot.classes import UpdateType
 from octobot.utils import add_photo_to_text
-
+import octobot.localization as localization
 
 class Context:
+    _plugin = "unknown"
     def __init__(self, update: telegram.Update):
         self.locale = "en"
         self.update = update
@@ -85,3 +87,17 @@ class Context:
             parse_mode=parse_mode,
             reply_markup=reply_markup
         )
+
+    def localize(self, text: str) -> str:
+        if self.update.effective_chat.id is not None:
+            chatid = self.update.effective_chat.id
+        else:
+            chatid = self.update.effective_user.id
+        chat_locale = octobot.localization.get_chat_locale(chatid)
+        print("chat locale is", chat_locale)
+        gt = gettext.translation("messages", localedir="locales", languages=[chat_locale])
+        gt.install()
+
+        return gt.gettext(text)
+
+

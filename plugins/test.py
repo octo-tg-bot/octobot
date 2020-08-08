@@ -67,3 +67,7 @@ def test_catalogarticle(query, index, max_amount, bot, context):
                                                          width=200,
                                                          height=200)]))
     return Catalog(res, 10)
+
+@CommandHandler(command="testtl")
+def test_translations(bot, ctx):
+    ctx.reply(ctx.localize("Test! Test! Test!"))

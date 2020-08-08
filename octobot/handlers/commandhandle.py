@@ -5,10 +5,11 @@ from typing import Union
 
 class CommandHandler(BaseHandler):
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
-                 hidden=False, prefix="/", *args, **kwargs):
+                 hidden=False, prefix="/", inline_support=True, *args, **kwargs):
         super(CommandHandler, self).__init__(*args, **kwargs)
         if isinstance(command, str):
             command = [command]
+        self.inline_support = inline_support
         self.command = command
         self.description = description
         self.hidden = hidden
@@ -37,6 +38,8 @@ class CommandHandler(BaseHandler):
         if context.update_type == octobot.UpdateType.button_press:
             return
         elif context.update_type == octobot.UpdateType.inline_query:
+            if not self.inline_support:
+                return
             prefix = ''
         else:
             prefix = self.prefix
