@@ -5,11 +5,32 @@ import gettext
 import telegram
 
 import octobot
+import octobot.exceptions
 from octobot.classes import UpdateType
 from octobot.utils import add_photo_to_text
 import octobot.localization as localization
 
 class Context:
+    """
+    Context class. It provides, well, context.
+
+    :param update: Update to create context from
+    :type update: :class:`telegram.Update`
+    :var user: User class
+    :vartype user: :class:`telegram.User`
+    :var chat: Chat class, can be None in case of inline queries
+    :vartype chat: :class:`telegram.Chat`
+    :var locale: User/Chat locale
+    :vartype locale: :class:`str`
+    :var update_type: Type of update
+    :vartype update_type: :class:`octobot.UpdateType`
+    :var query: Command query
+    :vartype query: :class:`str`
+    :var args: Command arguments, parsed like sys.argv
+    :vartype args: :class:`list`
+    :var update: Original update
+    :vartype update: :class:`telegram.Update`
+    """
     _plugin = "unknown"
     def __init__(self, update: telegram.Update):
         self.locale = "en"
@@ -29,12 +50,30 @@ class Context:
                 self.text = update.message.text
             self.update_type = UpdateType.message
         else:
-            raise octobot.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
+            raise octobot.exceptions.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
         self.query = " ".join(self.text.split(" ")[1:])
         self.args = shlex.split(self.query)
 
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
               title=None):
+        """
+        Replies to a message/shows a popup in inline keyboard/sends out inline query result
+
+        :param text: Text to send
+        :type text: :class:`str`
+        :param photo_url: Photo URLs, with best quality descending to worst
+        :type photo_url: :class:`list`, optional
+        :param reply_to_previous: If bot should reply to reply of trigger message, defaults to False. *We need to go deeper*
+        :type reply_to_previous: :class:`bool`, optional
+        :param reply_markup: Telegram reply markup
+        :type reply_markup: :class:`telegram.ReplyMarkup`, optional
+        :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
+        :type parse_mode: :class:`str`, optional
+        :param no_preview: Should the webpage preview be disabled. Defaults to `False`, becomes `False` if `photo_url` is passed
+        :type no_preview: :class:`bool`, optional
+        :param title: Title of message for inline mode, defaults to first line of `text`
+        :type title: :class:`str`, optional
+        """
         if photo_url:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
@@ -77,8 +116,20 @@ class Context:
             self.update.callback_query.answer(text)
 
     def edit(self, text, photo_url=None, reply_markup=None, parse_mode=None):
+        """
+        Edits message. Works only if update_type == :obj:`UpdateType.button_press`
+
+        :param text: Text to replace with
+        :type text: :class:`str`
+        :param photo_url: Photo URLs, with best quality descending to worst
+        :type photo_url: :class:`list`, optional
+        :param reply_markup: Telegram reply markup
+        :type reply_markup: :class:`telegram.ReplyMarkup`, optional
+        :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
+        :type parse_mode: :class:`str`, optional
+        """
         if photo_url:
-            if parse_mode != "html":
+            if parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
@@ -89,6 +140,14 @@ class Context:
         )
 
     def localize(self, text: str) -> str:
+        """
+        Localize string according to user-set localization
+
+        :param text: String to translate
+        :type text: :class:`str`
+        :return: Localized string
+        :rtype: :class:`str`
+        """
         if self.update.effective_chat.id is not None:
             chatid = self.update.effective_chat.id
         else:
