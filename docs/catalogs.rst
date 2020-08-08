@@ -4,7 +4,7 @@ Catalogs are a really cool feature of OctoBot. They provide catalog-like (hence 
 
 Implementing catalog
 --------------------
-For :class:`CatalogHandler` to work with your function, your function must accept four arguments: 
+For :class:`CatalogHandler` to work with your function, your function must accept five arguments:
 
 1. Query (:class:`str`)
 2. Index, from which iteration should start in your function (:class:`str`)
