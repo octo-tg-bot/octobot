@@ -22,22 +22,23 @@ Example handler:
 .. code-block:: python3
 
     CATALOG_MAX = 10
-
-
-    @CatalogHandler(command="catalogtest", description="Test CatalogHandler")
-    def test_catalog(query, index, max_amount, bot, context):
+    @CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
+    def test_catalogarticle(query, index, max_amount, bot, context):
         res = []
 
         if index >= CATALOG_MAX:
             raise CatalogCantGoDeeper
         if max_amount > CATALOG_MAX:
             max_amount = CATALOG_MAX
+        if query == "nothing":
+            raise CatalogNotFound
         for i in range(0, max_amount):
-            res.append(CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
-                                    parse_mode="HTML",
-                                    photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
-                                                        width=200,
-                                                        height=200)]))
+            res.append(CatalogKeyArticle(text=f"{query} {i + index}",
+                                         title=f"Title for {query}",
+                                         description=f"Description for {query}",
+                                         photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+                                                             width=200,
+                                                             height=200)]))
         return Catalog(res, 10)
 
 Classes documentation

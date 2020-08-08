@@ -84,10 +84,6 @@ class CatalogHandler(BaseHandler):
         res: octobot.Catalog = self.function(query, offset, 50, bot, context)
         inline_res = []
         for item in res:
-            if item.title is not None:
-                title = item.title
-            else:
-                title = item.text.split("\n")[0][:20]
             if item.photo is not None:
                 if item.parse_mode != "html":
                     item.parse_mode = 'html'
@@ -98,8 +94,8 @@ class CatalogHandler(BaseHandler):
                                   photo_width=item.photo[0].width,
                                   photo_height=item.photo[0].height,
                                   thumb_url=item.photo[-1].url,
-                                  title=title,
-                                  description=item.text.split("\n")[0],
+                                  title=item.title,
+                                  description=item.description,
                                   input_message_content=telegram.InputTextMessageContent(
                                       text,
                                       parse_mode=item.parse_mode
@@ -112,8 +108,8 @@ class CatalogHandler(BaseHandler):
             else:
                 inline_res.append(telegram.InlineQueryResultArticle(
                     item.item_id,
-                    title=title,
-                    description=item.text.split("\n")[0],
+                    title=item.title,
+                    description=item.description,
                     input_message_content=telegram.InputTextMessageContent(
                         item.text,
                         parse_mode=item.parse_mode
@@ -126,12 +122,21 @@ class CatalogHandler(BaseHandler):
         context.update.inline_query.answer(inline_res, cache_time=0, next_offset=next_offset)
 
     def handle_update(self, bot, context):
-        if context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[0]:
-            self.handle_page(bot, context)
-        if context.update_type in [octobot.UpdateType.message, octobot.UpdateType.inline_query]:
-            check_command = octobot.CommandHandler.check_command(self.prefix, self.command, bot, context)
-            check_command_inline = octobot.CommandHandler.check_command("", self.command, bot, context)
-            if context.update_type == octobot.UpdateType.message and check_command:
-                self.handle_command(bot, context)
-            elif context.update_type == octobot.UpdateType.inline_query and check_command_inline:
-                self.handle_inline(bot, context)
+        try:
+            if context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[0]:
+                self.handle_page(bot, context)
+            if context.update_type in [octobot.UpdateType.message, octobot.UpdateType.inline_query]:
+                check_command = octobot.CommandHandler.check_command(self.prefix, self.command, bot, context)
+                check_command_inline = octobot.CommandHandler.check_command("", self.command, bot, context)
+                if context.update_type == octobot.UpdateType.message and check_command:
+                    if len(context.args) > 0:
+                        self.handle_command(bot, context)
+                    else:
+                        context.reply("No query specified!")
+                elif context.update_type == octobot.UpdateType.inline_query and check_command_inline:
+                    if len(context.args) > 0:
+                        self.handle_inline(bot, context)
+                    else:
+                        context.reply("No query specified!")
+        except CatalogNotFound:
+            context.reply("Nothing found!")

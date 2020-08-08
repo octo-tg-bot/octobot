@@ -1,6 +1,6 @@
 import telegram
 
-from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle
+from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle, CatalogNotFound
 from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler, CatalogHandler
 
@@ -47,6 +47,8 @@ def test_catalog(query, index, max_amount, bot, context):
         max_amount = CATALOG_MAX
     for i in range(0, max_amount):
         res.append(CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
+                                   title=f"Title for {query}",
+                                   description=f"Description for {query}",
                                    parse_mode="HTML",
                                    photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                        width=200,
@@ -62,8 +64,12 @@ def test_catalogarticle(query, index, max_amount, bot, context):
         raise CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
+    if query == "nothing":
+        raise CatalogNotFound
     for i in range(0, max_amount):
         res.append(CatalogKeyArticle(text=f"{query} {i + index}",
+                                     title=f"Title for {query}",
+                                     description=f"Description for {query}",
                                      photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                          width=200,
                                                          height=200)]))

@@ -19,32 +19,6 @@ class CatalogPhoto:
     height: int
 
 
-class CatalogKeyPhoto:
-    """
-    :param text: Text to include in result
-    :type text: :class:`str`
-    :param photo: Photo to include in text as preview and in inline mode
-    :type photo: :class:`CatalogPhoto` or class:`list` of :class:`CatalogPhoto`, optional
-    :param parse_mode: Parse mode of messages. Become 'html' if `photo` is passed.
-    :type parse_mode: :class:`str`, optional
-    :param title: Item title for inline mode, defaults to first line of text
-    :type title: :class:`str`, optional
-    :param description: Description for inline mode, defaults to first 100 symbols of text
-    :type description: :class:`str`, optional
-    """
-    def __init__(self, text: str, photo: Union[List[CatalogPhoto], CatalogPhoto], parse_mode: str = None,
-                 title: str = None, item_id: str = None):
-        self.item_id = item_id
-        if self.item_id is None:
-            self.item_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-        self.text = text
-        self.parse_mode = parse_mode
-        self.title = title
-        if isinstance(photo, str):
-            photo = [photo]
-        self.photo = photo
-
-
 class CatalogKeyArticle:
     """
     :param text: Text to include in result
@@ -66,10 +40,29 @@ class CatalogKeyArticle:
         self.text = text
         self.parse_mode = parse_mode
         self.title = title
+        if self.title is None:
+            self.title = self.text.split("\n")[0][:40]
         self.description = description
+        if self.description is None:
+            self.description = self.text[:100]
         if isinstance(photo, CatalogPhoto):
             photo = [photo]
         self.photo = photo
+
+class CatalogKeyPhoto(CatalogKeyArticle):
+    """
+    :param text: Text to include in result
+    :type text: :class:`str`
+    :param photo: Photo to include in text as preview and in inline mode
+    :type photo: :class:`CatalogPhoto` or class:`list` of :class:`CatalogPhoto`, optional
+    :param parse_mode: Parse mode of messages. Become 'html' if `photo` is passed.
+    :type parse_mode: :class:`str`, optional
+    :param title: Item title for inline mode, defaults to first line of text
+    :type title: :class:`str`, optional
+    :param description: Description for inline mode, defaults to first 100 symbols of text
+    :type description: :class:`str`, optional
+    """
+
 
 
 class Catalog:
