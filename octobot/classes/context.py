@@ -64,7 +64,7 @@ class Context:
                                                            input_message_content=inline_content,
                                                            reply_markup=reply_markup)
             else:
-                result = telegram.InlineQueryResultArticle(self.update.inline_query.query,
+                result = telegram.InlineQueryResultPhoto(self.update.inline_query.query,
                                                          photo_url=photo_url,
                                                          thumb_url=photo_url,
                                                          title=title,

@@ -52,13 +52,14 @@ class CatalogHandler(BaseHandler):
         except octobot.CatalogCantGoDeeper:
             return context.reply("Can't go forward anymore")
         reply_markup = create_inline_buttons(self.command, query, offset, res.total_count)
-        context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_url, reply_markup=reply_markup)
+        context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url,
+                     reply_markup=reply_markup)
 
     def handle_command(self, bot, context: Context):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
         reply_markup = create_inline_buttons(self.command, query, 0, res.total_count)
-        context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_url, reply_to_previous=False,
+        context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url, reply_to_previous=False,
                       reply_markup=reply_markup)
 
     def handle_inline(self, bot, context: Context):
@@ -74,24 +75,27 @@ class CatalogHandler(BaseHandler):
                 title = item.title
             else:
                 title = item.text.split("\n")[0][:20]
-            if item.photo_url is not None:
+            if item.photo is not None:
                 if item.parse_mode != "html":
                     item.parse_mode = 'html'
                     item.text = html.escape(item.text)
-                text = add_photo_to_text(item.text, item.photo_url)
-                print(item.photo_url)
-                inline_res.append(telegram.InlineQueryResultArticle(
-                        item.item_id,
-                        photo_url=item.photo_url[0],
-                        thumb_url=item.photo_url[-1],
-                        title=title,
-                        description=item.text.split("\n")[0],
-                        input_message_content=telegram.InputTextMessageContent(
-                            text,
-                            parse_mode=item.parse_mode
-                        )
-                    )
-                )
+                text = add_photo_to_text(item.text, item.photo)
+                res_kwargs = dict(id=item.item_id,
+                                  photo_url=item.photo[0].url,
+                                  photo_width=item.photo[0].width,
+                                  photo_height=item.photo[0].height,
+                                  thumb_url=item.photo[-1].url,
+                                  title=title,
+                                  description=item.text.split("\n")[0],
+                                  input_message_content=telegram.InputTextMessageContent(
+                                      text,
+                                      parse_mode=item.parse_mode
+                                  )
+                                  )
+                if isinstance(item, octobot.CatalogKeyPhoto):
+                    inline_res.append(telegram.InlineQueryResultPhoto(**res_kwargs))
+                else:
+                    inline_res.append(telegram.InlineQueryResultArticle(**res_kwargs))
             else:
                 inline_res.append(telegram.InlineQueryResultArticle(
                     item.item_id,
@@ -102,12 +106,11 @@ class CatalogHandler(BaseHandler):
                         parse_mode=item.parse_mode
                     )
                 ))
-        print(inline_res)
         if len(inline_res) < 50:
             next_offset = None
         else:
             next_offset = offset + 50
-        print(context.update.inline_query.answer(inline_res, cache_time=0, next_offset=next_offset))
+        context.update.inline_query.answer(inline_res, cache_time=0, next_offset=next_offset)
 
     def handle_update(self, bot, context):
         if context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[0]:

@@ -1,6 +1,8 @@
-from octobot.handlers import CommandHandler, InlineButtonHandler, CatalogHandler
-from octobot import CatalogKey, Catalog, CatalogCantGoDeeper
 import telegram
+
+from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle
+from octobot.classes.catalog import CatalogPhoto
+from octobot.handlers import CommandHandler, InlineButtonHandler, CatalogHandler
 
 
 @CommandHandler(command="test", description="Test")
@@ -44,6 +46,24 @@ def test_catalog(query, index, max_amount, bot, context):
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
     for i in range(0, max_amount):
-        res.append(CatalogKey(text=f"{query} {i + index}",
-                              photo_url=f"https://picsum.photos/seed/{query}{i + index}/200/200"))
+        res.append(CatalogKeyPhoto(text=f"{query} {i + index}",
+                                   photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+                                                       width=200,
+                                                       height=200)]))
+    return Catalog(res, 10)
+
+
+@CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
+def test_catalogarticle(query, index, max_amount, bot, context):
+    res = []
+
+    if index >= CATALOG_MAX:
+        raise CatalogCantGoDeeper
+    if max_amount > CATALOG_MAX:
+        max_amount = CATALOG_MAX
+    for i in range(0, max_amount):
+        res.append(CatalogKeyArticle(text=f"{query} {i + index}",
+                                     photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+                                                         width=200,
+                                                         height=200)]))
     return Catalog(res, 10)
