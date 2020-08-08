@@ -73,10 +73,20 @@ class Catalog:
     :type results: :class:`list` of :class:`CatalogKeyPhoto` or :class:`CatalogKeyArticle`
     :param max_count: Total amount of results function can return
     :type max_count: :class:`int`
+    :param current_index: Current index
+    :type current_index: :class:`int`
+    :param next_offset: Next offset
+    :type next_offset: :class:`str` or :class:`int`
+    :param previous_offset: Previous offset
+    :type previous_offset: :class:`str` or :class:`int`
     """
-    def __init__(self, results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]], max_count: int):
+    def __init__(self, results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]], max_count: int,
+                 current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int]):
         self.results = results
         self.total_count = max_count
+        self.next_offset = next_offset
+        self.previous_offset = previous_offset
+        self.current_index = current_index
 
     def __iter__(self):
         return self.results.__iter__()

@@ -1,6 +1,7 @@
 import telegram
 
-from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle, CatalogNotFound
+from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle, CatalogNotFound, \
+    CatalogCantGoBackwards
 from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler, CatalogHandler
 
@@ -34,13 +35,15 @@ def test_button(bot, context):
     context.reply("Changed text!")
 
 
-CATALOG_MAX = 10
+CATALOG_MAX = 50
 
 
 @CatalogHandler(command="catalogtest", description="Test CatalogHandler")
 def test_catalog(query, index, max_amount, bot, context):
     res = []
-
+    index = int(index)
+    if index < 0:
+        raise CatalogCantGoBackwards
     if index >= CATALOG_MAX:
         raise CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
@@ -53,13 +56,15 @@ def test_catalog(query, index, max_amount, bot, context):
                                    photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                        width=200,
                                                        height=200)]))
-    return Catalog(res, 10)
+    return Catalog(res, CATALOG_MAX, current_index=index+1, next_offset=index+max_amount, previous_offset=index-max_amount)
 
 
 @CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
 def test_catalogarticle(query, index, max_amount, bot, context):
     res = []
-
+    index = int(index)
+    if index < 0:
+        raise CatalogCantGoBackwards
     if index >= CATALOG_MAX:
         raise CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
@@ -73,7 +78,7 @@ def test_catalogarticle(query, index, max_amount, bot, context):
                                      photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                          width=200,
                                                          height=200)]))
-    return Catalog(res, 10)
+    return Catalog(res, CATALOG_MAX, current_index=index, next_offset=index+max_amount, previous_offset=index-max_amount)
 
 @CommandHandler(command="testtl")
 def test_translations(bot, ctx):

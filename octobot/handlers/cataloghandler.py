@@ -1,7 +1,7 @@
 import html
 
 import octobot
-from octobot.exceptions import CatalogCantGoDeeper, CatalogNotFound
+from octobot.exceptions import CatalogCantGoDeeper, CatalogNotFound, CatalogCantGoBackwards
 from octobot.classes.context import Context
 from octobot.handlers import BaseHandler
 import re
@@ -21,14 +21,14 @@ def create_buttonstring(command, query, next_offset):
     return f"{command}:{query}:{next_offset}"
 
 
-def create_inline_buttons(command, query, current_offset, max_results):
+def create_inline_buttons(command, query, current_index, max_results, previous_offset, next_offset):
     return telegram.InlineKeyboardMarkup([
         [
             telegram.InlineKeyboardButton(text=BUTTON_LEFT,
-                                          callback_data=create_buttonstring(command, query, current_offset - 1)),
-            telegram.InlineKeyboardButton(text=f"{current_offset + 1}/{max_results}", callback_data="nothing:"),
+                                          callback_data=create_buttonstring(command, query, previous_offset)),
+            telegram.InlineKeyboardButton(text=f"{current_index}/{max_results}", callback_data="nothing:"),
             telegram.InlineKeyboardButton(text=BUTTON_RIGHT,
-                                          callback_data=create_buttonstring(command, query, current_offset + 1))
+                                          callback_data=create_buttonstring(command, query, next_offset))
         ]
     ])
 
@@ -57,21 +57,21 @@ class CatalogHandler(BaseHandler):
     def handle_page(self, bot, context: Context):
         _, query, offset = BUTTON_REGEX.match(context.text).groups()
         query = query.replace(r"\:", ":")
-        offset = int(offset)
-        if offset < 0:
-            return context.reply("Can't go backwards anymore")
+        offset = offset
         try:
             res: octobot.Catalog = self.function(query, offset, 1, bot, context)
         except CatalogCantGoDeeper:
             return context.reply("Can't go forward anymore")
-        reply_markup = create_inline_buttons(self.command, query, offset, res.total_count)
+        except CatalogCantGoBackwards:
+            return context.reply("Can't go backwards anymore")
+        reply_markup = create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset)
         context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url,
                      reply_markup=reply_markup)
 
     def handle_command(self, bot, context: Context):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
-        reply_markup = create_inline_buttons(self.command, query, 0, res.total_count)
+        reply_markup = create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset)
         context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url, reply_to_previous=False,
                       reply_markup=reply_markup)
 
