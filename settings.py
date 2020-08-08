@@ -17,15 +17,18 @@ class _Settings():
         with open(FOLDER + "/settings.base.json") as f:
             base_settings = jstyleson.load(f)
             self._settings = base_settings
-        with open(FOLDER + "/settings.json", "r") as f:
-            settings_user = jstyleson.load(f)
-            diff = list(set(settings_user.keys()) - set(base_settings.keys()))
-            if len(diff) > 0:
-                self._settings = settings_backup
-                LOGGER.error("Invalid user settings! Restoring previous settings")
-                raise ValueError("User settings has unknown item(s) not defined in base JSON: %s." %
-                                 diff)
-            self._settings.update(settings_user)
+        try:
+            with open(FOLDER + "/settings.json", "r") as f:
+                settings_user = jstyleson.load(f)
+                diff = list(set(settings_user.keys()) - set(base_settings.keys()))
+                if len(diff) > 0:
+                    self._settings = settings_backup
+                    LOGGER.error("Invalid user settings! Restoring previous settings")
+                    raise ValueError("User settings has unknown item(s) not defined in base JSON: %s." %
+                                     diff)
+                self._settings.update(settings_user)
+        except FileNotFoundError:
+            LOGGER.critical("Failed to find settings.json! Continuing anyway cause who knows, maybe doc is getting built?")
         LOGGER.debug(self._settings)
         LOGGER.info("Settings reloaded")
 
