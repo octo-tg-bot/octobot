@@ -10,4 +10,5 @@ class UpdateType(Enum):
 
 
 from octobot.classes.context import Context
-from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogCantGoDeeper, CatalogPhoto
+from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogPhoto
+from octobot import CatalogCantGoDeeper

@@ -4,6 +4,23 @@ from typing import Union
 
 
 class CommandHandler(BaseHandler):
+    """
+    Command handler. Handles commands in chat and commands in inline queries.
+
+    .. note:: Prefix will not be checked in case of inline queries
+
+    :param command: Command to handle
+    :type command: list,str
+    :param description: Command description
+    :type description: str
+    :param prefix: Command prefix, defaults to `/`
+    :type prefix: str,optional
+    :param hidden: If command should be hidden from /help, defaults to `False`
+    :type hidden: bool,optional
+    :param inline_support: If command is supported in inline mode, defaults to `True`
+    :type inline_support: bool,optional
+
+    """
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  hidden=False, prefix="/", inline_support=True, *args, **kwargs):
         super(CommandHandler, self).__init__(*args, **kwargs)

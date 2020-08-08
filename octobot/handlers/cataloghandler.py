@@ -1,6 +1,7 @@
 import html
 
 import octobot
+import octobot.exceptions
 from octobot.classes.context import Context
 from octobot.handlers import BaseHandler
 import re
@@ -33,6 +34,18 @@ def create_inline_buttons(command, query, current_offset, max_results):
 
 
 class CatalogHandler(BaseHandler):
+    """
+    Catalog handler. Handles catalogs, surprisingly enough.
+
+    .. note:: Prefix will not be checked in case of inline queries
+
+    :param command: Command to handle
+    :type command: list,str
+    :param description: Command description
+    :type description: str
+    :param prefix: Command prefix, defaults to `/`
+    :type prefix: str,optional
+    """
     def __init__(self, command, description="No description provided", prefix="/", *args, **kwargs):
         super(CatalogHandler, self).__init__(*args, **kwargs)
         self.prefix = prefix
@@ -49,7 +62,7 @@ class CatalogHandler(BaseHandler):
             return context.reply("Can't go backwards anymore")
         try:
             res: octobot.Catalog = self.function(query, offset, 1, bot, context)
-        except octobot.CatalogCantGoDeeper:
+        except octobot.exceptions.CatalogCantGoDeeper:
             return context.reply("Can't go forward anymore")
         reply_markup = create_inline_buttons(self.command, query, offset, res.total_count)
         context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url,

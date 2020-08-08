@@ -4,6 +4,7 @@ import importlib
 
 import telegram
 
+import octobot.exceptions
 import octobot.handlers
 import logging
 
@@ -26,8 +27,8 @@ class OctoBot(telegram.Bot):
 
     :param load_list: List of plugins to load in module syntax
     :type list:
-    :param *args: Arguments to pass to telegram.Bot class
-    :param **kwargs: Keyword arguments to pass to telegram.Bot class
+    :param \*args: Arguments to pass to telegram.Bot class
+    :param \*\*kwargs: Keyword arguments to pass to telegram.Bot class
     """
     plugins = {}
     handlers = {}
@@ -121,7 +122,7 @@ class OctoBot(telegram.Bot):
         logger.debug("handling update %s", update.to_dict())
         try:
             ctx = octobot.Context(update)
-        except octobot.UnknownUpdate:
+        except octobot.exceptions.UnknownUpdate:
             logger.warning("Failed to determine update type: %s", update.to_dict())
             return
         for handlers in self.handlers.values():
@@ -130,9 +131,9 @@ class OctoBot(telegram.Bot):
                     try:
                         ctx._plugin = handler.plugin_name
                         handler.handle_update(bot, ctx)
-                    except octobot.StopHandling as e:
+                    except octobot.exceptions.StopHandling as e:
                         raise e
                     except Exception as e:
                         logger.error("Handler threw an exception!", exc_info=True)
-            except octobot.StopHandling:
+            except octobot.exceptions.StopHandling:
                 break

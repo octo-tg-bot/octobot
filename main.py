@@ -37,7 +37,7 @@ def update_handler(upd_queue: Queue, run_event: threading.Event):
             time.sleep(0.2)
         else:
             bot, update = update
-            bot.handle_update(bot, update)
+            bot._handle_update(bot, update)
 
 
 STATES_EMOJIS = {

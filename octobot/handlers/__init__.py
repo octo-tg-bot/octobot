@@ -1,4 +1,5 @@
 class BaseHandler():
+    """Base class for all handlers"""
     plugin_name = "unknown"
     def __init__(self, priority=0):
         self.priority = priority
@@ -12,6 +13,9 @@ class BaseHandler():
 
 
 class MessageHandler(BaseHandler):
+    """
+    Calls function on every message. Simple enough.
+    """
     def handle_update(self, bot, update):
         if update.message:
             self.function(bot, update)
