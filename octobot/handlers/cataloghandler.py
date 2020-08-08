@@ -1,7 +1,7 @@
 import html
 
 import octobot
-import octobot.exceptions
+from octobot.exceptions import CatalogCantGoDeeper, CatalogNotFound
 from octobot.classes.context import Context
 from octobot.handlers import BaseHandler
 import re
@@ -62,7 +62,7 @@ class CatalogHandler(BaseHandler):
             return context.reply("Can't go backwards anymore")
         try:
             res: octobot.Catalog = self.function(query, offset, 1, bot, context)
-        except octobot.exceptions.CatalogCantGoDeeper:
+        except CatalogCantGoDeeper:
             return context.reply("Can't go forward anymore")
         reply_markup = create_inline_buttons(self.command, query, offset, res.total_count)
         context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url,

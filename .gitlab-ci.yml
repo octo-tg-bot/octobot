@@ -3,7 +3,6 @@ image: python:buster
 test:
   stage: test
   script:
-    - apt install gcc
     - pip install -r requirements.txt
     - pip install -r requirements-docs.txt
     - sphinx-build -b html . public
@@ -15,7 +14,6 @@ test:
 pages:
   stage: deploy
   script:
-    - apt install gcc
     - pip install -r requirements.txt
     - pip install -r requirements-docs.txt
     - sphinx-build -b html . public
