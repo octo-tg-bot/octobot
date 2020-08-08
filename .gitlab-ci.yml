@@ -1,11 +1,12 @@
-image: python:3.7-alpine
+image: python:buster
 
 test:
   stage: test
   script:
-  - pip install -r requirements.txt
-  - pip install -r requirements-docs.txt
-  - sphinx-build -b html . public
+    - apt install gcc
+    - pip install -r requirements.txt
+    - pip install -r requirements-docs.txt
+    - sphinx-build -b html . public
   only:
   - branches
   except:
@@ -14,9 +15,10 @@ test:
 pages:
   stage: deploy
   script:
-  - pip install -r requirements.txt
-  - pip install -r requirements-docs.txt
-  - sphinx-build -b html . public
+    - apt install gcc
+    - pip install -r requirements.txt
+    - pip install -r requirements-docs.txt
+    - sphinx-build -b html . public
   artifacts:
     paths:
     - public
