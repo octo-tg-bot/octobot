@@ -36,7 +36,7 @@ class Context:
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
               title=None):
         if photo_url:
-            if parse_mode != "html":
+            if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
