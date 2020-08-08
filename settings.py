@@ -1,9 +1,11 @@
+import os
+
 import jstyleson
 import logging
 
 LOGGER = logging.getLogger("Settings")
 
-
+FOLDER = os.path.abspath(os.path.dirname(__file__))
 class _Settings():
     _settings = {}
 
@@ -12,10 +14,10 @@ class _Settings():
 
     def reload_settings(self):
         settings_backup = self._settings.copy()
-        with open("settings.base.json") as f:
+        with open(FOLDER + "/settings.base.json") as f:
             base_settings = jstyleson.load(f)
             self._settings = base_settings
-        with open("settings.json", "r") as f:
+        with open(FOLDER + "/settings.json", "r") as f:
             settings_user = jstyleson.load(f)
             diff = list(set(settings_user.keys()) - set(base_settings.keys()))
             if len(diff) > 0:
