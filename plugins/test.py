@@ -46,7 +46,8 @@ def test_catalog(query, index, max_amount, bot, context):
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
     for i in range(0, max_amount):
-        res.append(CatalogKeyPhoto(text=f"{query} {i + index}",
+        res.append(CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
+                                   parse_mode="HTML",
                                    photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                        width=200,
                                                        height=200)]))
