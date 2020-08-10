@@ -4,6 +4,7 @@ from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArt
     CatalogCantGoBackwards, catalogs
 from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler
+from octobot.localization import localizable
 
 
 @CommandHandler(command="test", description="Test")
@@ -80,6 +81,8 @@ def test_catalogarticle(query, index, max_amount, bot, context):
                                                          height=200)]))
     return Catalog(res, CATALOG_MAX, current_index=index, next_offset=index+max_amount, previous_offset=index-max_amount)
 
-@CommandHandler(command="testtl")
-def test_translations(bot, ctx):
-    ctx.reply(ctx.localize("Test! Test! Test!"))
+
+
+@CommandHandler(command="helloworld", description=localizable("Hello, World!"))
+def hello_world(bot, ctx):
+    ctx.reply(ctx.localize("This is a test"))

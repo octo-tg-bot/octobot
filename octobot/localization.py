@@ -22,6 +22,7 @@ else:
 def localizable(string: str) -> str:
     """
     Function to mark which strings can be translated. Use for bot command descriptions and such
+
     :param string: String that can be translated
     :return: That exact same string
     """

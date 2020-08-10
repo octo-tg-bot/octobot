@@ -48,7 +48,7 @@ Example handler:
 Classes documentation
 ---------------------
 
-.. autoclass:: octobot.CatalogHandler
+.. autoclass:: octobot.catalogs.CatalogHandler
     :members:
 
 .. automodule:: octobot.classes.catalog
@@ -57,12 +57,12 @@ Classes documentation
 Exceptions:
 ___________
 
-.. autoclass:: octobot.exceptions.CatalogCantGoDeeper
+.. autoclass:: octobot.catalogs.CatalogCantGoDeeper
     :members:
 
-.. autoclass:: octobot.exceptions.CatalogCantGoBackwards
+.. autoclass:: octobot.catalogs.CatalogCantGoBackwards
     :members:
 
-.. autoclass:: octobot.exceptions.CatalogNotFound
+.. autoclass:: octobot.catalogs.CatalogNotFound
     :members:
 

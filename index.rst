@@ -12,6 +12,7 @@ Welcome to OctoBot's documentation!
 
    docs/octobot
    docs/context
+   docs/localization
    docs/handlers
    docs/catalogs
    docs/exceptions

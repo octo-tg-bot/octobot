@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-10 14:37+0300\n"
+"POT-Creation-Date: 2020-08-10 15:23+0300\n"
 "PO-Revision-Date: 2020-08-08 10:26+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en_US\n"
@@ -18,26 +18,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: plugins/test.py:85
-msgid "Test! Test! Test!"
+#: plugins/test.py:86
+msgid "Hello, World!"
+msgstr ""
+
+#: plugins/test.py:88
+msgid "This is a test"
 msgstr ""
 
 #: base_plugins/locale_ctl.py:37
 msgid "Language \"{locale}\" set"
 msgstr ""
 
-#: base_plugins/start_help.py:13
+#: base_plugins/start_help.py:17
 msgid "Command list"
 msgstr ""
 
-#: base_plugins/start_help.py:15
+#: base_plugins/start_help.py:19
 msgid "Support chat"
 msgstr ""
 
-#: base_plugins/start_help.py:17
+#: base_plugins/start_help.py:21
 msgid ""
 "Hi! I am {bot.me.first_name}, a Telegram bot with features and bugs and "
 "blah blah, noone reads /start anyway."
+msgstr ""
+
+#: base_plugins/start_help.py:60
+msgid "friendly_name"
+msgstr ""
+
+#: base_plugins/start_help.py:67
+msgid "More info on this command"
+msgstr ""
+
+#: base_plugins/start_help.py:84
+msgid "Help for"
 msgstr ""
 
 #~ msgid "test"
@@ -53,5 +69,8 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "start"
+#~ msgstr ""
+
+#~ msgid "Test! Test! Test!"
 #~ msgstr ""
 
