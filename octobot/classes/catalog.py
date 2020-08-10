@@ -49,6 +49,14 @@ class CatalogKeyArticle:
             photo = [photo]
         self.photo = photo
 
+    @property
+    def photo_msgmode(self):
+        if self.photo:
+            photos = []
+            for photo in self.photo:
+                photos.append(photo)
+            return photos
+
 class CatalogKeyPhoto(CatalogKeyArticle):
     """
     :param text: Text to include in result

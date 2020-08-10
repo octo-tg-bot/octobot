@@ -1,9 +1,9 @@
 import telegram
 
 from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle, CatalogNotFound, \
-    CatalogCantGoBackwards
+    CatalogCantGoBackwards, catalogs
 from octobot.classes.catalog import CatalogPhoto
-from octobot.handlers import CommandHandler, InlineButtonHandler, CatalogHandler
+from octobot.handlers import CommandHandler, InlineButtonHandler
 
 
 @CommandHandler(command="test", description="Test")
@@ -38,7 +38,7 @@ def test_button(bot, context):
 CATALOG_MAX = 50
 
 
-@CatalogHandler(command="catalogtest", description="Test CatalogHandler")
+@catalogs.CatalogHandler(command="catalogtest", description="Test CatalogHandler")
 def test_catalog(query, index, max_amount, bot, context):
     res = []
     index = int(index)
@@ -59,7 +59,7 @@ def test_catalog(query, index, max_amount, bot, context):
     return Catalog(res, CATALOG_MAX, current_index=index+1, next_offset=index+max_amount, previous_offset=index-max_amount)
 
 
-@CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
+@catalogs.CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
 def test_catalogarticle(query, index, max_amount, bot, context):
     res = []
     index = int(index)

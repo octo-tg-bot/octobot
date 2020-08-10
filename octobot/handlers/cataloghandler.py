@@ -46,6 +46,10 @@ class CatalogHandler(CommandHandler):
     :param prefix: Command prefix, defaults to `/`
     :type prefix: str,optional
     """
+    def __init__(self, *args, **kwargs):
+        self.query_required = kwargs.pop("query_required", True)
+        super(CatalogHandler, self).__init__(*args, **kwargs)
+
     def handle_page(self, bot, context: Context):
         _, query, offset = BUTTON_REGEX.match(context.text).groups()
         query = query.replace(r"\:", ":")
@@ -57,14 +61,14 @@ class CatalogHandler(CommandHandler):
         except CatalogCantGoBackwards:
             return context.reply("Can't go backwards anymore")
         reply_markup = create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset)
-        context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url,
+        context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
                      reply_markup=reply_markup)
 
     def handle_command(self, bot, context: Context):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
         reply_markup = create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset)
-        context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo[0].url, reply_to_previous=False,
+        context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode, reply_to_previous=False,
                       reply_markup=reply_markup)
 
     def handle_inline(self, bot, context: Context):
@@ -121,7 +125,7 @@ class CatalogHandler(CommandHandler):
                 check_command = self.check_command(bot, context)
                 check_command_inline = self.check_command(bot, context)
                 if context.update_type == octobot.UpdateType.message and check_command:
-                    if len(context.args) > 0:
+                    if not self.query_required or len(context.args) > 0:
                         self.handle_command(bot, context)
                     else:
                         context.reply("No query specified!")

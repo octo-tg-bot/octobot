@@ -13,6 +13,8 @@ class CommandHandler(BaseHandler):
     :type command: list,str
     :param description: Command description
     :type description: str
+    :param long_description: Command long description, appears in help for that specific command
+    :type long_description: str
     :param prefix: Command prefix, defaults to `/`
     :type prefix: str,optional
     :param hidden: If command should be hidden from /help, defaults to `False`
@@ -23,6 +25,7 @@ class CommandHandler(BaseHandler):
     """
 
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
+                 long_description: str = "Additional info not specified by developer",
                  hidden=False, prefix="/", inline_support=True, *args, **kwargs):
         super(CommandHandler, self).__init__(*args, **kwargs)
         if isinstance(command, str):
@@ -30,8 +33,14 @@ class CommandHandler(BaseHandler):
         self.inline_support = inline_support
         self.command = command
         self.description = description
+        self.long_description = long_description
         self.hidden = hidden
         self.prefix = prefix
+
+    @property
+    def commandlist(self):
+        for command in self.command:
+            yield self.prefix + command
 
     def execute_function_textmode(self, bot, context):
         self.function(bot, context)

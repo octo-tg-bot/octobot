@@ -1,6 +1,6 @@
 class BaseHandler():
     """Base class for all handlers"""
-    plugin_name = "unknown"
+    plugin = {"friendly_name": "unknown"}
     def __init__(self, priority=0):
         self.priority = priority
 
@@ -22,4 +22,3 @@ class MessageHandler(BaseHandler):
 
 from octobot.handlers.buttonhandle import InlineButtonHandler
 from octobot.handlers.commandhandle import CommandHandler
-from octobot.handlers.cataloghandler import CatalogHandler

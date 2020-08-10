@@ -74,7 +74,7 @@ class OctoBot(telegram.Bot):
             for var_name in dir(module):
                 var = getattr(module, var_name)
                 if isinstance(var, octobot.handlers.BaseHandler):
-                    var.plugin_name = plugin["name"]
+                    var.plugin = plugin
                     if var.priority not in self.handlers:
                         self.handlers[var.priority] = []
                     self.handlers[var.priority].append(var)
@@ -89,7 +89,7 @@ class OctoBot(telegram.Bot):
         :param single_load: If plugin is loaded not together with other plugins (e.g. manually loaded from other plugin). Defaults to False
         :type single_load: bool,optional
         """
-        self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None)
+        self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None, friendly_name=plugin)
         try:
             plugin_module = importlib.import_module(plugin)
         except ModuleNotFoundError:
@@ -118,7 +118,7 @@ class OctoBot(telegram.Bot):
         self.update_handlers()
         return
 
-    def _handle_update(self, bot, update):
+    def handle_update(self, bot, update):
         logger.debug("handling update %s", update.to_dict())
         try:
             ctx = octobot.Context(update)
@@ -129,7 +129,7 @@ class OctoBot(telegram.Bot):
             try:
                 for handler in handlers:
                     try:
-                        ctx._plugin = handler.plugin_name
+                        ctx._plugin = handler.plugin
                         handler.handle_update(bot, ctx)
                     except octobot.exceptions.StopHandling as e:
                         raise e

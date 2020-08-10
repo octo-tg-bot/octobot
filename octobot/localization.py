@@ -10,12 +10,22 @@ AVAILABLE_LOCALES = list(filter(lambda x: os.path.isdir("locales/" + x), os.list
 print(AVAILABLE_LOCALES)
 DEFAULT_LOCALE = "en_US"
 try:
-    db = redis.Redis(host=Settings.redis_host, port=Settings.redis_port, db=Settings.redis_db, socket_connect_timeout=0.5)
+    db = redis.Redis(host=Settings.redis_host, port=Settings.redis_port, db=Settings.redis_db,
+                     socket_connect_timeout=0.5)
     db.ping()
 except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
     REDIS_AVAILABLE = False
 else:
     REDIS_AVAILABLE = True
+
+
+def localizable(string: str) -> str:
+    """
+    Function to mark which strings can be translated. Use for bot command descriptions and such
+    :param string: String that can be translated
+    :return: That exact same string
+    """
+    return string
 
 
 def get_chat_locale(chat_id: Union[int, str]):

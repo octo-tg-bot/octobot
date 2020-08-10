@@ -10,6 +10,7 @@ from octobot.classes import UpdateType
 from octobot.utils import add_photo_to_text
 import octobot.localization as localization
 
+
 class Context:
     """
     Context class. It provides, well, context.
@@ -32,6 +33,7 @@ class Context:
     :vartype update: :class:`telegram.Update`
     """
     _plugin = "unknown"
+
     def __init__(self, update: telegram.Update):
         self.locale = "en"
         self.update = update
@@ -157,5 +159,3 @@ class Context:
         gt.install()
 
         return gt.gettext(text)
-
-
