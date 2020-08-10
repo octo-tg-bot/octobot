@@ -21,6 +21,7 @@ class CommandHandler(BaseHandler):
     :type inline_support: bool,optional
 
     """
+
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  hidden=False, prefix="/", inline_support=True, *args, **kwargs):
         super(CommandHandler, self).__init__(*args, **kwargs)
@@ -35,11 +36,16 @@ class CommandHandler(BaseHandler):
     def execute_function_textmode(self, bot, context):
         self.function(bot, context)
 
-    @staticmethod
-    def check_command(prefix, command_aliases, bot, context):
+    def check_command(self, bot, context):
+        if context.update_type == octobot.UpdateType.inline_query:
+            if not self.inline_support:
+                return False
+            prefix = ''
+        else:
+            prefix = self.prefix
         incmd = context.text
         if incmd.startswith(prefix):
-            for command in command_aliases:
+            for command in self.command:
                 command = prefix + command
                 state_only_command = incmd == command or incmd.startswith(
                     command + " ")
@@ -54,11 +60,5 @@ class CommandHandler(BaseHandler):
     def handle_update(self, bot, context):
         if context.update_type == octobot.UpdateType.button_press:
             return
-        elif context.update_type == octobot.UpdateType.inline_query:
-            if not self.inline_support:
-                return
-            prefix = ''
-        else:
-            prefix = self.prefix
-        if self.check_command(prefix, self.command, bot, context):
+        elif self.check_command(bot, context):
             self.execute_function_textmode(bot, context)

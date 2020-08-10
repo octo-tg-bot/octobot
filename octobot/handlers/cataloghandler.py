@@ -3,7 +3,7 @@ import html
 import octobot
 from octobot.exceptions import CatalogCantGoDeeper, CatalogNotFound, CatalogCantGoBackwards
 from octobot.classes.context import Context
-from octobot.handlers import BaseHandler
+from octobot.handlers import CommandHandler
 import re
 import telegram
 
@@ -33,7 +33,7 @@ def create_inline_buttons(command, query, current_index, max_results, previous_o
     ])
 
 
-class CatalogHandler(BaseHandler):
+class CatalogHandler(CommandHandler):
     """
     Catalog handler. Handles catalogs, surprisingly enough.
 
@@ -46,14 +46,6 @@ class CatalogHandler(BaseHandler):
     :param prefix: Command prefix, defaults to `/`
     :type prefix: str,optional
     """
-    def __init__(self, command, description="No description provided", prefix="/", *args, **kwargs):
-        super(CatalogHandler, self).__init__(*args, **kwargs)
-        self.prefix = prefix
-        if isinstance(command, str):
-            command = [command]
-        self.command = command
-        self.description = description
-
     def handle_page(self, bot, context: Context):
         _, query, offset = BUTTON_REGEX.match(context.text).groups()
         query = query.replace(r"\:", ":")
@@ -126,8 +118,8 @@ class CatalogHandler(BaseHandler):
             if context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[0]:
                 self.handle_page(bot, context)
             if context.update_type in [octobot.UpdateType.message, octobot.UpdateType.inline_query]:
-                check_command = octobot.CommandHandler.check_command(self.prefix, self.command, bot, context)
-                check_command_inline = octobot.CommandHandler.check_command("", self.command, bot, context)
+                check_command = self.check_command(bot, context)
+                check_command_inline = self.check_command(bot, context)
                 if context.update_type == octobot.UpdateType.message and check_command:
                     if len(context.args) > 0:
                         self.handle_command(bot, context)
