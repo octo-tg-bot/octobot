@@ -153,7 +153,6 @@ class Context:
         else:
             chatid = self.update.effective_user.id
         chat_locale = octobot.localization.get_chat_locale(chatid)
-        print("chat locale is", chat_locale)
         gt = gettext.translation("messages", localedir="locales", languages=[chat_locale])
         gt.install()
 
