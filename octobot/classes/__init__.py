@@ -1,4 +1,7 @@
+from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Callable
+
 class UpdateType(Enum):
     """Update types"""
     inline_query = 0
@@ -11,3 +14,13 @@ class UpdateType(Enum):
 
 from octobot.classes.context import Context
 from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogPhoto
+
+
+@dataclass
+class PluginInfo():
+    """
+    Plugin info class
+    """
+    name: str
+    after_load: Callable[["octobot.OctoBot"], Any] = None
+

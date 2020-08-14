@@ -1,6 +1,9 @@
+from octobot import PluginInfo
+
+
 class BaseHandler():
     """Base class for all handlers"""
-    plugin = {"friendly_name": "unknown"}
+    plugin = {"plugin_info": PluginInfo("unknown")}
     def __init__(self, priority=0):
         self.priority = priority
 

@@ -41,7 +41,10 @@ class Context:
         self.locale = "en"
         self.update = update
         self.user = update.effective_user
-        self.user_db = Database[self.user.id]
+        if self.user is not None:
+            self.user_db = Database[self.user.id]
+        else:
+            self.user_db = None
         self.chat = update.effective_chat
         if self.chat is not None:
             self.chat_db = Database[self.chat.id]

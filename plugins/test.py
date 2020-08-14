@@ -1,7 +1,7 @@
 import telegram
 
 from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle, CatalogNotFound, \
-    CatalogCantGoBackwards, catalogs
+    CatalogCantGoBackwards, catalogs, PluginInfo
 from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler
 from octobot.localization import localizable
@@ -86,3 +86,6 @@ def test_catalogarticle(query, index, max_amount, bot, context):
 @CommandHandler(command="helloworld", description=localizable("Hello, World!"))
 def hello_world(bot, ctx):
     ctx.reply(ctx.localize("This is a test"))
+
+
+info = PluginInfo("Test plugin")

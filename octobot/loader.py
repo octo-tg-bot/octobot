@@ -8,6 +8,7 @@ import octobot.exceptions
 import octobot.handlers
 import logging
 
+from octobot import PluginInfo
 from octobot.utils import path_to_module
 from settings import Settings
 
@@ -79,6 +80,11 @@ class OctoBot(telegram.Bot):
                         self.handlers[var.priority] = []
                     self.handlers[var.priority].append(var)
         logger.info("Handlers update complete, priority levels: %s", self.handlers.keys())
+        logger.debug("Running post-load functions...")
+        for plugin in self.plugins.values():
+            func = plugin["plugin_info"].after_load
+            if func is not None:
+                func(self)
 
     def load_plugin(self, plugin: str, single_load=False):
         """
@@ -89,18 +95,26 @@ class OctoBot(telegram.Bot):
         :param single_load: If plugin is loaded not together with other plugins (e.g. manually loaded from other plugin). Defaults to False
         :type single_load: bool,optional
         """
-        self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None, friendly_name=plugin)
+        self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None,
+                                    plugin_info=PluginInfo(name=plugin))
         try:
             plugin_module = importlib.import_module(plugin)
         except ModuleNotFoundError:
             self.plugins[plugin]["state"] = PluginStates.notfound
-            logger.error("Plugin %s is defined in load_order, but cannot be found. Please check your load_list.json", plugin)
+            logger.error("Plugin %s is defined in load_order, but cannot be found. Please check your load_list.json",
+                         plugin)
         except Exception as e:
             logger.error("Failed to load plugin %s", exc_info=True)
             self.plugins[plugin]["state"] = PluginStates.error
         else:
             self.plugins[plugin]["state"] = PluginStates.loaded
             self.plugins[plugin]["module"] = plugin_module
+            for variable in dir(plugin_module):
+                variable = getattr(plugin_module, variable)
+                if isinstance(variable, PluginInfo):
+                    self.plugins[plugin]["plugin_info"] = variable
+                    break
+
             logger.info("Loaded plugin %s", plugin)
         if single_load:
             self.update_handlers()
