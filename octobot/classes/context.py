@@ -8,8 +8,7 @@ import octobot
 import octobot.exceptions
 from octobot.classes import UpdateType
 from octobot.utils import add_photo_to_text
-import octobot.localization as localization
-
+from octobot.database import Database
 
 class Context:
     """
@@ -19,8 +18,12 @@ class Context:
     :type update: :class:`telegram.Update`
     :var user: User class
     :vartype user: :class:`telegram.User`
+    :var user_db: Per-user key-value database
+    :vartype user_db: :class:`octobot.database.RedisData`
     :var chat: Chat class, can be None in case of inline queries
     :vartype chat: :class:`telegram.Chat`
+    :var chat_db: Per-chat key-value database
+    :vartype chat_db: :class:`octobot.database.RedisData`
     :var locale: User/Chat locale
     :vartype locale: :class:`str`
     :var update_type: Type of update
@@ -38,7 +41,12 @@ class Context:
         self.locale = "en"
         self.update = update
         self.user = update.effective_user
+        self.user_db = Database[self.user.id]
         self.chat = update.effective_chat
+        if self.chat is not None:
+            self.chat_db = Database[self.chat.id]
+        else:
+            self.chat_db = None
         if update.inline_query:
             self.text = update.inline_query.query
             self.update_type = UpdateType.inline_query

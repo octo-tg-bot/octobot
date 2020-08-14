@@ -1,15 +1,5 @@
 Exceptions
 ==========
 
-.. autoclass:: octobot.StopHandling
+.. automodule:: octobot.exceptions
     :members:
-    :undoc-members:
-
-.. autoclass:: octobot.UnknownUpdate
-    :members:
-    :undoc-members:
-
-
-.. autoclass:: octobot.LoaderCommand
-    :members:
-    :undoc-members:
