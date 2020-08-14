@@ -15,4 +15,7 @@ class InlineButtonHandler(BaseHandler):
     def handle_update(self, bot, context):
         if context.update_type == octobot.UpdateType.button_press:
             if context.text.startswith(self.prefix):
-                self.function(bot, context)
+                try:
+                    self.function(bot, context)
+                except Exception as e:
+                    octobot.handle_exception(bot, context, e)

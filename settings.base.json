@@ -12,5 +12,10 @@
   "redis_port": 6379,
   "redis_db": 0,
   // Support URL
-  "support_url": "https://example.com"
+  "support_url": "https://example.com",
+  // How error will be reported to user
+  // Allowed values:
+  // describe - shows error description to user. May leak data, dont use in production
+  // none - doesnt show any sort of error description to user
+  "error_report_type": "describe"
 }

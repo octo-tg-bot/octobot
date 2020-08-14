@@ -1,6 +1,7 @@
 import octobot
 from octobot.handlers import BaseHandler
 from typing import Union
+import logging
 
 
 class CommandHandler(BaseHandler):
@@ -42,8 +43,11 @@ class CommandHandler(BaseHandler):
         for command in self.command:
             yield self.prefix + command
 
-    def execute_function_textmode(self, bot, context):
-        self.function(bot, context)
+    def execute_function_textmode(self, bot, context: octobot.Context):
+        try:
+            self.function(bot, context)
+        except Exception as e:
+            octobot.exceptions.handle_exception(bot, context, e)
 
     def check_command(self, bot, context):
         if context.update_type == octobot.UpdateType.inline_query:
