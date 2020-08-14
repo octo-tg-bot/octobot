@@ -152,4 +152,5 @@ fabric.properties
 
 # OctoBotV4 personalized files
 settings.json
+settings.toml
 preimport.py

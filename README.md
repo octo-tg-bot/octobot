@@ -11,8 +11,8 @@
 
 2. Copy the settings and fill them in:
     ```
-    cp settings.base.json settings.json
-    code settings.json
+    cp settings.base.toml settings.toml
+    code settings.toml
     ```
 3. Run the bot:
    ```

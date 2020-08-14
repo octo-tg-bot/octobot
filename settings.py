@@ -1,6 +1,6 @@
 import os
 
-import jstyleson
+import toml
 import logging
 
 LOGGER = logging.getLogger("Settings")
@@ -14,21 +14,21 @@ class _Settings():
 
     def reload_settings(self):
         settings_backup = self._settings.copy()
-        with open(FOLDER + "/settings.base.json") as f:
-            base_settings = jstyleson.load(f)
+        with open(FOLDER + "/settings.base.toml") as f:
+            base_settings = toml.load(f)
             self._settings = base_settings
         try:
-            with open(FOLDER + "/settings.json", "r") as f:
-                settings_user = jstyleson.load(f)
+            with open(FOLDER + "/settings.toml", "r") as f:
+                settings_user = toml.load(f)
                 diff = list(set(settings_user.keys()) - set(base_settings.keys()))
                 if len(diff) > 0:
                     self._settings = settings_backup
                     LOGGER.error("Invalid user settings! Restoring previous settings")
-                    raise ValueError("User settings has unknown item(s) not defined in base JSON: %s." %
+                    raise ValueError("User settings has unknown item(s) not defined in base TOML: %s." %
                                      diff)
                 self._settings.update(settings_user)
         except FileNotFoundError:
-            LOGGER.critical("Failed to find settings.json! Continuing anyway cause who knows, maybe doc is getting built?")
+            LOGGER.critical("Failed to find settings.toml! Continuing anyway cause who knows, maybe doc is getting built?")
         LOGGER.debug(self._settings)
         LOGGER.info("Settings reloaded")
 

@@ -62,7 +62,8 @@ def handle_exception(bot, context, e, notify=True):
         logger.error("Exception got thrown somewhere", exc_info=True)
         if notify:
             message = context.localize("🐞Failed to execute command due to unknown error.")
-            if Settings.error_report_type == "describe":
+            report_type = Settings.exceptions["report_type"]
+            if report_type == "describe":
                 message += "\n" + context.localize("Error description: {error}").format(error=str(e))
             if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
                 context.reply(message)

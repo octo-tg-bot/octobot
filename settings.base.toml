@@ -1,0 +1,30 @@
+# Telegram bot API token
+telegram_token = ""
+
+# Telegram bot owner ID
+owner = 0
+
+# Thread amount
+threads = 4
+
+# Plugins not to load
+exclude_plugins = []
+
+# Support URL
+support_url = "https://example.com"
+
+# Exception handling
+[exceptions]
+  # How error will be reported to user
+  # Allowed values:
+  # describe - shows error description to user. May leak data, dont use in production
+  # none - doesnt show any sort of error description to user
+  report_type = "describe"
+
+
+# Redis information
+[redis]
+  host = "localhost"
+  port = 6379
+  db = 0
+

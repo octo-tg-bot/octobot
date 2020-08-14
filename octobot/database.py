@@ -1,7 +1,11 @@
+import logging
+
 import redis
 
 from octobot import DatabaseNotAvailable
 from settings import Settings
+
+logger = logging.getLogger("Redis")
 
 
 class RedisData:
@@ -36,11 +40,14 @@ class RedisData:
 
 class _Database:
     def __init__(self):
-        self.redis = redis.Redis(host=Settings.redis_host, port=Settings.redis_port, db=Settings.redis_db)
+        self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
         try:
             self.redis.ping()
         except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
+            logger.error("Error: Redis is not available. That might break the bot in some places.")
             self.redis = None
+        else:
+            logger.info("Redis connection successful")
 
     def __getitem__(self, item):
         item = int(item)
