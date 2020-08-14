@@ -154,3 +154,6 @@ fabric.properties
 settings.json
 settings.toml
 preimport.py
+
+# Generated stuff
+public

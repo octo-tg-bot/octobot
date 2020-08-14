@@ -17,6 +17,7 @@ pages:
     - pip install -r requirements.txt
     - pip install -r requirements-docs.txt
     - sphinx-build -b html . public
+    - python utils/dry_run.py
   artifacts:
     paths:
     - public

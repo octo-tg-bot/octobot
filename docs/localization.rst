@@ -25,4 +25,4 @@ Localizing strings
 Generating localization files
 _____________________________
 
-To extract locale strings and/or compile .po files run the `update_locale_data.bat` file. Despite the fact it's bat, it only contains commands, so you are free to run it on macOS or Linux-based distros. Also notice that you need to run it every time you update locale strings or if it's first run of bot.
+To extract locale strings and/or compile .po files run the `utils/update_locale_data.cmd` file. Despite the fact it's .cmd, it only contains commands, so you are free to run it on macOS or Linux-based distros. Also notice that you need to run it every time you update locale strings or if it's first run of bot.

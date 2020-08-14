@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from glob import glob
 import importlib
@@ -35,8 +36,11 @@ class OctoBot(telegram.Bot):
     handlers = {}
 
     def __init__(self, load_list, *args, **kwargs):
-        super(OctoBot, self).__init__(*args, **kwargs)
-        self.me = self.getMe()
+        dry_run = os.environ.get("DRY_RUN", False)
+        if not dry_run:
+            super(OctoBot, self).__init__(*args, **kwargs)
+            self.me = self.getMe()
+
         for plugin in glob("base_plugins/*.py"):
             logger.info("Loading base plugin %s", plugin)
             self.load_plugin(path_to_module(plugin))

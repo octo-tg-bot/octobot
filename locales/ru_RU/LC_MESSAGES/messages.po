@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-14 14:59+0300\n"
+"POT-Creation-Date: 2020-08-14 16:56+0300\n"
 "PO-Revision-Date: 2020-08-08 10:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru_RU\n"
@@ -46,27 +46,31 @@ msgid ""
 msgstr ""
 
 #: base_plugins/start_help.py:60
-msgid "friendly_name"
+msgid "plugin_info"
 msgstr ""
 
 #: base_plugins/start_help.py:67
 msgid "More info on this command"
 msgstr ""
 
-#: base_plugins/start_help.py:84
+#: base_plugins/start_help.py:83
 msgid "Help for"
 msgstr ""
 
-#: octobot/handlers/commandhandle.py:49
-msgid ""
-"This command cannot be executed cause of database issues. Please contact "
-"the bot developer"
+#: octobot/exceptions.py:56 octobot/exceptions.py:58
+msgid "Failed to execute command due to database problems. Please try later"
 msgstr ""
 
-#: octobot/handlers/commandhandle.py:52
-msgid ""
-"An exception occured while handling your command. Please contact the bot "
-"developer"
+#: octobot/exceptions.py:64
+msgid "🐞Failed to execute command due to unknown error."
+msgstr ""
+
+#: octobot/exceptions.py:67
+msgid "Error description: {error}"
+msgstr ""
+
+#: octobot/exceptions.py:71
+msgid "Error occured"
 msgstr ""
 
 #~ msgid "test"
@@ -86,4 +90,19 @@ msgstr ""
 
 #~ msgid "Test! Test! Test!"
 #~ msgstr "Тест! Тест! Тест!"
+
+#~ msgid "friendly_name"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This command cannot be executed cause"
+#~ " of database issues. Please contact "
+#~ "the bot developer"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "An exception occured while handling your"
+#~ " command. Please contact the bot "
+#~ "developer"
+#~ msgstr ""
 
