@@ -59,9 +59,7 @@ def test_catalog(query, index, max_amount, bot, context):
         raise octobot.CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
-    print(max_amount)
     for i in range(0, max_amount):
-        print(i)
         res.append(octobot.CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
                                            title=f"Title for {query}",
                                            description=f"Description for {query}",

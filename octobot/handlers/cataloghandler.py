@@ -82,7 +82,6 @@ class CatalogHandler(CommandHandler):
         res: octobot.Catalog = self.function(query, offset, 50, bot, context)
         inline_res = []
         for item in res:
-            print("adding item", item)
             if item.photo is not None:
                 if item.parse_mode is None or item.parse_mode.lower() != "html":
                     item.parse_mode = 'html'
