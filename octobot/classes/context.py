@@ -162,11 +162,7 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        if self.update.effective_chat is not None:
-            chatid = self.update.effective_chat.id
-        else:
-            chatid = self.update.effective_user.id
-        chat_locale = octobot.localization.get_chat_locale(chatid)
+        chat_locale = octobot.localization.get_chat_locale(self.update)
         gt = gettext.translation("messages", localedir="locales", languages=[chat_locale], fallback=True)
         gt.install()
 
