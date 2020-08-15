@@ -25,3 +25,4 @@ class MessageHandler(BaseHandler):
 
 from octobot.handlers.buttonhandle import InlineButtonHandler
 from octobot.handlers.commandhandle import CommandHandler
+from octobot.handlers.cataloghandler import CatalogHandler
