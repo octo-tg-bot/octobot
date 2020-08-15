@@ -46,10 +46,9 @@ class Context:
         else:
             self.user_db = None
         self.chat = update.effective_chat
-        if self.chat is not None:
-            self.chat_db = Database[self.chat.id]
-        else:
-            self.chat_db = None
+        if self.chat is None and self.user is not None:
+            self.chat = self.user
+        self.chat_db = Database[self.chat.id]
         if update.inline_query:
             self.text = update.inline_query.query
             self.update_type = UpdateType.inline_query
@@ -161,7 +160,7 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        if self.update.effective_chat.id is not None:
+        if self.update.effective_chat is not None:
             chatid = self.update.effective_chat.id
         else:
             chatid = self.update.effective_user.id
