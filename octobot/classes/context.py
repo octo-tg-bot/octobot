@@ -143,7 +143,7 @@ class Context:
         :type parse_mode: :class:`str`, optional
         """
         if photo_url:
-            if parse_mode.lower() != "html":
+            if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
