@@ -22,15 +22,13 @@ def create_buttonstring(command, query, next_offset):
 
 
 def create_inline_buttons(command, query, current_index, max_results, previous_offset, next_offset):
-    return telegram.InlineKeyboardMarkup([
-        [
+    return [
             telegram.InlineKeyboardButton(text=BUTTON_LEFT,
                                           callback_data=create_buttonstring(command, query, previous_offset)),
             telegram.InlineKeyboardButton(text=f"{current_index}/{max_results}", callback_data="nothing:"),
             telegram.InlineKeyboardButton(text=BUTTON_RIGHT,
                                           callback_data=create_buttonstring(command, query, next_offset))
         ]
-    ])
 
 
 class CatalogHandler(CommandHandler):
@@ -60,14 +58,18 @@ class CatalogHandler(CommandHandler):
             return context.reply("Can't go forward anymore")
         except CatalogCantGoBackwards:
             return context.reply("Can't go backwards anymore")
-        reply_markup = create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset)
+        reply_markup = res[0].reply_markup
+        reply_markup.inline_keyboard.append(
+            create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset,
+                                  res.next_offset))
         context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
                      reply_markup=reply_markup)
 
     def handle_command(self, bot, context: Context):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
-        reply_markup = create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset)
+        reply_markup = res[0].reply_markup
+        reply_markup.inline_keyboard.append(create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset))
         context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode, reply_to_previous=False,
                       reply_markup=reply_markup)
 
@@ -80,8 +82,9 @@ class CatalogHandler(CommandHandler):
         res: octobot.Catalog = self.function(query, offset, 50, bot, context)
         inline_res = []
         for item in res:
+            print("adding item", item)
             if item.photo is not None:
-                if item.parse_mode != "html":
+                if item.parse_mode is None or item.parse_mode.lower() != "html":
                     item.parse_mode = 'html'
                     item.text = html.escape(item.text)
                 text = add_photo_to_text(item.text, item.photo)
@@ -95,7 +98,8 @@ class CatalogHandler(CommandHandler):
                                   input_message_content=telegram.InputTextMessageContent(
                                       text,
                                       parse_mode=item.parse_mode
-                                  )
+                                  ),
+                                  reply_markup=item.reply_markup
                                   )
                 if isinstance(item, octobot.CatalogKeyPhoto):
                     inline_res.append(telegram.InlineQueryResultPhoto(**res_kwargs))

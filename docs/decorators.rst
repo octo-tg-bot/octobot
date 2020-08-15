@@ -10,6 +10,8 @@ Permission decorators
 
 .. automethod:: octobot.my_permissions
 
+.. automethod:: octobot.not_admin
+
 Group type decorators
 ---------------------
 
