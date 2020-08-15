@@ -1,10 +1,19 @@
 import telegram
 
-from octobot import CatalogKeyPhoto, Catalog, CatalogCantGoDeeper, CatalogKeyArticle, CatalogNotFound, \
-    CatalogCantGoBackwards, catalogs, PluginInfo
+import octobot
 from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler
 from octobot.localization import localizable
+
+@CommandHandler(command="ptest", description="Permissions test")
+@octobot.permissions(can_restrict_members=True)
+@octobot.my_permissions(can_delete_messages=True)
+def test_perm(bot, context):
+    context.reply("Hello world!",
+                  reply_markup=telegram.InlineKeyboardMarkup([
+                      [telegram.InlineKeyboardButton(callback_data="test:", text="Change text")]
+                  ])
+                  )
 
 
 @CommandHandler(command="test", description="Test")
@@ -39,47 +48,47 @@ def test_button(bot, context):
 CATALOG_MAX = 50
 
 
-@catalogs.CatalogHandler(command="catalogtest", description="Test CatalogHandler")
+@octobot.catalogs.CatalogHandler(command="catalogtest", description="Test CatalogHandler")
 def test_catalog(query, index, max_amount, bot, context):
     res = []
     index = int(index)
     if index < 0:
-        raise CatalogCantGoBackwards
+        raise octobot.CatalogCantGoBackwards
     if index >= CATALOG_MAX:
-        raise CatalogCantGoDeeper
+        raise octobot.CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
     for i in range(0, max_amount):
-        res.append(CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
-                                   title=f"Title for {query}",
-                                   description=f"Description for {query}",
-                                   parse_mode="HTML",
-                                   photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+        res.append(octobot.CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
+                                           title=f"Title for {query}",
+                                           description=f"Description for {query}",
+                                           parse_mode="HTML",
+                                           photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                        width=200,
                                                        height=200)]))
-    return Catalog(res, CATALOG_MAX, current_index=index+1, next_offset=index+max_amount, previous_offset=index-max_amount)
+    return octobot.Catalog(res, CATALOG_MAX, current_index=index + 1, next_offset=index + max_amount, previous_offset=index - max_amount)
 
 
-@catalogs.CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
+@octobot.catalogs.CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
 def test_catalogarticle(query, index, max_amount, bot, context):
     res = []
     index = int(index)
     if index < 0:
-        raise CatalogCantGoBackwards
+        raise octobot.CatalogCantGoBackwards
     if index >= CATALOG_MAX:
-        raise CatalogCantGoDeeper
+        raise octobot.CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
     if query == "nothing":
-        raise CatalogNotFound
+        raise octobot.CatalogNotFound
     for i in range(0, max_amount):
-        res.append(CatalogKeyArticle(text=f"{query} {i + index}",
-                                     title=f"Title for {query}",
-                                     description=f"Description for {query}",
-                                     photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+        res.append(octobot.CatalogKeyArticle(text=f"{query} {i + index}",
+                                             title=f"Title for {query}",
+                                             description=f"Description for {query}",
+                                             photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                          width=200,
                                                          height=200)]))
-    return Catalog(res, CATALOG_MAX, current_index=index, next_offset=index+max_amount, previous_offset=index-max_amount)
+    return octobot.Catalog(res, CATALOG_MAX, current_index=index, next_offset=index + max_amount, previous_offset=index - max_amount)
 
 
 
@@ -88,4 +97,5 @@ def hello_world(bot, ctx):
     ctx.reply(ctx.localize("This is a test"))
 
 
-info = PluginInfo("Test plugin")
+
+info = octobot.PluginInfo("Test plugin")
