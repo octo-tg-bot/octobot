@@ -24,18 +24,19 @@ from dataclasses import dataclass
 
 import bs4
 import requests
+import telegram
 
-from octobot import CatalogHandler, CatalogPhoto, CatalogKeyArticle, Catalog, CatalogNotFound, OctoBot, Context
+from octobot import CatalogPhoto, CatalogKeyArticle, Catalog, CatalogNotFound, OctoBot, Context, \
+    localizable, PluginInfo, CatalogCantGoBackwards, CatalogKeyPhoto
+from octobot.catalogs import CatalogHandler
 
-MSG_TEMPLATE = """<b>Rating:</b> %(rating)s
-<b>Tags:</b> %(tags)s
-
-<a href="%(file_url)s">open full-res image</a>, <a href="%(source)s">source</a>, <a href="https://safebooru.org/index.php?page=post&s=view&id=%(id)s">post on safebooru</a>"""
+MSG_TEMPLATE = localizable("""<b>Rating:</b> {rating}
+<b>Tags:</b> {tags_str}""")
 
 HEADERS = {"User-Agent": "OctoBot/1.0"}
 
+plugin_info = PluginInfo("Safebooru")
 
-# TODO: add plugin name (safebooru)
 
 @dataclass
 class SafebooruPost:
@@ -59,6 +60,17 @@ class SafebooruPost:
 def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Context) -> Catalog:
     res = []
 
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise CatalogNotFound()
+
+    if offset < 0:
+        raise CatalogCantGoBackwards
+
+    if limit > 25:
+        limit = 25
+
     image = requests.get("https://safebooru.org/index.php",
                          params={
                              "page": "dapi",
@@ -66,7 +78,7 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
                              "q": "index",
                              "tags": query,
                              "limit": limit,
-                             "pid": int(offset) - 1
+                             "pid": offset
                          },
                          headers=HEADERS)
     api_q = bs4.BeautifulSoup(image.text, "html.parser").posts
@@ -102,10 +114,27 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
                                width=item.preview_width,
                                height=item.preview_height)]
 
-        res.append(CatalogKeyArticle(text=ctx.localize(MSG_TEMPLATE).format(**item.__dict__),
-                                     title=" ".join(item.tags),
-                                     description="",
-                                     photo=photos,
-                                     parse_mode="HTML"))
+        reply_markup = [
+            [telegram.InlineKeyboardButton(
+                url="https://safebooru.org/index.php?page=post&s=view&id={}".format(item.id),
+                text=ctx.localize("View on safebooru")
+            )]
+        ]
 
-    return Catalog(res, total)
+        if item.source is not None and item.source.startswith("http"):
+            reply_markup[0].append(telegram.InlineKeyboardButton(url=item.source, text=ctx.localize("Source")))
+
+        res.append(CatalogKeyPhoto(text=ctx.localize(MSG_TEMPLATE).format(**item.__dict__),
+                                   title="",
+                                   description="",
+                                   photo=photos,
+                                   reply_markup=telegram.InlineKeyboardMarkup(reply_markup),
+                                   parse_mode="HTML"))
+
+    return Catalog(
+        results=res,
+        max_count=total,
+        previous_offset=offset - limit,
+        current_index=offset + 1,
+        next_offset=offset + limit
+    )

@@ -21,17 +21,16 @@
 
 
 import calendar
-import json
 import re
-import uuid
-from math import ceil, floor
-from typing import Callable, Any
+import textwrap
+from math import ceil
+from typing import Union
 
 import requests
-from redis import Redis
 
-from octobot import Database, Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound
-from octobot.handlers import CatalogHandler
+from octobot import Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound, localizable, \
+    PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper
+from octobot.catalogs import CatalogHandler
 
 GRAPHQL_URL = "https://graphql.anilist.co"
 
@@ -109,57 +108,55 @@ query Character($query: String, $page: Int, $perPage: Int) {
 """
 HEADERS = {"User-Agent": "OctoBot/1.0"}
 
-MEDIA_TEMPLATE_STR = """
-<b>{title}</b>
+MEDIA_TEMPLATE_STR = localizable("""<b>{title}</b>
 <i>{metadata}</i>
 <a href="{siteUrl}">on anilist</a>
 
 {description}
 
 <i>{genres}</i>
-"""
+""")
 
-CHARACTER_TEMPLATE_STR = """
-<b>{full_name}</b>
+CHARACTER_TEMPLATE_STR = localizable("""<b>{full_name}</b>
 <i>{alternative_names}</i><a href="{siteUrl}">on anilist</a>
 
 {description}
 
 <i>Present in:</i>
 {present_in}
-"""
+""")
 
 ANIME_MEDIA_STATUSES_STR = {
-    "FINISHED": "finished",
-    "RELEASING": "airing",
-    "NOT_YET_RELEASED": "not yet airing",
-    "CANCELLED": "cancelled"
+    "FINISHED": localizable("finished"),
+    "RELEASING": localizable("airing"),
+    "NOT_YET_RELEASED": localizable("not yet airing"),
+    "CANCELLED": localizable("cancelled")
 }
 
 MANGA_MEDIA_STATUSES_STR = {
-    "FINISHED": "finished",
-    "RELEASING": "releasing",
-    "NOT_YET_RELEASED": "not yet released",
-    "CANCELLED": "cancelled"
+    "FINISHED": localizable("finished"),
+    "RELEASING": localizable("releasing"),
+    "NOT_YET_RELEASED": localizable("not yet released"),
+    "CANCELLED": localizable("cancelled")
 }
 
 MEDIA_FORMAT_STR = {
-    "TV": "TV animation series",
-    "TV_SHORT": "TV short",
-    "MOVIE": "anime movie",
-    "SPECIAL": "anime special",
-    "OVA": "OVA",
-    "ONA": "ONA",
-    "MUSIC": "AMV",
-    "MANGA": "manga series",
-    "NOVEL": "light novel series",
-    "ONE_SHOT": "one-shot manga"
+    "TV": localizable("TV animation series"),
+    "TV_SHORT": localizable("TV short"),
+    "MOVIE": localizable("anime movie"),
+    "SPECIAL": localizable("anime special"),
+    "OVA": localizable("OVA"),
+    "ONA": localizable("ONA"),
+    "MUSIC": localizable("AMV"),
+    "MANGA": localizable("manga series"),
+    "NOVEL": localizable("light novel series"),
+    "ONE_SHOT": localizable("one-shot manga")
 }
 
 MEDIA_ANIME = "ANIME"
 MEDIA_MANGA = "MANGA"
 
-# TODO: add plugin name (AniList)
+plugin_info = PluginInfo("AniList")
 
 
 def cleanse_html(raw_html):
@@ -169,9 +166,11 @@ def cleanse_html(raw_html):
     return cleansed_text
 
 
-def cleanse_spoilers(raw_text):
+def cleanse_spoilers(raw_text: str, replacement_text: str, html=False):
     r = re.compile("~!.*!~", flags=re.S)
-    cleansed_text = re.sub(r, "<i>(spoilers redacted)</i>", raw_text)
+    if html:
+        replacement_text = f"<i>{replacement_text}</i>"
+    cleansed_text = re.sub(r, replacement_text, raw_text)
     return cleansed_text
 
 
@@ -209,12 +208,27 @@ def get_fuzzy_date_str(fuzzy_date):
         return None
 
 
+def format_media_description(description: Union[str, None], ctx: Context):
+    if description is None:
+        short = ctx.localize("no description")
+        long = "<i>{}</i>".format(ctx.localize("No description provided."))
+    else:
+        long = cleanse_html(description)
+        replacement_text = ctx.localize("(spoilers redacted)")
+        short = cleanse_spoilers(long, replacement_text, html=False)
+        long = cleanse_spoilers(long, replacement_text, html=True)
+
+    short = textwrap.shorten(short, width=70, placeholder="…")
+
+    return long, short
+
+
 def get_media_metadata(media, ctx: Context):
     mtype = media["type"]
     metadata = []
 
     if media["format"] is not None and media["format"] in MEDIA_FORMAT_STR:
-        metadata.append(MEDIA_FORMAT_STR[media["format"]])
+        metadata.append(ctx.localize(MEDIA_FORMAT_STR[media["format"]]))
 
     if media["status"] is not None:
         if mtype == MEDIA_ANIME:
@@ -224,7 +238,7 @@ def get_media_metadata(media, ctx: Context):
         metadata.append(status_str)
 
     if mtype == MEDIA_ANIME and media["episodes"] is not None:
-        episodes_str = f"{media['episodes']} episodes"
+        episodes_str = ctx.localize("{} episodes").format(media["episodes"])
         metadata.append(episodes_str)
 
     if mtype == MEDIA_MANGA:
@@ -249,63 +263,24 @@ def get_media_metadata(media, ctx: Context):
     return metadata
 
 
-def cached_catalog(fetch_fn, cache_key_fn, expires_after=60 * 60 * 60):
-    def wrapper(fn):
-        catalog_uuid = uuid.uuid4()
+def anilist_search_media(query: str, offset: str, count: int, bot: OctoBot, ctx: Context, media_type=MEDIA_ANIME):
+    res = []
 
-        def inner_wrapper(query: str, offset: str, limit: int, bot: OctoBot, ctx: Context, **kwargs) -> Catalog:
-            # Only numeric offsets are supported for now
-            try:
-                offset = int(offset)
-            except ValueError:
-                raise CatalogNotFound()
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise CatalogNotFound()
 
-            def cached_fetch_fn(query: str, offset: int, limit: int, **kwargs):
-                if Database.redis is not None:
-                    db: Redis = Database.redis
-                    key_extra = cache_key_fn(query, **kwargs)
-                    key = f"catalog:{catalog_uuid}:{key_extra}"
-                    total_key = f"catalog:{catalog_uuid}:{key_extra}:total"
+    if offset < 0:
+        raise CatalogCantGoBackwards()
 
-                    if not db.exists(key) or db.scard(key) < offset + limit:
-                        items, total = fetch_fn(query, offset, limit, **kwargs)
-                        db.expire(key, expires_after)
-                        db.set(total_key, total)
-                        db.expire(total, expires_after)
-                        for item in items:
-                            id = item["id"]
-                            item_key = f"catalog:{catalog_uuid}:item:{id}"
-                            db.set(item_key, json.dumps(item))
-                            db.expire(item_key, expires_after)
-                            db.sadd(key, id)
-                        return items, total
-                    else:
-                        i = 0
-                        items = []
-                        for id in db.smembers(key):
-                            if i < offset:
-                                continue
-                            elif i > offset + limit:
-                                break
-                            item_json = db.get(f"catalog:{catalog_uuid}:item:{id}")
-                            item = json.loads(item_json)
-                            items.append(item)
-                        return items, db.get(total_key)
-                else:
-                    return fetch_fn(query, offset, limit, **kwargs)
+    if count > 25:
+        count = 25
 
-            return fn(query, offset, limit, bot, ctx, fetch=cached_fetch_fn, **kwargs)
-
-        return inner_wrapper
-
-    return wrapper
-
-
-def anilist_iter_media(query: str, offset: int, limit: int, media_type: str):
     resp = graphql(GRAPHQL_QUERY, "Media", {
         "query": query,
-        "page": floor(offset / limit),
-        "perPage": limit if offset % limit == 0 else limit * 2,
+        "page": floor(offset / count),
+        "perPage": count,
         "type": media_type
     })
 
@@ -316,34 +291,15 @@ def anilist_iter_media(query: str, offset: int, limit: int, media_type: str):
     total = page_info["total"]
 
     if total == 0:
-        raise CatalogNotFound()
-
-    return media, total
-
-
-@cached_catalog(anilist_iter_media, lambda query, media_type: f"{query}:{media_type}")
-def anilist_search_media(query, offset, count, bot: OctoBot, ctx: Context, fetch, media_type=MEDIA_ANIME):
-    res = []
-
-    # resp = graphql(GRAPHQL_QUERY, "Media", {
-    #     "query": query,
-    #     "page": ceil(offset / count),
-    #     "perPage": count,
-    #     "type": media_type
-    # })
-
-    media, total = fetch(query, offset, count, media_type=media_type)
+        if offset == 0:
+            raise CatalogNotFound()
+        else:
+            raise CatalogCantGoDeeper()
 
     for item in media:
         item["title"] = get_media_title(item["title"])
-
         item["metadata"] = ", ".join(get_media_metadata(item, ctx))
-
-        if item["description"] is not None:
-            item["description"] = "<i>No description provided.</i>"
-        else:
-            item["description"] = cleanse_spoilers(cleanse_html(item["description"]))
-
+        item["description"], short_description = format_media_description(item["description"], ctx)
         item["genres"] = ", ".join(item["genres"])
 
         text = ctx.localize(MEDIA_TEMPLATE_STR).format(**item)
@@ -353,9 +309,19 @@ def anilist_search_media(query, offset, count, bot: OctoBot, ctx: Context, fetch
             CatalogPhoto(url=item["coverImage"]["medium"], width=0, height=0),
         ]
 
-        res.append(CatalogKeyArticle(text=text, title=item["title"], photo=photos, parse_mode="HTML"))
+        res.append(CatalogKeyArticle(text=text,
+                                     title=item["title"],
+                                     description=short_description,
+                                     photo=photos,
+                                     parse_mode="HTML"))
 
-    return Catalog(res, total)
+    return Catalog(
+        results=res,
+        max_count=total,
+        previous_offset=offset - 1,
+        current_index=offset,
+        next_offset=offset + 1
+    )
 
 
 @CatalogHandler(command=["anilist", "anime"], description="Search anime on AniList")
@@ -369,13 +335,24 @@ def anilist_search_manga(query, offset, count, bot, ctx):
 
 
 @CatalogHandler(command=["anilist_character", "anichar", "character"], description="Search for character on AniList")
-def anilist_search_character(query: str, offset: str, limit: int, bot: OctoBot, ctx: Context) -> Catalog:
+def anilist_search_character(query: str, offset: str, count: int, bot: OctoBot, ctx: Context) -> Catalog:
     res = []
+
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise CatalogNotFound
+
+    if offset < 0:
+        raise CatalogCantGoBackwards
+
+    if count > 25:
+        count = 25
 
     resp = graphql(GRAPHQL_QUERY, "Character", {
         "query": query,
-        "page": ceil(int(offset) / limit),
-        "perPage": limit
+        "page": ceil((offset + 1) / count),
+        "perPage": count
     })
 
     page_data = resp["data"]["Page"]
@@ -385,7 +362,7 @@ def anilist_search_character(query: str, offset: str, limit: int, bot: OctoBot, 
     total = page_info["total"]
 
     if total == 0:
-        raise CatalogNotFound()
+        raise CatalogNotFound
 
     for item in characters:
         item["full_name"] = item["name"]["full"]
@@ -395,11 +372,7 @@ def anilist_search_character(query: str, offset: str, limit: int, bot: OctoBot, 
         else:
             item["alternative_names"] = ""
 
-        if item["description"] is not None:
-            description = "<i>No description provided.</i>"
-            item["description"] = f"<i>{description}</i>"
-        else:
-            description = item["description"] = cleanse_spoilers(cleanse_html(item["description"]))
+        item["description"], short_description = format_media_description(item["description"], ctx)
 
         item["present_in"] = "\n".join(
             [f"<a href=\"{media['siteUrl']}\">{get_media_title(media['title'])}</a>" for media in
@@ -412,10 +385,18 @@ def anilist_search_character(query: str, offset: str, limit: int, bot: OctoBot, 
             CatalogPhoto(url=item["image"]["medium"], width=0, height=0),
         ]
 
+        print(item["full_name"], end=' ')
+
         res.append(CatalogKeyArticle(text=text,
                                      title=item["full_name"],
-                                     description=description,
+                                     description=short_description,
                                      photo=photos,
                                      parse_mode="HTML"))
 
-    return Catalog(res, total)
+    return Catalog(
+        results=res,
+        max_count=total,
+        previous_offset=offset - count,
+        current_index=offset + 1,
+        next_offset=offset + count
+    )
