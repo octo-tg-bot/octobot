@@ -5,6 +5,7 @@ from settings import Settings
 
 logger = logging.getLogger("Exceptions")
 
+
 class UnknownUpdate(ValueError):
     """
     This exception gets raised during update handle if Context failed to determine update
@@ -25,9 +26,11 @@ class StopHandling(LoaderCommand):
     """
     pass
 
+
 class CatalogBaseException(IndexError):
     """Base exception for catalog commands"""
     pass
+
 
 class CatalogCantGoDeeper(CatalogBaseException):
     """Raise this exception is maximum number of results is reached"""

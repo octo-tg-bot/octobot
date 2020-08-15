@@ -3,10 +3,18 @@ import telegram
 import json
 
 
+def create_db_entry_name(chat: telegram.Chat):
+    return f"admcache:{chat.id}"
+
+
+def reset_cache(chat: telegram.Chat):
+    return Database.redis.delete(create_db_entry_name(chat))
+
+
 def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: set):
     if chat.type != "supergroup":
         return True, []
-    db_entry = f"admcache:{chat.id}"
+    db_entry = create_db_entry_name(chat)
     if Database.redis is not None and Database.redis.exists(db_entry) == 1:
         adm_list = json.loads(Database.redis.get(db_entry).decode())
     else:
@@ -22,6 +30,8 @@ def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: 
         if member["user"]["id"] == user.id:
             if member["status"] == "creator":
                 return True, permissions_to_check
+            if "is_admin" in permissions_to_check:
+                permissions_to_check.remove("is_admin")
             for user_permission in permissions_to_check.copy():
                 print(member[user_permission], user_permission)
                 if member[user_permission]:
@@ -47,6 +57,7 @@ def permissions(**perms):
         return wrapper
 
     return decorator
+
 
 def my_permissions(**perms):
     perms = set(perms.keys())
