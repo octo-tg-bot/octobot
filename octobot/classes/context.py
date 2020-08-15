@@ -63,6 +63,8 @@ class Context:
             self.update_type = UpdateType.message
         else:
             raise octobot.exceptions.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
+        if self.text is None:
+            self.text = ''
         self.query = " ".join(self.text.split(" ")[1:])
         self.args = shlex.split(self.query)
 

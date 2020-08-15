@@ -19,9 +19,9 @@ class MessageHandler(BaseHandler):
     """
     Calls function on every message. Simple enough.
     """
-    def handle_update(self, bot, update):
-        if update.message:
-            self.function(bot, update)
+    def handle_update(self, bot, context):
+        if context.update.message:
+            self.function(bot, context)
 
 from octobot.handlers.buttonhandle import InlineButtonHandler
 from octobot.handlers.commandhandle import CommandHandler

@@ -25,7 +25,6 @@ def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: 
         if Database.redis is not None:
             Database.redis.set(db_entry, json.dumps(adm_list))
             Database.redis.expire(db_entry, 240)
-    print(adm_list)
     for member in adm_list:
         if member["user"]["id"] == user.id:
             if member["status"] == "creator":
@@ -33,7 +32,6 @@ def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: 
             if "is_admin" in permissions_to_check:
                 permissions_to_check.remove("is_admin")
             for user_permission in permissions_to_check.copy():
-                print(member[user_permission], user_permission)
                 if member[user_permission]:
                     permissions_to_check.remove(user_permission)
             break
@@ -64,6 +62,22 @@ def permissions(**perms):
     return decorator
 
 
+def not_admin(function):
+    """
+    Decorator to check if sender is not an admin.
+    """
+    perms = {"is_admin"}
+
+    def wrapper(bot, context):
+        if context.chat is not None:
+            res, missing_perms = check_perms(context.chat, context.user, perms.copy())
+            if not res:
+                function(bot, context)
+
+    return wrapper
+
+
+
 def my_permissions(**perms):
     """
     Decorator to check bots own permissions.
@@ -71,6 +85,8 @@ def my_permissions(**perms):
     :param perms: Valid permissions that can be found on :class:`telegram.ChatMember` + is_admin. Example: `@my_permissions(can_delete_messages=True)`. The value does not matter.
     """
     perms = set(perms.keys())
+    if "is_admin" not in perms:
+        perms.add("is_admin")
 
     def decorator(function):
         def wrapper(bot, context):
@@ -78,6 +94,10 @@ def my_permissions(**perms):
                 res, missing_perms = check_perms(context.chat, bot.me, perms.copy())
                 if res:
                     function(bot, context)
+                elif "is_admin" not in missing_perms:
+                    context.reply(context.localize(
+                        "Sorry, you can't execute this command cause I lack following permissions: {}").format(
+                        ', '.join(perms)))
 
         return wrapper
 
