@@ -5,6 +5,7 @@ from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler
 from octobot.localization import localizable
 
+
 @CommandHandler(command="ptest", description="Permissions test")
 @octobot.permissions(can_restrict_members=True)
 @octobot.my_permissions(can_delete_messages=True)
@@ -58,16 +59,21 @@ def test_catalog(query, index, max_amount, bot, context):
         raise octobot.CatalogCantGoDeeper
     if max_amount > CATALOG_MAX:
         max_amount = CATALOG_MAX
+    print(max_amount)
     for i in range(0, max_amount):
+        print(i)
         res.append(octobot.CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i + index}</i>",
                                            title=f"Title for {query}",
                                            description=f"Description for {query}",
                                            parse_mode="HTML",
-                                           photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
-                                                       width=200,
-                                                       height=200)]))
-    return octobot.Catalog(res, CATALOG_MAX, current_index=index + 1, next_offset=index + max_amount, previous_offset=index - max_amount)
-
+                                           reply_markup=telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(
+                                               url="https://example.com", text="Test")]]),
+                                           photo=[CatalogPhoto(
+                                               url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+                                               width=200,
+                                               height=200)]))
+    return octobot.Catalog(res, CATALOG_MAX, current_index=index + 1, next_offset=index + max_amount,
+                               previous_offset=index - max_amount)
 
 @octobot.catalogs.CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
 def test_catalogarticle(query, index, max_amount, bot, context):
@@ -85,17 +91,15 @@ def test_catalogarticle(query, index, max_amount, bot, context):
         res.append(octobot.CatalogKeyArticle(text=f"{query} {i + index}",
                                              title=f"Title for {query}",
                                              description=f"Description for {query}",
-                                             photo=[CatalogPhoto(url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
-                                                         width=200,
-                                                         height=200)]))
-    return octobot.Catalog(res, CATALOG_MAX, current_index=index, next_offset=index + max_amount, previous_offset=index - max_amount)
-
-
+                                             photo=[CatalogPhoto(
+                                                 url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
+                                                 width=200,
+                                                 height=200)]))
+    return octobot.Catalog(res, CATALOG_MAX, current_index=index, next_offset=index + max_amount,
+                           previous_offset=index - max_amount)
 
 @CommandHandler(command="helloworld", description=localizable("Hello, World!"))
 def hello_world(bot, ctx):
     ctx.reply(ctx.localize("This is a test"))
-
-
 
 info = octobot.PluginInfo("Test plugin")

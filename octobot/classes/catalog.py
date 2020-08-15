@@ -3,6 +3,8 @@ import string
 from typing import Union, List
 from dataclasses import dataclass
 
+import telegram
+
 
 @dataclass
 class CatalogPhoto:
@@ -31,9 +33,14 @@ class CatalogKeyArticle:
     :type title: :class:`str`, optional
     :param description: Description for inline mode, defaults to first 100 symbols of text
     :type description: :class:`str`, optional
+    :param reply_markup: Inline keyboard that will appear in message
+    :type reply_markup: :class:`telegram.InlineKeyboardMarkup`
     """
+
     def __init__(self, text: str, photo: Union[List[CatalogPhoto], CatalogPhoto] = None, parse_mode: str = None,
-                 title: str = None, description: str = None, item_id: str = None):
+                 title: str = None, description: str = None, item_id: str = None,
+                 reply_markup: telegram.InlineKeyboardMarkup = telegram.InlineKeyboardMarkup([])):
+        self.reply_markup = reply_markup
         self.item_id = item_id
         if self.item_id is None:
             self.item_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
@@ -57,6 +64,7 @@ class CatalogKeyArticle:
                 photos.append(photo)
             return photos
 
+
 class CatalogKeyPhoto(CatalogKeyArticle):
     """
     :param text: Text to include in result
@@ -70,7 +78,6 @@ class CatalogKeyPhoto(CatalogKeyArticle):
     :param description: Description for inline mode, defaults to first 100 symbols of text
     :type description: :class:`str`, optional
     """
-
 
 
 class Catalog:
@@ -88,6 +95,7 @@ class Catalog:
     :param previous_offset: Previous offset
     :type previous_offset: :class:`str` or :class:`int`
     """
+
     def __init__(self, results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]], max_count: int,
                  current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int]):
         self.results = results
@@ -101,5 +109,3 @@ class Catalog:
 
     def __getitem__(self, key):
         return self.results.__getitem__(key)
-
-
