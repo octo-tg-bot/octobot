@@ -9,6 +9,7 @@ import logging
 
 logger = logging.getLogger("StartHelp")
 
+info = octobot.PluginInfo(octobot.localizable("Usual bot commands"))
 
 @octobot.CommandHandler("start", description="Bot generic description and stuff", inline_support=False)
 def start(bot: octobot.OctoBot, ctx: octobot.Context):
@@ -64,7 +65,7 @@ def help_command(query, idx, max_amount, bot: octobot.OctoBot, ctx: octobot.Cont
             description=html.escape(ctx.localize(handler.description)),
             bot=bot,
             command=base64.urlsafe_b64encode(("/helpextra " + handler.command[0]).encode()).decode(),
-            learnmore=ctx.localize("More info on this command")
+            learnmore=ctx.localize("More...")
         )
     catalog = catalogs.Catalog(results=[catalogs.CatalogKeyArticle(handlers_msg, parse_mode="HTML")],
                                current_index=idx + 1, next_offset=idx + 1, previous_offset=idx - 1,

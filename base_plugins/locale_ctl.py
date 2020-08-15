@@ -1,10 +1,11 @@
-from octobot import CommandHandler, InlineButtonHandler
+from octobot import CommandHandler, InlineButtonHandler, PluginInfo
 import telegram
 import octobot.localization
 from babel import Locale
 import logging
 
 logger = logging.getLogger("localectl")
+inf = PluginInfo("Localization settings")
 
 
 @CommandHandler("language", description="Set language", inline_support=False)
