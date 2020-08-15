@@ -14,6 +14,7 @@ Welcome to OctoBot's documentation!
    docs/context
    docs/localization
    docs/kvdb
+   docs/decorators
    docs/handlers
    docs/catalogs
    docs/exceptions

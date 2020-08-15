@@ -41,6 +41,11 @@ def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: 
 
 
 def permissions(**perms):
+    """
+    Decorator to check permissions.
+
+    :param perms: Valid permissions that can be found on :class:`telegram.ChatMember` + is_admin. Example: `@permissions(can_delete_messages=True)`. The value does not matter.
+    """
     perms = set(perms.keys())
 
     def decorator(function):
@@ -60,6 +65,11 @@ def permissions(**perms):
 
 
 def my_permissions(**perms):
+    """
+    Decorator to check bots own permissions.
+
+    :param perms: Valid permissions that can be found on :class:`telegram.ChatMember` + is_admin. Example: `@my_permissions(can_delete_messages=True)`. The value does not matter.
+    """
     perms = set(perms.keys())
 
     def decorator(function):
