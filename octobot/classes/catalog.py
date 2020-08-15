@@ -39,8 +39,10 @@ class CatalogKeyArticle:
 
     def __init__(self, text: str, photo: Union[List[CatalogPhoto], CatalogPhoto] = None, parse_mode: str = None,
                  title: str = None, description: str = None, item_id: str = None,
-                 reply_markup: telegram.InlineKeyboardMarkup = telegram.InlineKeyboardMarkup([])):
+                 reply_markup: telegram.InlineKeyboardMarkup = None):
         self.reply_markup = reply_markup
+        if self.reply_markup is None:
+            self.reply_markup = telegram.InlineKeyboardMarkup([])
         self.item_id = item_id
         if self.item_id is None:
             self.item_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))

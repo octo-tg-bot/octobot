@@ -58,7 +58,7 @@ class CatalogHandler(CommandHandler):
             return context.reply("Can't go forward anymore")
         except CatalogCantGoBackwards:
             return context.reply("Can't go backwards anymore")
-        reply_markup = res[0].reply_markup
+        reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset,
                                   res.next_offset))
@@ -68,7 +68,7 @@ class CatalogHandler(CommandHandler):
     def handle_command(self, bot, context: Context):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
-        reply_markup = res[0].reply_markup
+        reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
         reply_markup.inline_keyboard.append(create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset))
         context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode, reply_to_previous=False,
                       reply_markup=reply_markup)

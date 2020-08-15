@@ -143,7 +143,7 @@ class Context:
         :type parse_mode: :class:`str`, optional
         """
         if photo_url:
-            if parse_mode.lower() != "html":
+            if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
@@ -162,11 +162,7 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        if self.update.effective_chat is not None:
-            chatid = self.update.effective_chat.id
-        else:
-            chatid = self.update.effective_user.id
-        chat_locale = octobot.localization.get_chat_locale(chatid)
+        chat_locale = octobot.localization.get_chat_locale(self.update)
         gt = gettext.translation("messages", localedir="locales", languages=[chat_locale], fallback=True)
         gt.install()
 
