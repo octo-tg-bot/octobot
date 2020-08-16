@@ -71,7 +71,8 @@ def test_catalog(query, index, max_amount, bot, context):
                                                width=200,
                                                height=200)]))
     return octobot.Catalog(res, CATALOG_MAX, current_index=index + 1, next_offset=index + max_amount,
-                               previous_offset=index - max_amount)
+                           previous_offset=index - max_amount)
+
 
 @octobot.catalogs.CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
 def test_catalogarticle(query, index, max_amount, bot, context):
@@ -90,14 +91,16 @@ def test_catalogarticle(query, index, max_amount, bot, context):
                                              title=f"Title for {query}",
                                              description=f"Description for {query}",
                                              photo=[CatalogPhoto(
-                                                 url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
-                                                 width=200,
-                                                 height=200)]))
+                                                 url=f"https://picsum.photos/seed/{query}{i + index}/1000/1000",
+                                                 width=1000,
+                                                 height=1000)]))
     return octobot.Catalog(res, CATALOG_MAX, current_index=index, next_offset=index + max_amount,
                            previous_offset=index - max_amount)
+
 
 @CommandHandler(command="helloworld", description=localizable("Hello, World!"))
 def hello_world(bot, ctx):
     ctx.reply(ctx.localize("This is a test"))
+
 
 info = octobot.PluginInfo("Test plugin")

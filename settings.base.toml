@@ -1,6 +1,9 @@
 # Telegram bot API token
 telegram_token = ""
 
+# Set to true if in production
+production = false
+
 # Telegram bot owner ID
 owner = 0
 

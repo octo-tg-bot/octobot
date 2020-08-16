@@ -8,6 +8,7 @@ import re
 import telegram
 
 from octobot.utils import add_photo_to_text
+from settings import Settings
 
 BUTTON_REGEX = re.compile(r"(\w*):(.*(?<!\\)):(.*)$")
 BUTTON_LEFT = "◀️"
@@ -118,7 +119,7 @@ class CatalogHandler(CommandHandler):
             next_offset = None
         else:
             next_offset = offset + 50
-        context.update.inline_query.answer(inline_res, cache_time=0, next_offset=next_offset)
+        context.update.inline_query.answer(inline_res, cache_time=(360 if Settings.production else 0), next_offset=next_offset)
 
     def handle_update(self, bot, context):
         try:

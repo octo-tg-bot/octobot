@@ -9,6 +9,8 @@ import octobot.exceptions
 from octobot.classes import UpdateType
 from octobot.utils import add_photo_to_text
 from octobot.database import Database
+from settings import Settings
+
 
 class Context:
     """
@@ -125,7 +127,7 @@ class Context:
                                                          title=title,
                                                          description=text.split("\n")[0],
                                                          input_message_content=inline_content)
-            self.update.inline_query.answer([result])
+            self.update.inline_query.answer([result], cache_time=(360 if Settings.production else 0))
         elif self.update_type == UpdateType.button_press:
             self.update.callback_query.answer(text)
 
