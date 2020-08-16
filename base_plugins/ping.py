@@ -23,12 +23,13 @@ import datetime
 
 import pytz
 
-from octobot import CommandHandler, Context, OctoBot
+from octobot import CommandHandler, Context, OctoBot, PluginInfo, localizable
+
+plugin_info = PluginInfo(localizable("Ping"))
 
 
-# TODO: add plugin name (ping)
-
-@CommandHandler(command="ping", description="Make sure bot is alive and get message delivery latency")
+@CommandHandler(command="ping",
+                description=localizable("Make sure bot is alive and get message delivery latency"))
 def ping(bot: OctoBot, ctx: Context):
     time = (datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) - ctx.update.message.date).total_seconds()
-    ctx.reply(ctx.localize("🏓 Pong! Reply time: %.2fs") % time)
+    ctx.reply(ctx.localize("🏓 Pong! Reply latency: %.2fs") % time)
