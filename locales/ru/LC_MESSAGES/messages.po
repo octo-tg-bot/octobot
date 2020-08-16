@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-16 12:31+0700\n"
+"POT-Creation-Date: 2020-08-16 18:32+0300\n"
 "PO-Revision-Date: 2020-08-08 10:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru_RU\n"
@@ -227,6 +227,30 @@ msgstr "Привет, мир!"
 msgid "This is a test"
 msgstr "Это тест"
 
+#: plugins/urban.py:12
+msgid ""
+"Definition for <b>{word}</b> by <i>{author}</i>:\n"
+"\n"
+"{definition}\n"
+"\n"
+"Example(s):\n"
+"{example}"
+msgstr ""
+"Определение к слову <b>{word}</b> (сделал(а) <i>{author}</i>):\n"
+"\n"
+"{definition}\n"
+"\n"
+"Пример(ы):\n"
+"{example}"
+
+#: plugins/urban.py:43
+msgid "Definition on Urban Dictionary"
+msgstr "Определение на Urban Dictionary"
+
+#: plugins/urban.py:50
+msgid "Definition for {}"
+msgstr "Определение для {}"
+
 #: base_plugins/cache_mgmt.py:3
 msgid "Admin cache utils"
 msgstr "Управление кэшом для администраторов чата"
@@ -289,10 +313,6 @@ msgstr ""
 "бла бла бла здесь никто не читает но я буду пинать окту чтобы дописать "
 "это."
 
-#: base_plugins/start_help.py:61
-msgid "plugin_info"
-msgstr ""
-
 #: base_plugins/start_help.py:68
 msgid "More…"
 msgstr "Больше…"
@@ -338,4 +358,15 @@ msgid ""
 msgstr ""
 "Извините, я не могу выполнить эту команду из-за отсутствия этих прав "
 "администратора: {}"
+
+#~ msgid "plugin_info"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Definition for <b>{escape(word)}</b> by <i>{escape(author)}</i>:\n"
+#~ "\n"
+#~ "{definition}\n"
+#~ "Example(s):\n"
+#~ "{example}"
+#~ msgstr ""
 

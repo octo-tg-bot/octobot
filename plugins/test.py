@@ -46,7 +46,7 @@ def test_button(bot, context):
     context.reply("Changed text!")
 
 
-CATALOG_MAX = 50
+CATALOG_MAX = 10
 
 
 @octobot.catalogs.CatalogHandler(command="catalogtest", description="Test CatalogHandler")
