@@ -58,14 +58,14 @@ def help_command(query, idx, max_amount, bot: octobot.OctoBot, ctx: octobot.Cont
     last_plugin = ""
     for handler in handlers[idx]:
         if last_plugin != handler.plugin["plugin_info"].name:
-            last_plugin = ctx.localize(handler.plugin["plugin_info"].name)
-            handlers_msg += f"<b>{handler.plugin['plugin_info'].name}:</b>\n"
-        handlers_msg += '{commands} - {description}. <i><a href="t.me/{bot.me.username}?start=b64-{command}">{learnmore}</a></i>\n'.format(
+            last_plugin = handler.plugin["plugin_info"].name
+            handlers_msg += f"<b>{ctx.localize(handler.plugin['plugin_info'].name)}:</b>\n"
+        handlers_msg += '{commands} – {description}. <i><a href="t.me/{bot.me.username}?start=b64-{command}">{learnmore}</a></i>\n'.format(
             commands=", ".join(handler.commandlist),
             description=html.escape(ctx.localize(handler.description)),
             bot=bot,
             command=base64.urlsafe_b64encode(("/helpextra " + handler.command[0]).encode()).decode(),
-            learnmore=ctx.localize("More...")
+            learnmore=ctx.localize("More…")
         )
     catalog = catalogs.Catalog(results=[catalogs.CatalogKeyArticle(handlers_msg, parse_mode="HTML")],
                                current_index=idx + 1, next_offset=idx + 1, previous_offset=idx - 1,

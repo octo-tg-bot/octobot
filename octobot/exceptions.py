@@ -64,7 +64,7 @@ def handle_exception(bot, context, e, notify=True):
     else:
         logger.error("Exception got thrown somewhere", exc_info=True)
         if notify:
-            message = context.localize("🐞Failed to execute command due to unknown error.")
+            message = context.localize("🐞 Failed to execute command due to unknown error.")
             report_type = Settings.exceptions["report_type"]
             if report_type == "describe":
                 message += "\n" + context.localize("Error description: {error}").format(error=str(e))

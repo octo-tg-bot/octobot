@@ -115,11 +115,7 @@ class CatalogHandler(CommandHandler):
                         parse_mode=item.parse_mode
                     )
                 ))
-        if len(inline_res) < 50:
-            next_offset = None
-        else:
-            next_offset = offset + 50
-        context.update.inline_query.answer(inline_res, cache_time=(360 if Settings.production else 0), next_offset=next_offset)
+        context.update.inline_query.answer(inline_res, cache_time=(360 if Settings.production else 0), next_offset=res.next_offset)
 
     def handle_update(self, bot, context):
         try:
