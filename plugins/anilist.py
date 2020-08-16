@@ -21,6 +21,7 @@
 
 
 import calendar
+import locale
 import re
 import textwrap
 from math import ceil
@@ -156,6 +157,8 @@ MEDIA_FORMAT_STR = {
 MEDIA_ANIME = "ANIME"
 MEDIA_MANGA = "MANGA"
 
+MAX_RESULTS = 25
+
 plugin_info = PluginInfo("AniList")
 
 
@@ -193,19 +196,35 @@ def get_media_title(title):
     return title_str
 
 
-def get_fuzzy_date_str(fuzzy_date):
+class different_locale:
+    def __init__(self, _locale):
+        self.locale = _locale
+
+    def __enter__(self):
+        self.old_locale = locale.getlocale(locale.LC_TIME)
+        try:
+            locale.setlocale(locale.LC_TIME, self.locale)
+        except locale.Error:
+            pass
+
+    def __exit__(self, *args):
+        locale.setlocale(locale.LC_TIME, self.old_locale)
+
+
+def get_fuzzy_date_str(fuzzy_date, ctx: Context):
     year = fuzzy_date["year"]
     month = fuzzy_date["month"]
     day = fuzzy_date["day"]
 
-    if day is not None:
-        return f"{calendar.month_abbr[month]} {day}, {year}"
-    elif month is not None:
-        return f"{calendar.month_abbr[month]} {year}"
-    elif year is not None:
-        return str(year)
-    else:
-        return None
+    with different_locale(ctx.locale):
+        if day is not None:
+            return f"{calendar.month_abbr[month]} {day}, {year}"
+        elif month is not None:
+            return f"{calendar.month_abbr[month]} {year}"
+        elif year is not None:
+            return str(year)
+        else:
+            return None
 
 
 def format_media_description(description: Union[str, None], ctx: Context):
@@ -219,6 +238,7 @@ def format_media_description(description: Union[str, None], ctx: Context):
         long = cleanse_spoilers(long, replacement_text, html=True)
 
     short = textwrap.shorten(short, width=70, placeholder="…")
+    long = textwrap.shorten(long, width=1024, placeholder="…")
 
     return long, short
 
@@ -256,7 +276,7 @@ def get_media_metadata(media, ctx: Context):
         metadata.append(score_str)
 
     if media["startDate"] is not None:
-        start_date_str = get_fuzzy_date_str(media["startDate"])
+        start_date_str = get_fuzzy_date_str(media["startDate"], ctx)
         if start_date_str is not None:
             metadata.append(start_date_str)
 
@@ -269,17 +289,17 @@ def anilist_search_media(query: str, offset: str, count: int, bot: OctoBot, ctx:
     try:
         offset = int(offset)
     except ValueError:
-        raise CatalogNotFound()
+        raise CatalogNotFound
 
     if offset < 0:
-        raise CatalogCantGoBackwards()
+        raise CatalogCantGoBackwards
 
-    if count > 25:
-        count = 25
+    if count > MAX_RESULTS:
+        count = MAX_RESULTS
 
     resp = graphql(GRAPHQL_QUERY, "Media", {
         "query": query,
-        "page": floor(offset / count),
+        "page": ceil((offset + 1) / count),
         "perPage": count,
         "type": media_type
     })
@@ -324,17 +344,20 @@ def anilist_search_media(query: str, offset: str, count: int, bot: OctoBot, ctx:
     )
 
 
-@CatalogHandler(command=["anilist", "anime"], description="Search anime on AniList")
+@CatalogHandler(command=["anilist", "anime"],
+                description=localizable("Search anime on AniList"))
 def anilist_search_anime(query, offset, count, bot, ctx):
     return anilist_search_media(query, offset, count, bot, ctx, media_type=MEDIA_ANIME)
 
 
-@CatalogHandler(command=["anilist_manga", "manga"], description="Search manga on AniList")
+@CatalogHandler(command=["anilist_manga", "manga"],
+                description=localizable("Search manga on AniList"))
 def anilist_search_manga(query, offset, count, bot, ctx):
     return anilist_search_media(query, offset, count, bot, ctx, media_type=MEDIA_MANGA)
 
 
-@CatalogHandler(command=["anilist_character", "anichar", "character"], description="Search for character on AniList")
+@CatalogHandler(command=["anilist_character", "anichar", "character"],
+                description=localizable("Search for character on AniList"))
 def anilist_search_character(query: str, offset: str, count: int, bot: OctoBot, ctx: Context) -> Catalog:
     res = []
 
@@ -346,8 +369,8 @@ def anilist_search_character(query: str, offset: str, count: int, bot: OctoBot, 
     if offset < 0:
         raise CatalogCantGoBackwards
 
-    if count > 25:
-        count = 25
+    if count > MAX_RESULTS:
+        count = MAX_RESULTS
 
     resp = graphql(GRAPHQL_QUERY, "Character", {
         "query": query,
