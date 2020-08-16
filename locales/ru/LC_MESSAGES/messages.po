@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-14 16:56+0300\n"
+"POT-Creation-Date: 2020-08-16 12:31+0700\n"
 "PO-Revision-Date: 2020-08-08 10:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru_RU\n"
@@ -19,90 +19,323 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: plugins/test.py:86
-msgid "Hello, World!"
+#: plugins/anilist.py:112
+msgid ""
+"<b>{title}</b>\n"
+"<i>{metadata}</i>\n"
+"<a href=\"{siteUrl}\">on anilist</a>\n"
+"\n"
+"{description}\n"
+"\n"
+"<i>{genres}</i>\n"
 msgstr ""
+"<b>{title}</b>\n"
+"<i>{metadata}</i>\n"
+"<a href=\"{siteUrl}\">на anilist</a>\n"
+"\n"
+"{description}\n"
+"\n"
+"<i>{genres}</i>\n"
 
-#: plugins/test.py:88
+#: plugins/anilist.py:121
+msgid ""
+"<b>{full_name}</b>\n"
+"<i>{alternative_names}</i><a href=\"{siteUrl}\">on anilist</a>\n"
+"\n"
+"{description}\n"
+"\n"
+"<i>Present in:</i>\n"
+"{present_in}\n"
+msgstr ""
+"<b>{full_name}</b>\n"
+"<i>{alternative_names}</i><a href=\"{siteUrl}\">на anilist</a>\n"
+"\n"
+"{description}\n"
+"\n"
+"<i>Появляется в:</i>\n"
+"{present_in}\n"
+
+#: plugins/anilist.py:131 plugins/anilist.py:138
+msgid "finished"
+msgstr "закончено"
+
+#: plugins/anilist.py:132
+msgid "airing"
+msgstr "идёт вещание"
+
+#: plugins/anilist.py:133
+msgid "not yet airing"
+msgstr "ещё не начато"
+
+#: plugins/anilist.py:134 plugins/anilist.py:141
+msgid "cancelled"
+msgstr "отменено"
+
+#: plugins/anilist.py:139
+msgid "releasing"
+msgstr "выпускается"
+
+#: plugins/anilist.py:140
+msgid "not yet released"
+msgstr "ещё не начат выпуск"
+
+#: plugins/anilist.py:145
+msgid "TV animation series"
+msgstr "анимационный сериал"
+
+#: plugins/anilist.py:146
+msgid "TV short"
+msgstr "короткометражный фильм"
+
+#: plugins/anilist.py:147
+msgid "anime movie"
+msgstr "аниме-фильм"
+
+#: plugins/anilist.py:148
+msgid "anime special"
+msgstr "аниме-спешл"
+
+#: plugins/anilist.py:149
+msgid "OVA"
+msgstr "OVA"
+
+#: plugins/anilist.py:150
+msgid "ONA"
+msgstr "ONA"
+
+#: plugins/anilist.py:151
+msgid "AMV"
+msgstr "AMV"
+
+#: plugins/anilist.py:152
+msgid "manga series"
+msgstr "манга"
+
+#: plugins/anilist.py:153
+msgid "light novel series"
+msgstr "ранобэ"
+
+#: plugins/anilist.py:154
+msgid "one-shot manga"
+msgstr "ван-шот манга"
+
+#: plugins/anilist.py:232
+msgid "no description"
+msgstr "нет описания"
+
+#: plugins/anilist.py:233
+msgid "No description provided."
+msgstr "Нет описания."
+
+#: plugins/anilist.py:236
+msgid "(spoilers redacted)"
+msgstr "(спойлеры вырезаны)"
+
+#: plugins/anilist.py:251
+msgid "format"
+msgstr "формат"
+
+#: plugins/anilist.py:261
+msgid "{} episodes"
+msgstr "эпизодов: {}"
+
+#: plugins/anilist.py:266
+msgid "{} volumes"
+msgstr "томов: {}"
+
+#: plugins/anilist.py:270
+msgid "{} chapters"
+msgstr "глав: {}"
+
+#: plugins/anilist.py:275
+msgid "rating {:0.1f}/10"
+msgstr "средняя оценка {:0.1f}/10"
+
+#: plugins/anilist.py:352
+msgid "Search anime on AniList"
+msgstr "Поиск аниме на Anilist"
+
+#: plugins/anilist.py:358
+msgid "Search manga on AniList"
+msgstr "Поиск манги на Anilist"
+
+#: plugins/anilist.py:364
+msgid "Search for character on AniList"
+msgstr "Поиск персонажей на Anilist"
+
+#: plugins/safebooru.py:34
+msgid ""
+"<b>Rating:</b> {rating}\n"
+"<b>Tags:</b> {tags_str}"
+msgstr ""
+"<b>Рейтинг:</b> {rating}\n"
+"<b>Теги:</b> {tags_str}"
+
+#: plugins/safebooru.py:123
+msgid "View on safebooru"
+msgstr "Открыть на safebooru"
+
+#: plugins/safebooru.py:130
+msgid "Source"
+msgstr "Сурс"
+
+#: plugins/stickers_ban.py:13
+msgid "Bans stickerpack in chat"
+msgstr "Заблокировать стикерпак в чате"
+
+#: plugins/stickers_ban.py:20
+msgid ""
+"Reply to sticker from stickerpack which you want to ban or pass the pack "
+"name as argument"
+msgstr ""
+"Ответьте этой командой на стикер, пак которого вы хотите заблокировать, "
+"или передайте название пака аргументом"
+
+#: plugins/stickers_ban.py:33
+msgid ""
+"Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> banned "
+"successfully"
+msgstr ""
+"Стикерпак <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
+"успешно заблокирован"
+
+#: plugins/stickers_ban.py:38
+msgid ""
+"Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
+"unbanned successfully"
+msgstr ""
+"Стикерпак <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
+"успешно разблокирован"
+
+#: plugins/stickers_ban.py:43
+msgid "Lists packs that are banned in this chat"
+msgstr "Список заблокированных стикерпаков"
+
+#: plugins/stickers_ban.py:50
+msgid "This stickerpacks are currently banned in <b>{chat_name}</b>:"
+msgstr "Заблокированные стикерпаки в <b>{chat_name}</b>:"
+
+#: plugins/stickers_ban.py:57
+msgid "There are no stickerpacks that are banned in this chat"
+msgstr "В этом чате нет заблокированных стикерпаков"
+
+#: plugins/test.py:101
+msgid "Hello, World!"
+msgstr "Привет, мир!"
+
+#: plugins/test.py:103
 msgid "This is a test"
 msgstr "Это тест"
 
-#: base_plugins/locale_ctl.py:35
+#: base_plugins/cache_mgmt.py:3
+msgid "Admin cache utils"
+msgstr "Управление кэшом для администраторов чата"
+
+#: base_plugins/cache_mgmt.py:5
+msgid "Check group admins cache"
+msgstr "Проверить доступность кэша администраторов"
+
+#: base_plugins/cache_mgmt.py:10
+msgid "Cache database availability: {}"
+msgstr "Доступность базы данных кэша: {}"
+
+#: base_plugins/cache_mgmt.py:12
+msgid "Time until current cache death: {}"
+msgstr "Время до очистки кэша: {}"
+
+#: base_plugins/cache_mgmt.py:14
+msgid "To reset cache use /cache_reset command"
+msgstr "Используйте команду /cache_reset, чтобы сбросить кэш"
+
+#: base_plugins/cache_mgmt.py:23
+msgid "Admin cache has been reset"
+msgstr "Кэш администраторов чата был успешно сброшен"
+
+#: base_plugins/locale_ctl.py:36
 msgid "Language \"{locale}\" set"
 msgstr "Язык \"{locale}\" установлен"
 
-#: base_plugins/start_help.py:17
+#: base_plugins/ping.py:28
+msgid "Ping"
+msgstr "Пинг"
+
+#: base_plugins/ping.py:32
+msgid "Make sure bot is alive and get message delivery latency"
+msgstr "Проверить доступность бота и узнать задержку доставки сообщений"
+
+#: base_plugins/ping.py:35
+#, python-format
+msgid "🏓 Pong! Reply latency: %.2fs"
+msgstr "🏓 Понг! Задержка: %.2fs"
+
+#: base_plugins/start_help.py:12
+msgid "Usual bot commands"
+msgstr "Стандартные команды"
+
+#: base_plugins/start_help.py:18
 msgid "Command list"
-msgstr ""
+msgstr "Список команд"
 
-#: base_plugins/start_help.py:19
+#: base_plugins/start_help.py:20
 msgid "Support chat"
-msgstr ""
+msgstr "Чат поддержки"
 
-#: base_plugins/start_help.py:21
+#: base_plugins/start_help.py:22
 msgid ""
 "Hi! I am {bot.me.first_name}, a Telegram bot with features and bugs and "
 "blah blah, noone reads /start anyway."
 msgstr ""
+"Привет, я {bot.me.first_name}, бот для Telegram с функциями и багами и "
+"бла бла бла здесь никто не читает но я буду пинать окту чтобы дописать "
+"это."
 
-#: base_plugins/start_help.py:60
+#: base_plugins/start_help.py:61
 msgid "plugin_info"
 msgstr ""
 
-#: base_plugins/start_help.py:67
-msgid "More info on this command"
-msgstr ""
+#: base_plugins/start_help.py:68
+msgid "More…"
+msgstr "Больше…"
 
-#: base_plugins/start_help.py:83
+#: base_plugins/start_help.py:84
 msgid "Help for"
-msgstr ""
+msgstr "Справка для"
 
-#: octobot/exceptions.py:56 octobot/exceptions.py:58
+#: octobot/__init__.py:21
+msgid "This command can be used only in supergroups."
+msgstr "Эта команда доступна только в групповых чатах."
+
+#: octobot/exceptions.py:59 octobot/exceptions.py:61
 msgid "Failed to execute command due to database problems. Please try later"
 msgstr ""
-
-#: octobot/exceptions.py:64
-msgid "🐞Failed to execute command due to unknown error."
-msgstr ""
+"Произошла ошибка в выполнении команды из-за проблем с базой данных. "
+"Пожалуйста, попробуйте позже."
 
 #: octobot/exceptions.py:67
+msgid "🐞 Failed to execute command due to unknown error."
+msgstr "🐞 Во время выполнения команды произошла непревиденная ошибка."
+
+#: octobot/exceptions.py:70
 msgid "Error description: {error}"
-msgstr ""
+msgstr "Описание ошибки: {error}"
 
-#: octobot/exceptions.py:71
+#: octobot/exceptions.py:74
 msgid "Error occured"
+msgstr "Произошла ошибка"
+
+#: octobot/permissions.py:56
+msgid ""
+"Sorry, you can't execute this command cause you lack following "
+"permissions: {}"
 msgstr ""
+"У вас не хватает этих прав администратора, чтобы выполнить эту команду: "
+"{} "
 
-#~ msgid "test"
-#~ msgstr ""
-
-#~ msgid "imgtest"
-#~ msgstr ""
-
-#~ msgid "testtl"
-#~ msgstr ""
-
-#~ msgid "language"
-#~ msgstr ""
-
-#~ msgid "start"
-#~ msgstr ""
-
-#~ msgid "Test! Test! Test!"
-#~ msgstr "Тест! Тест! Тест!"
-
-#~ msgid "friendly_name"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "This command cannot be executed cause"
-#~ " of database issues. Please contact "
-#~ "the bot developer"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "An exception occured while handling your"
-#~ " command. Please contact the bot "
-#~ "developer"
-#~ msgstr ""
+#: octobot/permissions.py:98
+msgid ""
+"Sorry, you can't execute this command cause I lack following permissions:"
+" {}"
+msgstr ""
+"Извините, я не могу выполнить эту команду из-за отсутствия этих прав "
+"администратора: {}"
 
