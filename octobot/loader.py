@@ -1,3 +1,4 @@
+import base64
 import os
 from enum import Enum
 from glob import glob
@@ -155,3 +156,8 @@ class OctoBot(telegram.Bot):
                         logger.error("Handler threw an exception!", exc_info=True)
             except octobot.exceptions.StopHandling:
                 break
+
+    def generate_startlink(self, command):
+        command = f"b64-{base64.urlsafe_b64encode(command.encode()).decode()}"
+        return f"https://t.me/{self.me.username}?start={command}"
+

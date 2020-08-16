@@ -80,7 +80,12 @@ class CatalogHandler(CommandHandler):
             offset = int(context.update.inline_query.offset)
         else:
             offset = 0
-        res: octobot.Catalog = self.function(query, offset, 50, bot, context)
+        try:
+            res: octobot.Catalog = self.function(query, offset, 50, bot, context)
+        except CatalogCantGoDeeper:
+            return
+        if res is None:
+            return
         inline_res = []
         for item in res:
             if item.photo is not None:
