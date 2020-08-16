@@ -21,6 +21,7 @@
 
 
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 import bs4
 import requests
@@ -34,6 +35,8 @@ MSG_TEMPLATE = localizable("""<b>Rating:</b> {rating}
 <b>Tags:</b> {tags_str}""")
 
 HEADERS = {"User-Agent": "OctoBot/1.0"}
+
+MAX_RESULTS = 25
 
 plugin_info = PluginInfo("Safebooru")
 
@@ -68,8 +71,8 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
     if offset < 0:
         raise CatalogCantGoBackwards
 
-    if limit > 25:
-        limit = 25
+    if limit > MAX_RESULTS:
+        limit = MAX_RESULTS
 
     image = requests.get("https://safebooru.org/index.php",
                          params={
@@ -121,8 +124,10 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
             )]
         ]
 
-        if item.source is not None and item.source.startswith("http"):
-            reply_markup[0].append(telegram.InlineKeyboardButton(url=item.source, text=ctx.localize("Source")))
+        if item.source is not None:
+            url = urlparse(item.source)
+            if url.scheme in ["http", "https"]:
+                reply_markup[0].append(telegram.InlineKeyboardButton(url=item.source, text=ctx.localize("Source")))
 
         res.append(CatalogKeyPhoto(text=ctx.localize(MSG_TEMPLATE).format(**item.__dict__),
                                    title="",
@@ -131,10 +136,14 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
                                    reply_markup=telegram.InlineKeyboardMarkup(reply_markup),
                                    parse_mode="HTML"))
 
+    next_offset = offset + limit
+    if next_offset > total:
+        next_offset = None
+
     return Catalog(
         results=res,
         max_count=total,
         previous_offset=offset - limit,
         current_index=offset + 1,
-        next_offset=offset + limit
+        next_offset=next_offset
     )

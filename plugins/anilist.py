@@ -335,12 +335,16 @@ def anilist_search_media(query: str, offset: str, count: int, bot: OctoBot, ctx:
                                      photo=photos,
                                      parse_mode="HTML"))
 
+    next_offset = offset + count
+    if next_offset > total:
+        next_offset = None
+
     return Catalog(
         results=res,
         max_count=total,
-        previous_offset=offset - 1,
+        previous_offset=offset - count,
         current_index=offset,
-        next_offset=offset + 1
+        next_offset=next_offset
     )
 
 
@@ -416,10 +420,14 @@ def anilist_search_character(query: str, offset: str, count: int, bot: OctoBot, 
                                      photo=photos,
                                      parse_mode="HTML"))
 
+    next_offset = offset + count
+    if next_offset > total:
+        next_offset = None
+
     return Catalog(
         results=res,
         max_count=total,
         previous_offset=offset - count,
         current_index=offset + 1,
-        next_offset=offset + count
+        next_offset=next_offset
     )
