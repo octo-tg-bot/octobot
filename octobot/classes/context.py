@@ -43,7 +43,7 @@ class Context:
         self.locale = "en"
         self.bot = bot
         self.update = update
-        self.user = update.effective_user
+        self.   user = update.effective_user
         if self.user is not None:
             self.user_db = Database[self.user.id]
         else:

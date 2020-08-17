@@ -1,24 +1,42 @@
+import typing
+
 from octobot.database import Database
 import telegram
 import json
 
 
-def create_db_entry_name(chat: telegram.Chat):
-    return f"admcache:{chat.id}"
+def create_db_entry_name(chat: typing.Union[telegram.Chat, int]):
+    if isinstance(chat, telegram.Chat):
+        chat = chat.id
+    return f"admcache:{chat}"
 
 
-def reset_cache(chat: telegram.Chat):
+def reset_cache(chat: typing.Union[telegram.Chat, int]):
     return Database.redis.delete(create_db_entry_name(chat))
 
 
-def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: set):
-    if chat.type != "supergroup":
-        return True, []
+def check_perms(chat: typing.Union[telegram.Chat, int], user: typing.Union[telegram.User, int],
+                permissions_to_check: set, bot=None):
     db_entry = create_db_entry_name(chat)
+
+    if isinstance(user, telegram.User):
+        user_id = user.id
+    else:
+        user_id = user
+    if isinstance(chat, telegram.Chat):
+        chat_id = chat.id
+    else:
+        chat_id = chat
+
+    if not str(chat_id).startswith("-100"):
+        return True, []
     if Database.redis is not None and Database.redis.exists(db_entry) == 1:
         adm_list = json.loads(Database.redis.get(db_entry).decode())
     else:
-        adm_list_t = chat.get_administrators()
+        if bot is None:
+            adm_list_t = chat.get_administrators()
+        else:
+            adm_list_t = bot.get_chat_administrators(chat_id=chat_id)
         adm_list = []
         for admin in adm_list_t:
             adm_list.append(admin.to_dict())
@@ -26,7 +44,7 @@ def check_perms(chat: telegram.Chat, user: telegram.User, permissions_to_check: 
             Database.redis.set(db_entry, json.dumps(adm_list))
             Database.redis.expire(db_entry, 240)
     for member in adm_list:
-        if member["user"]["id"] == user.id:
+        if member["user"]["id"] == user_id:
             if member["status"] == "creator":
                 return True, permissions_to_check
             if "is_admin" in permissions_to_check:
@@ -55,7 +73,7 @@ def permissions(**perms):
                 else:
                     context.reply(context.localize(
                         "Sorry, you can't execute this command cause you lack following permissions: {}").format(
-                        ', '.join(perms)))
+                        ', '.join(missing_perms)))
 
         return wrapper
 
@@ -77,7 +95,6 @@ def not_admin(function):
     return wrapper
 
 
-
 def my_permissions(**perms):
     """
     Decorator to check bots own permissions.
@@ -97,7 +114,7 @@ def my_permissions(**perms):
                 elif "is_admin" not in missing_perms:
                     context.reply(context.localize(
                         "Sorry, you can't execute this command cause I lack following permissions: {}").format(
-                        ', '.join(perms)))
+                        ', '.join(missing_perms)))
 
         return wrapper
 
