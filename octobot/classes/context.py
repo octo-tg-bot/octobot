@@ -39,8 +39,9 @@ class Context:
     """
     _plugin = "unknown"
 
-    def __init__(self, update: telegram.Update):
+    def __init__(self, update: telegram.Update, bot):
         self.locale = "en"
+        self.bot = bot
         self.update = update
         self.user = update.effective_user
         if self.user is not None:
@@ -71,7 +72,7 @@ class Context:
         self.args = shlex.split(self.query)
 
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
-              title=None):
+              title=None, to_pm=False):
         """
         Replies to a message/shows a popup in inline keyboard/sends out inline query result
 
@@ -89,6 +90,8 @@ class Context:
         :type no_preview: :class:`bool`, optional
         :param title: Title of message for inline mode, defaults to first line of `text`
         :type title: :class:`str`, optional
+        :param to_pm: If message should be sent into user PM
+        :type to_pm: :class:`bool`
         """
         if photo_url:
             if parse_mode is None or parse_mode.lower() != "html":
@@ -97,16 +100,19 @@ class Context:
             text = add_photo_to_text(text, photo_url)
         if title is None:
             title = self.text[:20]
-        if self.update_type == UpdateType.message:
+        if self.update_type == UpdateType.message or to_pm:
             if reply_to_previous and (self.update.message.reply_to_message is not None):
                 target_msg: telegram.Message = self.update.message.reply_to_message
             else:
                 target_msg: telegram.Message = self.update.message
-
-            target_msg.reply_text(text=text,
-                                  parse_mode=parse_mode,
-                                  reply_markup=reply_markup,
-                                  disable_web_page_preview=no_preview)
+            if to_pm:
+                self.bot.send_message(chat_id=self.user.id, text=text, parse_mode=parse_mode,
+                                      reply_markup=reply_markup, disable_web_page_preview=no_preview)
+            else:
+                target_msg.reply_text(text=text,
+                                      parse_mode=parse_mode,
+                                      reply_markup=reply_markup,
+                                      disable_web_page_preview=no_preview)
 
         elif self.update_type == UpdateType.inline_query:
             inline_content = telegram.InputTextMessageContent(

@@ -103,4 +103,10 @@ def hello_world(bot, ctx):
     ctx.reply(ctx.localize("This is a test"))
 
 
+@CommandHandler(command="pmtest")
+def pmtest(bot, ctx: octobot.Context):
+    ctx.reply("Check your PMs!")
+    ctx.reply("Test", to_pm=True)
+
+
 info = octobot.PluginInfo("Test plugin")
