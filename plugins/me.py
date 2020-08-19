@@ -18,21 +18,18 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""IRC Stuff"""
+import html
+
 import octobot
-import telegram
 
-plugin = octobot.PluginInfo("About bot")
+plugin = octobot.PluginInfo
 
 
-@octobot.CommandHandler(command="about",
-                        description=octobot.localizable("About bot"),
-                        hidden=False,
-                        service=True)
-def about(bot, context):
-    about_string = context.localize("OctoBot4 based on commit <code>{ob_version}</code>" + \
-                                    "Python-Telegram-Bot version: <code>{ptb_version}</code>\n" + \
-                                    '<a href="gitlab.com/aigis_bot">GitLab page</a>\n').format(
-        ob_version=octobot.__version__,
-        ptb_version=telegram.__version__
-    )
-    context.reply(text=about_string, parse_mode="HTML")
+@octobot.CommandHandler(command="me",
+                        description="/me from IRC",
+                        )
+def me(bot, context):
+    args = context.query
+    return context.reply(text="* %s %s" % (context.user.mention_html(), html.escape(args)), parse_mode="HTML")
