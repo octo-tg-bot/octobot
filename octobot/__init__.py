@@ -1,3 +1,5 @@
+import subprocess
+
 from octobot.exceptions import *
 from octobot.database import Database
 from octobot.classes import *
@@ -22,3 +24,9 @@ def supergroup_only(function):
             context.reply(context.localize("This command can be used only in supergroups."))
 
     return wrapper
+
+try:
+    __version__ = subprocess.check_output('git log -n 1 --pretty="%h"',
+                                      shell=True).decode('utf-8')
+except subprocess.CalledProcessError:
+    __version__ = "Unknown"

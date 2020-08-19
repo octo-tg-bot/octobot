@@ -22,12 +22,13 @@ class CommandHandler(BaseHandler):
     :type hidden: bool,optional
     :param inline_support: If command is supported in inline mode, defaults to `True`
     :type inline_support: bool,optional
-
+    :param service: If command should be excluded from commands list (not from /help)
+    :type service: bool
     """
 
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  long_description: str = "Additional info not specified by developer",
-                 hidden=False, prefix="/", inline_support=True, *args, **kwargs):
+                 hidden=False, prefix="/", inline_support=True, service: bool = False, *args, **kwargs):
         super(CommandHandler, self).__init__(*args, **kwargs)
         if isinstance(command, str):
             command = [command]
@@ -37,6 +38,7 @@ class CommandHandler(BaseHandler):
         self.long_description = long_description
         self.hidden = hidden
         self.prefix = prefix
+        self.service = service
 
     @property
     def commandlist(self):
