@@ -77,31 +77,16 @@ def rebuild_inline_markup(reply_markup, context):
         return reply_markup, None
 
 
-def decode_inline(data, message_id):
+def decode_inline(data):
     data = data.split(":")
     keyboard_data = "invalid:"
     if len(data) == 2:
         kbd_uuid, button_uuid = data
         db_res = Database.redis.hget(generate_inline_entry(kbd_uuid), button_uuid)
-        og_message_id = Database.redis.hget(generate_inline_entry(kbd_uuid), "msg_id")
-        logger.debug(f"Original message: {og_message_id} | Current message: {message_id}")
         if db_res is not None:
-            if message_id is not None and og_message_id.decode() != str(message_id):
-                keyboard_data = "smartass:"
-            else:
-                Database.redis.delete(generate_inline_entry(kbd_uuid))
-                keyboard_data = db_res.decode()
+            keyboard_data = db_res.decode()
     logger.debug(f"{data} -> {keyboard_data}")
     return keyboard_data
-
-
-def set_msg_id(message, kbd_id):
-    kbd_id = generate_inline_entry(kbd_id)
-    logger.debug("Setting message id in redis for keyboard %s", kbd_id)
-    logger.debug("exists %s", octobot.Database.redis.exists(kbd_id))
-    octobot.Database.redis.hset(kbd_id, "msg_id", str(message.message_id))
-    logger.debug("expire result %s",
-                 octobot.Database.redis.expire(kbd_id, 60 * 60 * 24 * 7))
 
 
 class Context:
@@ -144,15 +129,13 @@ class Context:
         if self.chat is None and self.user is not None:
             self.chat = self.user
         self.chat_db = Database[self.chat.id]
+        self.kbd_id = None
         if update.inline_query:
             self.text = update.inline_query.query
             self.update_type = UpdateType.inline_query
         elif update.callback_query:
-            msg_id = None
-            if update.effective_message is not None:
-                msg_id = self.update.effective_message.message_id
-                logger.debug("Incoming inline button message id is %s.", msg_id)
-            self.text = decode_inline(update.callback_query.data, msg_id)
+            self.kbd_id = update.callback_query.data.split(":")[0]
+            self.text = decode_inline(update.callback_query.data)
             self.update_type = UpdateType.button_press
         elif update.message:
             if update.message.caption is not None:
@@ -210,8 +193,6 @@ class Context:
                                                 parse_mode=parse_mode,
                                                 reply_markup=reply_markup,
                                                 disable_web_page_preview=no_preview)
-            if kbd_id is not None:
-                set_msg_id(message, kbd_id)
         elif self.update_type == UpdateType.inline_query:
             inline_content = telegram.InputTextMessageContent(
                 text,
@@ -248,6 +229,10 @@ class Context:
         :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
         :type parse_mode: :class:`str`, optional
         """
+        if octobot.Database is not None and self.kbd_id is not None:
+            logger.debug("Edit called, deleting inline keyboard data for %s", self.kbd_id)
+            Database.redis.delete(generate_inline_entry(self.kbd_id))
+            self.kbd_id = None
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url:
             if parse_mode is None or parse_mode.lower() != "html":
@@ -263,8 +248,6 @@ class Context:
         elif reply_markup is not None:
             logger.debug("updating reply markup to %s", reply_markup)
             self.update.callback_query.edit_message_reply_markup(reply_markup)
-        if kbd_id is not None and self.update.effective_message is not None:
-            set_msg_id(kbd_id=kbd_id, message=self.update.effective_message)
 
     def localize(self, text: str) -> str:
         """
