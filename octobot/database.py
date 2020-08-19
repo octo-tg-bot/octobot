@@ -1,6 +1,8 @@
+import json
 import logging
 
 import redis
+import requests
 
 from octobot import DatabaseNotAvailable
 from settings import Settings
@@ -12,6 +14,7 @@ class RedisData:
     """
     Redis chat/user data class. Can be accessed like dictionary.
     """
+
     def __init__(self, redis_db, chat_id):
         self._redis = redis_db
         self.chat_id = chat_id
@@ -61,6 +64,10 @@ class RedisData:
         return self.set(key, value)
 
 
+def request_create_id(request_type, request_args, request_kwargs):
+    return f"request_cache:{request_type}:{json.dumps(request_args)}:{json.dumps(request_kwargs)}"
+
+
 class _Database:
     """
     Base database class.
@@ -68,7 +75,10 @@ class _Database:
     Usage:
     Database[chat_id] to get :class:`RedisData` for chat_id
     """
+
     def __init__(self):
+        self.request_session = requests.Session()
+        self.request_session.headers.update({"User-Agent": Settings.user_agent})
         self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
         try:
             self.redis.ping()
@@ -78,9 +88,49 @@ class _Database:
         else:
             logger.info("Redis connection successful")
 
+        def create_cached_request_function(rtype):
+            def cache(*args, **request_kwargs):
+                convert_json = request_kwargs.pop("convert_json", True)
+                return self.cache_requests(request_type=rtype, convert_json=convert_json, request_args=args,
+                                           request_kwargs=request_kwargs)
+
+            return cache
+
+        self.get_cache = create_cached_request_function("GET")
+        self.post_cache = create_cached_request_function("POST")
+
     def __getitem__(self, item):
         item = int(item)
         return RedisData(self.redis, item)
+
+    def _do_request(self, request_type, args, kwargs):
+        req = requests.Request(request_type, *args, **kwargs)
+        prepped = self.request_session.prepare_request(req)
+        resp = self.request_session.send(prepped)
+        return resp.content, resp.status_code
+
+    def cache_requests(self, request_type, convert_json, request_args, request_kwargs):
+        logger.debug(request_type)
+        if self.redis is None:
+            logger.warning("DB not available, requests are not cached, beware")
+            return self._do_request(request_type, request_args, request_kwargs)
+        else:
+            db_entry = request_create_id(request_type, request_args, request_kwargs)
+            if self.redis.exists(db_entry) == 1:
+                logger.debug("Using cached result")
+                req = self.redis.get(db_entry)
+                if convert_json:
+                    req = json.loads(req.decode())
+                return req, 200
+            else:
+                req, status_code = self._do_request(request_type, request_args, request_kwargs)
+                if status_code == requests.codes.ok:
+                    logger.debug("Status code is 200, saving to redis")
+                    self.redis.set(db_entry, req)
+                    self.redis.expire(db_entry, 60)
+                if convert_json:
+                    return json.loads(req.decode()), status_code
+                return req, status_code
 
 
 Database = _Database()
