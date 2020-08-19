@@ -16,6 +16,14 @@ exclude_plugins = []
 # Support URL
 support_url = "https://example.com"
 
+# User-Agent used for cached requests
+user_agent = "OctoBot/4.0"
+
+# Mozambiquehe.re token for apex.py plugin
+mozamibque_here_token = ""
+
+
+
 # Exception handling
 [exceptions]
   # How error will be reported to user
