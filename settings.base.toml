@@ -22,7 +22,8 @@ user_agent = "OctoBot/4.0"
 # Mozambiquehe.re token for apex.py plugin
 mozamibque_here_token = ""
 
-
+# API Key for currency converter
+currency_converter_apikey = ""
 
 # Exception handling
 [exceptions]

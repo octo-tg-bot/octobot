@@ -23,12 +23,15 @@ class CommandHandler(BaseHandler):
     :param inline_support: If command is supported in inline mode, defaults to `True`
     :type inline_support: bool,optional
     :param service: If command should be excluded from commands list (not from /help)
-    :type service: bool
+    :type service: bool,optional
+    :param required_args: Required args count, defaults to 0
+    :type required_args: int,optional
     """
 
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  long_description: str = "Additional info not specified by developer",
-                 hidden=False, prefix="/", inline_support=True, service: bool = False, *args, **kwargs):
+                 hidden=False, prefix="/", inline_support=True, service: bool = False, required_args: int = 0, *args,
+                 **kwargs):
         super(CommandHandler, self).__init__(*args, **kwargs)
         if isinstance(command, str):
             command = [command]
@@ -39,6 +42,7 @@ class CommandHandler(BaseHandler):
         self.hidden = hidden
         self.prefix = prefix
         self.service = service
+        self.required_args = required_args
 
     @property
     def commandlist(self):
@@ -72,8 +76,16 @@ class CommandHandler(BaseHandler):
                     return True
         return False
 
-    def handle_update(self, bot, context):
+    def handle_update(self, bot: "octobot.OctoBot", context: "octobot.Context"):
         if context.update_type == octobot.UpdateType.button_press:
             return
         elif self.check_command(bot, context):
-            self.execute_function_textmode(bot, context)
+            if len(context.args) >= self.required_args:
+                self.execute_function_textmode(bot, context)
+            else:
+                context.reply(context.localize(
+                    'Not enough arguments! This command takes {args_amount} arguments. ' + \
+                    'Consider reading <a href="{help_url}">help for this command</a>').format(
+                    args_amount=self.required_args,
+                    help_url=bot.generate_startlink(f"/helpextra {self.command[0]}")),
+                parse_mode="HTML")
