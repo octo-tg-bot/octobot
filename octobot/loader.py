@@ -142,7 +142,11 @@ class OctoBot(telegram.Bot):
         try:
             ctx = octobot.Context(update, bot)
         except octobot.exceptions.UnknownUpdate:
-            logger.warning("Failed to determine update type: %s", update.to_dict())
+            unknown_thing = "unknown, update dict: %s" % update.to_dict()
+            for var_name, var in vars(update).items():
+                if var is not None and not (var_name.startswith("effective") or var_name.startswith("_") or var_name.startswith("update")):
+                    unknown_thing = var_name
+            logger.warning("Failed to determine update type: %s", unknown_thing)
             return
         for handlers in self.handlers.values():
             try:
