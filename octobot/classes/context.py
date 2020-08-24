@@ -115,7 +115,7 @@ class Context:
     :vartype update: :class:`telegram.Update`
     """
     _plugin = "unknown"
-
+    text = None
     def __init__(self, update: telegram.Update, bot):
         self.locale = "en"
         self.bot = bot
@@ -143,10 +143,31 @@ class Context:
             else:
                 self.text = update.message.text
             self.update_type = UpdateType.message
+            if octobot.Database.redis is not None:
+                octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), 0)
+                octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
+        elif update.edited_message:
+            if octobot.Database.redis is None:
+                raise octobot.StopHandling
+            else:
+                self.update.message = self.update.edited_message
+                if octobot.Database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
+                    self.edit_tgt = int(octobot.Database.redis.get(octobot.utils.generate_edit_id(self.update.message)))
+                    if self.edit_tgt == 0:
+                        raise octobot.StopHandling
+                    octobot.Database.redis.delete(octobot.utils.generate_edit_id(self.update.message))
+                    self.update_type = UpdateType.edited_message
+                    if update.message.caption is not None:
+                        self.text = update.message.caption
+                    else:
+                        self.text = update.message.text
+                else:
+                    raise octobot.StopHandling
         else:
             raise octobot.exceptions.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
         if self.text is None:
             self.text = ''
+        logger.debug("update type for id %s is %s", self.update.update_id, self.update_type)
         self.query = " ".join(self.text.split(" ")[1:])
         self.args = shlex.split(self.query)
 
@@ -193,6 +214,11 @@ class Context:
                                                 parse_mode=parse_mode,
                                                 reply_markup=reply_markup,
                                                 disable_web_page_preview=no_preview)
+            if octobot.Database.redis is not None:
+                octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), message.message_id)
+                octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
+        elif self.update_type == UpdateType.edited_message and octobot.Database.redis is not None:
+            return self.edit(text=text, photo_url=photo_url, reply_markup=reply_markup, parse_mode=parse_mode)
         elif self.update_type == UpdateType.inline_query:
             inline_content = telegram.InputTextMessageContent(
                 text,
@@ -239,15 +265,23 @@ class Context:
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
-        if text is not None:
-            self.update.callback_query.edit_message_text(
-                text=text,
-                parse_mode=parse_mode,
-                reply_markup=reply_markup
-            )
-        elif reply_markup is not None:
-            logger.debug("updating reply markup to %s", reply_markup)
-            self.update.callback_query.edit_message_reply_markup(reply_markup)
+        if self.update_type == UpdateType.button_press:
+            if text is not None:
+                self.update.callback_query.edit_message_text(
+                    text=text,
+                    parse_mode=parse_mode,
+                    reply_markup=reply_markup
+                )
+            elif reply_markup is not None:
+                logger.debug("updating reply markup to %s", reply_markup)
+                self.update.callback_query.edit_message_reply_markup(reply_markup)
+        elif self.update_type == UpdateType.edited_message:
+            if text is not None:
+                self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
+                                      text=text, parse_mode=parse_mode, reply_markup=reply_markup)
+            elif reply_markup is not None:
+                self.bot.edit_message_reply_markup(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
+                                                   reply_markup=reply_markup)
 
     def localize(self, text: str) -> str:
         """

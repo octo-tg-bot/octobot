@@ -19,7 +19,7 @@ def test_perm(bot, context):
 
 @CommandHandler(command="test", description="Test")
 def test(bot, context):
-    context.reply("Hello world!",
+    context.reply("Hello world! " + context.query,
                   reply_markup=telegram.InlineKeyboardMarkup([
                       [telegram.InlineKeyboardButton(callback_data="test:", text="Change text")]
                   ])

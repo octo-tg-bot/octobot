@@ -12,6 +12,8 @@ def add_photo_to_text(text, photo_url):
     text = photos + text
     return text
 
+def generate_edit_id(message):
+    return f"emsg:{message.chat.id}:{message.message_id}"
 
 def path_to_module(path: str):
     return path.replace("\\", "/").replace("/", ".").replace(".py", "")

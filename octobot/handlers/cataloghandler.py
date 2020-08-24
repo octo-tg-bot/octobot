@@ -24,12 +24,12 @@ def create_buttonstring(command, query, next_offset):
 
 def create_inline_buttons(command, query, current_index, max_results, previous_offset, next_offset):
     return [
-            telegram.InlineKeyboardButton(text=BUTTON_LEFT,
-                                          callback_data=create_buttonstring(command, query, previous_offset)),
-            telegram.InlineKeyboardButton(text=f"{current_index}/{max_results}", callback_data="nothing:"),
-            telegram.InlineKeyboardButton(text=BUTTON_RIGHT,
-                                          callback_data=create_buttonstring(command, query, next_offset))
-        ]
+        telegram.InlineKeyboardButton(text=BUTTON_LEFT,
+                                      callback_data=create_buttonstring(command, query, previous_offset)),
+        telegram.InlineKeyboardButton(text=f"{current_index}/{max_results}", callback_data="nothing:"),
+        telegram.InlineKeyboardButton(text=BUTTON_RIGHT,
+                                      callback_data=create_buttonstring(command, query, next_offset))
+    ]
 
 
 class CatalogHandler(CommandHandler):
@@ -45,6 +45,7 @@ class CatalogHandler(CommandHandler):
     :param prefix: Command prefix, defaults to `/`
     :type prefix: str,optional
     """
+
     def __init__(self, *args, **kwargs):
         self.query_required = kwargs.pop("query_required", True)
         super(CatalogHandler, self).__init__(*args, **kwargs)
@@ -70,8 +71,11 @@ class CatalogHandler(CommandHandler):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
         reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
-        reply_markup.inline_keyboard.append(create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset, res.next_offset))
-        context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode, reply_to_previous=False,
+        reply_markup.inline_keyboard.append(
+            create_inline_buttons(self.command, query, res.current_index, res.total_count, res.previous_offset,
+                                  res.next_offset))
+        context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
+                      reply_to_previous=False,
                       reply_markup=reply_markup)
 
     def handle_inline(self, bot, context: Context):
@@ -120,24 +124,21 @@ class CatalogHandler(CommandHandler):
                         parse_mode=item.parse_mode
                     )
                 ))
-        context.update.inline_query.answer(inline_res, cache_time=(360 if Settings.production else 0), next_offset=res.next_offset)
+        context.update.inline_query.answer(inline_res, cache_time=(360 if Settings.production else 0),
+                                           next_offset=res.next_offset)
 
     def handle_update(self, bot, context):
         try:
-            if context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[0]:
+            chk_cmd = self.check_command(bot, context)
+            if (context.query == "" and self.query_required) and context.update_type != octobot.UpdateType.button_press and chk_cmd:
+                return context.reply(context.localize("This command requires query. Specify what you want to find"))
+            elif context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[
+                0]:
                 self.handle_page(bot, context)
-            if context.update_type in [octobot.UpdateType.message, octobot.UpdateType.inline_query]:
-                check_command = self.check_command(bot, context)
-                check_command_inline = self.check_command(bot, context)
-                if context.update_type == octobot.UpdateType.message and check_command:
-                    if not self.query_required or len(context.args) > 0:
-                        self.handle_command(bot, context)
-                    else:
-                        context.reply("No query specified!")
-                elif context.update_type == octobot.UpdateType.inline_query and check_command_inline:
-                    if len(context.args) > 0:
-                        self.handle_inline(bot, context)
-                    else:
-                        context.reply("No query specified!")
+            elif context.update_type in [octobot.UpdateType.message,
+                                         octobot.UpdateType.edited_message] and chk_cmd:
+                self.handle_command(bot, context)
+            elif context.update_type == octobot.UpdateType.inline_query and chk_cmd:
+                self.handle_inline(bot, context)
         except CatalogNotFound:
-            context.reply("Nothing found!")
+            context.reply(context.localize("Nothing found!"))

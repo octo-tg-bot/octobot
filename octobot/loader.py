@@ -148,6 +148,8 @@ class OctoBot(telegram.Bot):
                     unknown_thing = var_name
             logger.warning("Failed to determine update type: %s", unknown_thing)
             return
+        except octobot.exceptions.StopHandling:
+            return
         for handlers in self.handlers.values():
             try:
                 for handler in handlers:

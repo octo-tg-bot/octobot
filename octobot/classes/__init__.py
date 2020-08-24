@@ -10,6 +10,8 @@ class UpdateType(Enum):
     """Inline keyboard button press"""
     message = 2
     """Message"""
+    edited_message = 3
+    """Edited message"""
 
 
 from octobot.classes.context import Context
