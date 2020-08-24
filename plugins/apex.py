@@ -54,10 +54,9 @@ def get_apex_stats(platform, username, context):
         if "Error" in res:
             context.reply(context.localize("Mozambiquehe.re API returned error: {}").format(res["Error"]))
             return
-        player_info = []
-        player_info.append(
+        player_info = [
             context.localize("Player <b>{username}</b>, level {level}").format(username=html.escape(username),
-                                                                               level=res["global"]["level"]))
+                                                                               level=res["global"]["level"])]
         if "rank" in res["global"]:
             player_info.append(context.localize("Rank {rankName} {rankDiv}").format(**res["global"]["rank"]))
         selected_legend_name = res["legends"]["selected"]["LegendName"]
@@ -87,7 +86,13 @@ def get_apex_stats(platform, username, context):
             kbd[-1].append(button)
         context.reply("\n".join(player_info), parse_mode="HTML",
                       photo_url=res["legends"]["selected"]["ImgAssets"]["banner"],
-                      reply_markup=telegram.InlineKeyboardMarkup(kbd))
+                      reply_markup=telegram.InlineKeyboardMarkup(kbd),
+                      title=context.localize("Apex Legends {username} stats").format(username=username),
+                      inline_description=context.localize("Level {level}, ranked level {ranked_level}\nCurrent legend:{current_legend}").format(
+                          level=res["global"]["level"],
+                          ranked_level="{rankName} {rankDiv}".format(**res["global"]["rank"]),
+                          current_legend=context.localize(res["legends"]["selected"]["LegendName"])
+                      ))
     else:
         context.reply(context.localize("Invalid username specified!"))
 

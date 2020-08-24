@@ -129,6 +129,7 @@ class _Database:
                     self.redis.set(db_entry, req)
                     self.redis.expire(db_entry, 60)
                 if convert_json:
+                    logger.debug(req)
                     return json.loads(req.decode()), status_code
                 return req, status_code
 

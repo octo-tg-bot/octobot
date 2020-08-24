@@ -1,6 +1,7 @@
 import gettext
 import html
 import logging
+import re
 import shlex
 from functools import wraps
 from uuid import uuid4
@@ -39,6 +40,12 @@ def create_inline_button_id(kbd_id):
         uuid = str(generate_id())
         key_exists = Database.redis.hexists(kbd_id, uuid)
     return uuid
+
+
+def cleanhtml(raw_html):
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', raw_html)
+    return cleantext
 
 
 def encode_callback_data(callback_data, keyboard_id):
@@ -191,7 +198,7 @@ class Context:
 
     @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
-              title=None, to_pm=False, failed=False, editable=True):
+              title=None, to_pm=False, failed=False, editable=True, inline_description=None):
         """
         Replies to a message/shows a popup in inline keyboard/sends out inline query result
 
@@ -215,6 +222,8 @@ class Context:
         :type failed: :class:`bool`, optional
         :param editable: Pass :obj:`False` if you want your command NOT to be editable, defaults to :obj:`True`
         :type editable: :class:`bool`, optional
+        :param inline_description: Description for inline mode, optional, defaults to first 400 symbols of `text`
+        :type inline_description: :class:`str`
         """
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url:
@@ -248,19 +257,13 @@ class Context:
                 parse_mode=parse_mode,
                 disable_web_page_preview=no_preview
             )
-            if photo_url is None:
-                result = telegram.InlineQueryResultArticle(self.update.inline_query.query,
-                                                           title=title,
-                                                           description=text.split("\n")[0],
-                                                           input_message_content=inline_content,
-                                                           reply_markup=reply_markup)
-            else:
-                result = telegram.InlineQueryResultPhoto(self.update.inline_query.query,
-                                                         photo_url=photo_url,
-                                                         thumb_url=photo_url,
-                                                         title=title,
-                                                         description=text.split("\n")[0],
-                                                         input_message_content=inline_content)
+            result = telegram.InlineQueryResultArticle(self.update.inline_query.query,
+                                                       title=title,
+                                                       description=cleanhtml(text)[
+                                                                   :500] if inline_description is None else inline_description,
+                                                       input_message_content=inline_content,
+                                                       reply_markup=reply_markup,
+                                                       thumb_url=photo_url)
             self.update.inline_query.answer([result], cache_time=(360 if Settings.production else 0))
         elif self.update_type == UpdateType.button_press:
             self.update.callback_query.answer(text)
