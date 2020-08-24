@@ -10,6 +10,7 @@ inf = octobot.PluginInfo(
     reply_kwargs={"editable": False}
 )
 
+
 def lookup_username(target):
     if octobot.database.redis is None:
         return False, 0
@@ -301,5 +302,4 @@ def username_cache(bot: octobot.OctoBot, context: octobot.Context):
     uname_key = generate_uname_key(context.user.username)
     if octobot.Database.redis.exists(uname_key) == 0:
         octobot.Database.redis.set(uname_key, context.user.id)
-        octobot.Database.redis.expire(uname_key, 60*60*24*30)
-
+        octobot.Database.redis.expire(uname_key, 60 * 60 * 24 * 30)
