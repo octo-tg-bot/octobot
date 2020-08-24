@@ -1,8 +1,8 @@
 import gettext
 import html
 import logging
-import os
 import shlex
+from functools import wraps
 from uuid import uuid4
 
 import telegram
@@ -89,6 +89,20 @@ def decode_inline(data):
     return keyboard_data
 
 
+def pluginfo_kwargs(field_name):
+    def decorator(function):
+        @wraps(function)
+        def call_func(self, *args, **kwargs):
+            plugin = self._plugin["plugin_info"]
+            kw = getattr(plugin, field_name).copy()
+            kw.update(kwargs)
+            return function(self, *args, **kw)
+
+        return call_func
+
+    return decorator
+
+
 class Context:
     """
     Context class. It provides, well, context.
@@ -116,6 +130,7 @@ class Context:
     """
     _plugin = "unknown"
     text = None
+
     def __init__(self, update: telegram.Update, bot):
         self.locale = "en"
         self.bot = bot
@@ -154,6 +169,7 @@ class Context:
                 if octobot.Database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
                     self.edit_tgt = int(octobot.Database.redis.get(octobot.utils.generate_edit_id(self.update.message)))
                     if self.edit_tgt == 0:
+                        logger.debug("Not handling update %s cause invalid edit target", update.update_id)
                         raise octobot.StopHandling
                     octobot.Database.redis.delete(octobot.utils.generate_edit_id(self.update.message))
                     self.update_type = UpdateType.edited_message
@@ -162,7 +178,9 @@ class Context:
                     else:
                         self.text = update.message.text
                 else:
+                    logger.debug("Not handling update %s cause not available in database", update.update_id)
                     raise octobot.StopHandling
+                logger.debug("edit target = %s", self.edit_tgt)
         else:
             raise octobot.exceptions.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
         if self.text is None:
@@ -171,8 +189,9 @@ class Context:
         self.query = " ".join(self.text.split(" ")[1:])
         self.args = shlex.split(self.query)
 
+    @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
-              title=None, to_pm=False):
+              title=None, to_pm=False, failed=False, editable=True):
         """
         Replies to a message/shows a popup in inline keyboard/sends out inline query result
 
@@ -192,6 +211,10 @@ class Context:
         :type title: :class:`str`, optional
         :param to_pm: If message should be sent into user PM
         :type to_pm: :class:`bool`
+        :param failed: Pass :obj:`True` if command failed to execute. defaults to :obj:`False`
+        :type failed: :class:`bool`, optional
+        :param editable: Pass :obj:`False` if you want your command NOT to be editable, defaults to :obj:`True`
+        :type editable: :class:`bool`, optional
         """
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url:
@@ -214,7 +237,7 @@ class Context:
                                                 parse_mode=parse_mode,
                                                 reply_markup=reply_markup,
                                                 disable_web_page_preview=no_preview)
-            if octobot.Database.redis is not None:
+            if octobot.Database.redis is not None and editable:
                 octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), message.message_id)
                 octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
         elif self.update_type == UpdateType.edited_message and octobot.Database.redis is not None:
@@ -278,7 +301,7 @@ class Context:
         elif self.update_type == UpdateType.edited_message:
             if text is not None:
                 self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
-                                      text=text, parse_mode=parse_mode, reply_markup=reply_markup)
+                                           text=text, parse_mode=parse_mode, reply_markup=reply_markup)
             elif reply_markup is not None:
                 self.bot.edit_message_reply_markup(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
                                                    reply_markup=reply_markup)

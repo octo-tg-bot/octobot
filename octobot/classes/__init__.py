@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable
 
@@ -24,5 +24,6 @@ class PluginInfo():
     Plugin info class
     """
     name: str
+    reply_kwargs: dict = field(default_factory=dict)
     after_load: Callable[["octobot.OctoBot"], Any] = None
 

@@ -5,6 +5,10 @@ import telegram
 import octobot
 import typing
 
+inf = octobot.PluginInfo(
+    name=octobot.localizable("Admin commands"),
+    reply_kwargs={"editable": False}
+)
 
 def lookup_username(target):
     if octobot.database.redis is None:
