@@ -98,8 +98,9 @@ class Catalog:
     :type previous_offset: :class:`str` or :class:`int`
     """
 
-    def __init__(self, results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]], max_count: int,
-                 current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int]):
+    def __init__(self, results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]],
+                 current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int],
+                 max_count: Union[str, int] = "?"):
         self.results = results
         self.total_count = max_count
         self.next_offset = next_offset

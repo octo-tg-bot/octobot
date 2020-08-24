@@ -25,6 +25,9 @@ mozamibque_here_token = ""
 # API Key for currency converter
 currency_converter_apikey = ""
 
+# Imgur API Client-ID
+imgur_clientid = ""
+
 # Exception handling
 [exceptions]
   # How error will be reported to user
