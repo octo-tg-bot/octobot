@@ -7,8 +7,8 @@ def nothing_reply(bot, ctx):
 
 @InlineButtonHandler("invalid:")
 def unknown_reply(bot, ctx):
-    ctx.reply(ctx.localize("I can't understand what this inline button does. The keyboard here is probably outdated, I will delete it."))
-    ctx.edit(reply_markup=telegram.InlineKeyboardMarkup([]))
+    ctx.reply(ctx.localize("I can't understand what this inline button does. The keyboard here is probably outdated."))
+    # ctx.edit(reply_markup=telegram.InlineKeyboardMarkup([]))
 
 @InlineButtonHandler("smartass:")
 def smartass_reply(bot, ctx):
