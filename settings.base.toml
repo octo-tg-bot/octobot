@@ -28,6 +28,13 @@ currency_converter_apikey = ""
 # Imgur API Client-ID
 imgur_clientid = ""
 
+# Allow only specific chats
+# If this value != [], then bot will attempt to leave all chats that are not in this list
+allowed_chats = []
+# Reason for bot leaving if allowed_chats != []
+disallowed_chat_reason = "I am sorry, I can't work in this chat cause it is not in allowed chats list."
+
+
 # Exception handling
 [exceptions]
   # How error will be reported to user

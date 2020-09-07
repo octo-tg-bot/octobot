@@ -52,6 +52,11 @@ class DatabaseNotAvailable(ConnectionError):
     pass
 
 
+class DontLoadPlugin(RuntimeError):
+    """Raise this exception if you dont want plugin to continue loading"""
+    pass
+
+
 def handle_exception(bot, context, e, notify=True):
     if isinstance(e, DatabaseNotAvailable):
         if notify:
