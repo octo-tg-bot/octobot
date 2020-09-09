@@ -20,6 +20,7 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 import logging
+import re
 
 import requests
 from settings import Settings
@@ -33,6 +34,12 @@ CURR_TEMPLATE = octobot.localizable("""
 <a href="http://free.currencyconverterapi.com/">Powered by Currency convert API</a>
 """)
 LOGGER = logging.getLogger("/cash")
+
+
+def number_conv(amount):
+    power = 10 ** (amount.count("k") * 3 + amount.count("m") * 6 + amount.count("b") * 9)
+    amount = re.sub("[kmb]", "", amount)
+    return float(amount) * power
 
 
 def get_rate(in_c, out_c):
@@ -55,7 +62,7 @@ def convert(in_c, out_c, count):
     rate = get_rate(in_c, out_c)
     out = {}
     out["in"] = "<b>%s</b> <i>%s</i>" % (count, in_c.upper())
-    out["out"] = "<b>%s</b> <i>%s</i>" % (round(float(count) * float(list(rate.values())[0]), 2), out_c.upper())
+    out["out"] = "<b>%s</b> <i>%s</i>" % (round(number_conv(count) * float(list(rate.values())[0]), 2), out_c.upper())
     return out
 
 
@@ -79,7 +86,7 @@ Data from Yahoo Finance""")
 def currency(bot, context):
     try:
         try:
-            float(context.args[0])
+            number_conv(context.args[0])
         except ValueError:
             return context.reply(context.localize("{} is not a valid number").format(context.args[0]))
         else:

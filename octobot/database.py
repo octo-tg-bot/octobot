@@ -113,7 +113,10 @@ class _Database:
         logger.debug(request_type)
         if self.redis is None:
             logger.warning("DB not available, requests are not cached, beware")
-            return self._do_request(request_type, request_args, request_kwargs)
+            r, scode = self._do_request(request_type, request_args, request_kwargs)
+            if convert_json:
+                r = json.loads(r.decode())
+            return r, scode
         else:
             db_entry = request_create_id(request_type, request_args, request_kwargs)
             if self.redis.exists(db_entry) == 1:
