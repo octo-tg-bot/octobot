@@ -25,5 +25,6 @@ class PluginInfo():
     """
     name: str
     reply_kwargs: dict = field(default_factory=dict)
+    handler_kwargs: dict = field(default_factory=dict)
     after_load: Callable[["octobot.OctoBot"], Any] = None
 

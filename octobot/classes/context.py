@@ -194,7 +194,10 @@ class Context:
             self.text = ''
         logger.debug("update type for id %s is %s", self.update.update_id, self.update_type)
         self.query = " ".join(self.text.split(" ")[1:])
-        self.args = self.query.split(" ")
+        try:
+            self.args = shlex.split(self.query)
+        except ValueError:
+            self.args = self.query.split(" ")
 
     @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,

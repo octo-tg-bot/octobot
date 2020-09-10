@@ -4,6 +4,8 @@ from octobot.database import Database
 import telegram
 import json
 
+from settings import Settings
+
 
 def create_db_entry_name(chat: typing.Union[telegram.Chat, int]):
     if isinstance(chat, telegram.Chat):
@@ -27,7 +29,9 @@ def check_perms(chat: typing.Union[telegram.Chat, int], user: typing.Union[teleg
         chat_id = chat.id
     else:
         chat_id = chat
-
+    if "is_bot_owner" in permissions_to_check:
+        if Settings.owner == user_id: permissions_to_check.remove("is_bot_owner")
+        return Settings.owner == user_id, permissions_to_check
     if not str(chat_id).startswith("-100"):
         return True, []
     if Database.redis is not None and Database.redis.exists(db_entry) == 1:
@@ -56,13 +60,14 @@ def check_perms(chat: typing.Union[telegram.Chat, int], user: typing.Union[teleg
     return len(permissions_to_check) == 0, permissions_to_check
 
 
-def permissions(**perms):
+def permissions(*perms_args, **perms_kwargs):
     """
     Decorator to check permissions.
 
     :param perms: Valid permissions that can be found on :class:`telegram.ChatMember` + is_admin. Example: `@permissions(can_delete_messages=True)`. The value does not matter.
     """
-    perms = set(perms.keys())
+    perms = set(perms_kwargs.keys())
+    perms.update(perms_args)
 
     def decorator(function):
         def wrapper(bot, context):
@@ -95,13 +100,14 @@ def not_admin(function):
     return wrapper
 
 
-def my_permissions(**perms):
+def my_permissions(*perms_args, **perms_kwargs):
     """
     Decorator to check bots own permissions.
 
     :param perms: Valid permissions that can be found on :class:`telegram.ChatMember` + is_admin. Example: `@my_permissions(can_delete_messages=True)`. The value does not matter.
     """
-    perms = set(perms.keys())
+    perms = set(perms_kwargs.keys())
+    perms.update(perms_args)
     if "is_admin" not in perms:
         perms.add("is_admin")
 

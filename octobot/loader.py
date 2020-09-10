@@ -84,6 +84,9 @@ class OctoBot(telegram.Bot):
                     var.plugin = plugin
                     if var.priority not in self.handlers:
                         self.handlers[var.priority] = []
+                    if type(var).__name__ in plugin["plugin_info"].handler_kwargs:
+                        for k, v in plugin["plugin_info"].handler_kwargs[type(var).__name__].items():
+                            setattr(var, k, v)
                     self.handlers[var.priority].append(var)
         logger.info("Handlers update complete, priority levels: %s", self.handlers.keys())
         logger.debug("Running post-load functions...")
@@ -127,7 +130,6 @@ class OctoBot(telegram.Bot):
                 if isinstance(variable, PluginInfo):
                     self.plugins[plugin]["plugin_info"] = variable
                     break
-
             logger.info("Loaded plugin %s", plugin)
         if single_load:
             self.update_handlers()

@@ -37,6 +37,7 @@ LOGGER = logging.getLogger("/cash")
 
 
 def number_conv(amount):
+    amount = str(amount).lower()
     power = 10 ** (amount.count("k") * 3 + amount.count("m") * 6 + amount.count("b") * 9)
     amount = re.sub("[kmb]", "", amount)
     return float(amount) * power
