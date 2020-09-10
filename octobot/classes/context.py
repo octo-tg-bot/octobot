@@ -137,6 +137,7 @@ class Context:
     """
     _plugin = "unknown"
     text = None
+    message = None
 
     def __init__(self, update: telegram.Update, bot):
         self.locale = "en"
@@ -252,6 +253,8 @@ class Context:
             if octobot.Database.redis is not None and editable:
                 octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), message.message_id)
                 octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
+            self.edit_tgt = message.message_id
+            return message
         elif self.update_type == UpdateType.edited_message and octobot.Database.redis is not None:
             return self.edit(text=text, photo_url=photo_url, reply_markup=reply_markup, parse_mode=parse_mode)
         elif self.update_type == UpdateType.inline_query:
@@ -304,13 +307,13 @@ class Context:
             elif reply_markup is not None:
                 logger.debug("updating reply markup to %s", reply_markup)
                 self.update.callback_query.edit_message_reply_markup(reply_markup)
-        elif self.update_type == UpdateType.edited_message:
+        elif self.update_type in [UpdateType.edited_message, UpdateType.message] and self.edit_tgt is not None:
             if text is not None:
-                self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
-                                           text=text, parse_mode=parse_mode, reply_markup=reply_markup)
+                return self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
+                                                  text=text, parse_mode=parse_mode, reply_markup=reply_markup)
             elif reply_markup is not None:
-                self.bot.edit_message_reply_markup(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
-                                                   reply_markup=reply_markup)
+                return self.bot.edit_message_reply_markup(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
+                                                          reply_markup=reply_markup)
 
     def localize(self, text: str) -> str:
         """

@@ -104,24 +104,37 @@ class OctoBot(telegram.Bot):
         :param single_load: If plugin is loaded not together with other plugins (e.g. manually loaded from other plugin). Defaults to False
         :type single_load: bool,optional
         """
+        if plugin in self.plugins:
+            old_plugin = self.plugins[plugin]
+        else:
+            old_plugin = None
         self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None,
                                     plugin_info=PluginInfo(name=plugin))
         if plugin in Settings.exclude_plugins:
             self.plugins[plugin]["state"] = PluginStates.skipped
-            return
+            return "skipped"
         try:
-            plugin_module = importlib.import_module(plugin)
+            if old_plugin and old_plugin["module"]:
+                plugin_module = importlib.reload(old_plugin["module"])
+            else:
+                plugin_module = importlib.import_module(plugin)
         except ModuleNotFoundError:
             self.plugins[plugin]["state"] = PluginStates.notfound
             logger.error("Plugin %s is defined in load_order, but cannot be found. Please check your load_list.json",
                          plugin)
+            res = "skipped"
         except octobot.DontLoadPlugin as e:
             self.plugins[plugin]["state"] = PluginStates.skipped
             self.plugins[plugin]["exception"] = str(e)
+            res = "skipped"
         except Exception as e:
             logger.error("Failed to load plugin %s", exc_info=True)
             self.plugins[plugin]["state"] = PluginStates.error
             self.plugins[plugin]["exception"] = str(e)
+            res = f"crashed, {e}"
+            if old_plugin and old_plugin["module"]:
+                res = f"crashed ({e}), old version restored"
+                self.plugins[plugin] = old_plugin
         else:
             self.plugins[plugin]["state"] = PluginStates.loaded
             self.plugins[plugin]["module"] = plugin_module
@@ -131,9 +144,10 @@ class OctoBot(telegram.Bot):
                     self.plugins[plugin]["plugin_info"] = variable
                     break
             logger.info("Loaded plugin %s", plugin)
+            res = "loaded"
         if single_load:
             self.update_handlers()
-        return
+        return res
 
     def load_plugins(self, load_list: dict):
         """
