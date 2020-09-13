@@ -91,7 +91,7 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
         raise CatalogNotFound()
 
     for post in api_q.find_all("post"):
-        tags = post.attrs["tags"].split()[:1024]
+        tags = post.attrs["tags"].split()[:512]
 
         item = SafebooruPost(
             id=post.attrs["rating"],
