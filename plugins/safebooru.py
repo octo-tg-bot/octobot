@@ -18,8 +18,7 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
-
-
+import html
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
@@ -91,7 +90,7 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
         raise CatalogNotFound()
 
     for post in api_q.find_all("post"):
-        tags = post.attrs["tags"].split()[:512]
+        tags = html.escape(post.attrs["tags"]).split()[:512]
 
         item = SafebooruPost(
             id=post.attrs["rating"],
