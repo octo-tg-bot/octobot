@@ -4,6 +4,7 @@ import subprocess
 import traceback
 
 import telegram
+from telegram.error import TimedOut
 
 import octobot
 from settings import Settings
@@ -21,11 +22,12 @@ inf = octobot.PluginInfo("Bot update",
 
 def reload(bot: octobot.OctoBot, ctx):
     msg: telegram.Message = ctx.reply("Reloading...")
+    msg_res = []
     for plugin in bot.discover_plugins()["load_order"]:
         res = bot.load_plugin(plugin)
-        msg = ctx.edit(msg.text + f"\n{plugin} - {res}")
+        msg_res.append(f"\n{plugin} - {res}")
     bot.update_handlers()
-    ctx.edit(msg.text + f"\nRELOADED")
+    ctx.edit("Reload complete. Plugin statuses:\n" + "\n".join(msg_res))
 
 
 @octobot.CommandHandler("reload")
