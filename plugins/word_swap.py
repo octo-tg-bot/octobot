@@ -81,9 +81,9 @@ def wordsw(bot, context):
                     # Nothing changed.
                     return
                 mod_msg = appendCodeChanges(html.escape(msg.reply_to_message.text), mod_msg)
-                text = context.localize("Hi, {username}!\nDid you mean:\n{text}").format(username=context.user.mention_html(),
+                text = context.localize("Hi, {username}!\nDid you mean:\n{text}").format(username=msg.reply_to_message.from_user.mention_html(),
                                                                                          text=mod_msg)
-                return context.reply(text=text, parse_mode="HTML")
+                return context.reply(text=text, parse_mode="HTML", reply_to_previous=True)
     except IndexError:
         pass
     except re.error:
