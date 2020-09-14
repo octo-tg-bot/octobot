@@ -41,7 +41,7 @@ def reload_cmd(bot, ctx):
 def update(bot, ctx):
     update_type = "soft"
     if len(ctx.args) > 0:
-        update_type = ctx.args[1]
+        update_type = ctx.args[0]
     update_type = update_type.lower()
     if update_type not in ["soft", "hard"]:
         ctx.reply(f"unknown update type {update_type}")
