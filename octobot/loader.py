@@ -10,7 +10,7 @@ import octobot.exceptions
 import octobot.handlers
 import logging
 
-from octobot import PluginInfo
+from octobot import PluginInfo, handle_exception
 from octobot.utils import path_to_module
 from settings import Settings
 
@@ -187,6 +187,7 @@ class OctoBot(telegram.Bot):
                         raise e
                     except Exception as e:
                         logger.error("Handler threw an exception!", exc_info=True)
+                        handle_exception(self, ctx, e, notify=False)
             except octobot.exceptions.StopHandling:
                 break
 

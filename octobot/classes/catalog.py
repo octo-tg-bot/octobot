@@ -63,7 +63,7 @@ class CatalogKeyArticle:
         if self.photo:
             photos = []
             for photo in self.photo:
-                photos.append(photo)
+                photos.append(photo.url)
             return photos
 
 
@@ -81,7 +81,7 @@ class CatalogKeyPhoto(CatalogKeyArticle):
     :type description: :class:`str`, optional
     """
 
-
+@dataclass()
 class Catalog:
     """
     Base catalog class
@@ -97,16 +97,13 @@ class Catalog:
     :param previous_offset: Previous offset
     :type previous_offset: :class:`str` or :class:`int`
     """
-
-    def __init__(self, results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]],
-                 current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int],
-                 max_count: Union[str, int] = "?"):
-        self.results = results
-        self.total_count = max_count
-        self.next_offset = next_offset
-        self.previous_offset = previous_offset
-        self.current_index = current_index
-
+    results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]]
+    current_index: int
+    next_offset: Union[str, int]
+    current_index: int
+    previous_offset: Union[str, int]
+    max_count: Union[str, int] = "?"
+    photo_primary: bool = False
     def __iter__(self):
         return self.results.__iter__()
 

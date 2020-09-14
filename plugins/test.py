@@ -70,8 +70,8 @@ def test_catalog(query, index, max_amount, bot, context):
                                                url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
                                                width=200,
                                                height=200)]))
-    return octobot.Catalog(res, CATALOG_MAX, current_index=index + 1, next_offset=index + max_amount,
-                           previous_offset=index - max_amount)
+    return octobot.Catalog(res, current_index=index + 1, next_offset=index + max_amount,
+                           previous_offset=index - max_amount, max_count=CATALOG_MAX, photo_primary=True)
 
 
 @octobot.catalogs.CatalogHandler(command="catalogtesta", description="Test CatalogHandler with Articles")
@@ -94,7 +94,7 @@ def test_catalogarticle(query, index, max_amount, bot, context):
                                                  url=f"https://picsum.photos/seed/{query}{i + index}/1000/1000",
                                                  width=1000,
                                                  height=1000)]))
-    return octobot.Catalog(res, CATALOG_MAX, current_index=index, next_offset=index + max_amount,
+    return octobot.Catalog(res, max_count=CATALOG_MAX, current_index=index, next_offset=index + max_amount,
                            previous_offset=index - max_amount)
 
 

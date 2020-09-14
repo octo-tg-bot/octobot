@@ -7,6 +7,7 @@ from functools import wraps
 from uuid import uuid4
 
 import telegram
+from telegram import InputMediaPhoto
 
 import octobot
 import octobot.exceptions
@@ -202,7 +203,7 @@ class Context:
 
     @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
-              title=None, to_pm=False, failed=False, editable=True, inline_description=None):
+              title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False):
         """
         Replies to a message/shows a popup in inline keyboard/sends out inline query result
 
@@ -230,7 +231,7 @@ class Context:
         :type inline_description: :class:`str`
         """
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
-        if photo_url:
+        if photo_url and not photo_primary:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
@@ -242,14 +243,23 @@ class Context:
                 target_msg: telegram.Message = self.update.message.reply_to_message
             else:
                 target_msg: telegram.Message = self.update.message
+            kwargs = dict(chat_id=target_msg.chat_id, parse_mode=parse_mode,
+                          reply_markup=reply_markup, disable_web_page_preview=no_preview,
+                          reply_to_message_id=target_msg.message_id)
             if to_pm:
-                message = self.bot.send_message(chat_id=self.user.id, text=text, parse_mode=parse_mode,
-                                                reply_markup=reply_markup, disable_web_page_preview=no_preview)
+                kwargs["chat_id"] = self.user.id
+                del kwargs["reply_to_message_id"]
+            if photo_url and photo_primary:
+                try:
+                    message = self.bot.send_photo(caption=text, photo=photo_url[0], **kwargs)
+                except telegram.error.TelegramError:
+                    if parse_mode.lower() != 'html':
+                        text = html.escape(text)
+                    text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
+                    message = self.bot.send_photo(caption=text, photo=Settings.no_image, **kwargs)
             else:
-                message = target_msg.reply_text(text=text,
-                                                parse_mode=parse_mode,
-                                                reply_markup=reply_markup,
-                                                disable_web_page_preview=no_preview)
+                message = self.bot.send_message(text=text, **kwargs)
+
             if octobot.Database.redis is not None and editable:
                 octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), message.message_id)
                 octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
@@ -274,7 +284,7 @@ class Context:
         elif self.update_type == UpdateType.button_press:
             self.update.callback_query.answer(text)
 
-    def edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None):
+    def edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         """
         Edits message. Works only if update_type == :obj:`UpdateType.button_press`
 
@@ -287,26 +297,51 @@ class Context:
         :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
         :type parse_mode: :class:`str`, optional
         """
-        if octobot.Database is not None and self.kbd_id is not None:
-            logger.debug("Edit called, deleting inline keyboard data for %s", self.kbd_id)
-            Database.redis.delete(generate_inline_entry(self.kbd_id))
-            self.kbd_id = None
+
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
-        if photo_url:
+        if photo_url and not photo_primary:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
         if self.update_type == UpdateType.button_press:
-            if text is not None:
+            kwargs = dict(parse_mode=parse_mode,
+                          reply_markup=reply_markup)
+            if photo_url is not None and photo_primary:
+                kwargs = dict(
+                    media=InputMediaPhoto(media=photo_url[0], caption=text,
+                                          parse_mode=parse_mode),
+                    reply_markup=reply_markup,
+                )
+                if self.update.callback_query.inline_message_id is not None:
+                    kwargs["inline_message_id"] = self.update.callback_query.inline_message_id
+                else:
+                    logger.debug("chat instance %s", self.update.callback_query.chat_instance)
+                    kwargs["chat_id"] = self.update.callback_query.message.chat_id
+                    kwargs["message_id"] = self.update.callback_query.message.message_id
+                try:
+                    self.bot.edit_message_media(**kwargs)
+                except telegram.error.TelegramError:
+                    if parse_mode.lower() != 'html':
+                        text = html.escape(text)
+                    text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
+                    kwargs["media"] = InputMediaPhoto(media=Settings.no_image, caption=text, parse_mode=parse_mode)
+                    self.bot.edit_message_media(**kwargs)
+            elif text is not None and not photo_primary:
                 self.update.callback_query.edit_message_text(
-                    text=text,
-                    parse_mode=parse_mode,
-                    reply_markup=reply_markup
+                    text=text, **kwargs
+                )
+            elif text is not None and photo_primary:
+                self.update.callback_query.edit_message_caption(
+                    caption=text, **kwargs
                 )
             elif reply_markup is not None:
                 logger.debug("updating reply markup to %s", reply_markup)
                 self.update.callback_query.edit_message_reply_markup(reply_markup)
+            if octobot.Database is not None and self.kbd_id is not None:
+                logger.debug("Edit called OK, deleting inline keyboard data for %s", self.kbd_id)
+                Database.redis.delete(generate_inline_entry(self.kbd_id))
+                self.kbd_id = None
         elif self.update_type in [UpdateType.edited_message, UpdateType.message] and self.edit_tgt is not None:
             if text is not None:
                 return self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,

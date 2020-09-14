@@ -63,6 +63,7 @@ class Halt(LoaderCommand):
 
 
 def handle_exception(bot, context, e, notify=True):
+    logger.info("handling %s", e)
     if isinstance(e, DatabaseNotAvailable):
         if notify:
             if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
@@ -81,5 +82,5 @@ def handle_exception(bot, context, e, notify=True):
             if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
                 context.reply(message)
             elif context.update_type == octobot.UpdateType.button_press:
-                context.reply(context.localize("Error occured"))
-                context.edit(message)
+                context.update.callback_query.answer(message, show_alert=True)
+                # context.edit(message)
