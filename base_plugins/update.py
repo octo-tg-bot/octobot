@@ -33,7 +33,13 @@ def reload(bot: octobot.OctoBot, ctx):
 @octobot.CommandHandler("reload")
 @octobot.permissions("is_bot_owner")
 def reload_cmd(bot, ctx):
-    reload(bot, ctx)
+    reload_type = "soft"
+    if len(ctx.args) > 0:
+        reload_type = ctx.args[0]
+    if reload_type == "soft":
+        reload(bot, ctx)
+    else:
+        bot.stop()
 
 
 @octobot.CommandHandler("update")
@@ -51,4 +57,4 @@ def update(bot, ctx):
     if update_type == "soft":
         reload(bot, ctx)
     else:
-        raise SystemExit
+        bot.stop()

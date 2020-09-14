@@ -181,6 +181,8 @@ class OctoBot(telegram.Bot):
                     try:
                         ctx._plugin = handler.plugin
                         handler.handle_update(bot, ctx)
+                    except octobot.exceptions.Halt as e:
+                        raise e
                     except octobot.exceptions.StopHandling as e:
                         raise e
                     except Exception as e:
@@ -192,3 +194,5 @@ class OctoBot(telegram.Bot):
         command = f"b64-{base64.urlsafe_b64encode(command.encode()).decode()}"
         return f"https://t.me/{self.me.username}?start={command}"
 
+    def stop(self):
+        raise octobot.exceptions.Halt

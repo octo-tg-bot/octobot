@@ -17,10 +17,10 @@ import logging
 logger = logging.getLogger("Bot")
 
 
-def update_loop(bot, queue):
+def update_loop(bot, queue, run_event):
     update_id = None
     bot.deleteWebhook()
-    while 1:
+    while run_event.is_set():
         try:
             for update in bot.getUpdates(update_id, timeout=2):
                 update_id = update.update_id + 1
@@ -37,7 +37,10 @@ def update_handler(upd_queue: Queue, run_event: threading.Event):
             time.sleep(0.2)
         else:
             bot, update = update
-            bot.handle_update(bot, update)
+            try:
+                bot.handle_update(bot, update)
+            except octobot.Halt:
+                run_event.clear()
 
 
 STATES_EMOJIS = {
@@ -79,8 +82,8 @@ def main():
 
     logger.info("Starting update loop.")
     try:
-        update_loop(bot, queue)
-    except KeyboardInterrupt:
+        update_loop(bot, queue, run_event)
+    except (KeyboardInterrupt, octobot.Halt):
         logger.info("Stopping...")
         run_event.clear()
         for thread in threads:

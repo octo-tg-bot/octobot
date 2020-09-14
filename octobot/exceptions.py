@@ -57,6 +57,11 @@ class DontLoadPlugin(RuntimeError):
     pass
 
 
+class Halt(LoaderCommand):
+    """Raise this exception to make bot stop handling any further updates and quit"""
+    pass
+
+
 def handle_exception(bot, context, e, notify=True):
     if isinstance(e, DatabaseNotAvailable):
         if notify:
