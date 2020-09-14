@@ -25,7 +25,7 @@ def reload(bot: octobot.OctoBot, ctx):
     msg_res = []
     for plugin in bot.discover_plugins()["load_order"]:
         res = bot.load_plugin(plugin)
-        msg_res.append(f"\n{plugin} - {res}")
+        msg_res.append(f"{plugin} - {res}")
     bot.update_handlers()
     ctx.edit("Reload complete. Plugin statuses:\n" + "\n".join(msg_res))
 
