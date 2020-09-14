@@ -144,5 +144,6 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
         max_count=total,
         previous_offset=offset - limit,
         current_index=offset + 1,
-        next_offset=next_offset
+        next_offset=next_offset,
+        photo_primary=True
     )

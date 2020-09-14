@@ -49,4 +49,5 @@ def imgur_search(query, index, max_count, bot: octobot.OctoBot, context: octobot
                                                url=item["link"]
                                            )))
                    )
-    return octobot.Catalog(res, next_offset=index + max_count, current_index=index+1, previous_offset=index - max_count)
+    return octobot.Catalog(res, next_offset=index + max_count, current_index=index+1, previous_offset=index - max_count,
+                           photo_primary=True)
