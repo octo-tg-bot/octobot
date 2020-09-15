@@ -15,7 +15,11 @@ TRANSLATION_TEMPLATE = octobot.localizable("From <i>{source_language}</i> to <i>
 @octobot.CommandHandler(["tl", "translate"], description=octobot.localizable("Translates text using Google Translate"))
 def gtl(bot: octobot.OctoBot, context: octobot.Context):
     if context.update.message is not None and context.update.message.reply_to_message is not None:
-        text = context.update.message.reply_to_message.text
+        reply = context.update.message.reply_to_message
+        if reply.caption is not None:
+            text = reply.caption
+        else:
+            text = reply.text
         text_type = "reply"
     else:
         text = str(context.query)
