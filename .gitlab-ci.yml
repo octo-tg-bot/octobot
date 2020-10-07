@@ -1,5 +1,9 @@
 image: python:buster
 
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+
+
 test:
   stage: test
   script:

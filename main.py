@@ -14,6 +14,7 @@ import telegram
 import octobot
 from settings import Settings
 import logging
+
 logger = logging.getLogger("Bot")
 
 
@@ -91,6 +92,7 @@ def main():
             thread.join()
         logger.info("Bye!")
         sys.exit()
+
 
 if __name__ == '__main__':
     main()
