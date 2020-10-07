@@ -19,13 +19,14 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
+import json
 import logging
 import re
 
 import requests
-from settings import Settings
 
 import octobot
+from settings import Settings
 
 plugin = octobot.PluginInfo(name="Currency Converter")
 CURR_TEMPLATE = octobot.localizable("""
@@ -44,13 +45,16 @@ def number_conv(amount):
 
 
 def get_rate(in_c, out_c):
-    rate, status_code = octobot.Database.get_cache(
-        "https://free.currconv.com/api/v7/convert?compact=ultra",
-        params={
-            "q": in_c + "_" + out_c,
-            "apiKey": Settings.currency_converter_apikey
-        }
-    )
+    try:
+        rate, status_code = octobot.Database.get_cache(
+            "https://free.currconv.com/api/v7/convert?compact=ultra",
+            params={
+                "q": in_c + "_" + out_c,
+                "apiKey": Settings.currency_converter_apikey
+            }
+        )
+    except json.JSONDecodeError:
+        raise requests.HTTPError
     LOGGER.debug(rate)
     if status_code != 200:
         raise requests.HTTPError
