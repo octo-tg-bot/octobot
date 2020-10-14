@@ -9,12 +9,12 @@ FOLDER = os.path.abspath(os.path.dirname(__file__))
 
 
 class _Settings():
-    _settings = {}
+    _settings: dict = {}
 
     def __init__(self):
         self.reload_settings()
 
-    def reload_settings(self):
+    def reload_settings(self) -> None:
         settings_backup = self._settings.copy()
         with open(FOLDER + "/settings.base.toml") as f:
             base_settings = toml.load(f)
@@ -35,20 +35,20 @@ class _Settings():
         LOGGER.debug(self._settings)
         LOGGER.info("Settings reloaded")
 
-    def __getattr__(self, item):
+    def __getattr__(self, item:str):
         if item in self._settings:
             return self._settings[item]
         else:
             raise KeyError("Unknown settings entry: %s" % item)
 
-    def get(self, item):
+    def get(self, item: str):
         if item in self._settings:
             return self._settings[item]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value):
         return self._settings.__setitem__(key, value)
 
-    def save_settings_to_disk(self):
+    def save_settings_to_disk(self) -> None:
         try:
             with open(FOLDER + "/settings.toml", "w") as f:
                 toml.dump(self._settings, f)
@@ -56,4 +56,5 @@ class _Settings():
             LOGGER.critical(
                 "Failed to find settings.toml! Continuing anyway cause who knows, maybe doc is getting built?")
 
-Settings = _Settings()
+
+Settings: _Settings = _Settings()

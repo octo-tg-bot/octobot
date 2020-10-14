@@ -75,10 +75,8 @@ Example usage:
     /cash 100 RUB USD
 
     OctoBot:
-    100 RUB = 1.66 USD
+    100 RUB = 1.66 USD""")
 
-8/7/2017 10:30pm
-Data from Yahoo Finance""")
 
 
 @octobot.CommandHandler(command=["cash", "currency", "stonks"],
