@@ -1,5 +1,7 @@
 import json
 import logging
+import pickle
+from functools import wraps
 
 import redis
 import requests
@@ -88,16 +90,24 @@ class _Database:
         else:
             logger.info("Redis connection successful")
 
-        def create_cached_request_function(rtype):
+    def http_cache(rtype):
+        def decorator(_):
             def cache(*args, **request_kwargs):
-                convert_json = request_kwargs.pop("convert_json", True)
-                return self.cache_requests(request_type=rtype, convert_json=convert_json, request_args=args,
+                self = args[0]
+                return self.cache_requests(request_type=rtype, request_args=args[1:],
                                            request_kwargs=request_kwargs)
 
             return cache
 
-        self.get_cache = create_cached_request_function("GET")
-        self.post_cache = create_cached_request_function("POST")
+        return decorator
+
+    @http_cache("GET")
+    def get_cache(self, *args, **request_kwargs) -> requests.Response:
+        ...
+
+    @http_cache("POST")
+    def post_cache(self, *args, **request_kwargs) -> requests.Response:
+        ...
 
     def __getitem__(self, item):
         item = int(item)
@@ -107,34 +117,27 @@ class _Database:
         req = requests.Request(request_type, *args, **kwargs)
         prepped = self.request_session.prepare_request(req)
         resp = self.request_session.send(prepped)
-        return resp.content, resp.status_code
+        return resp
 
-    def cache_requests(self, request_type, convert_json, request_args, request_kwargs):
+    def cache_requests(self, request_type, request_args, request_kwargs):
         logger.debug(request_type)
         if self.redis is None:
             logger.warning("DB not available, requests are not cached, beware")
-            r, scode = self._do_request(request_type, request_args, request_kwargs)
-            if convert_json:
-                r = json.loads(r.decode())
-            return r, scode
+            r = self._do_request(request_type, request_args, request_kwargs)
+            return r
         else:
             db_entry = request_create_id(request_type, request_args, request_kwargs)
             if self.redis.exists(db_entry) == 1:
                 logger.debug("Using cached result")
                 req = self.redis.get(db_entry)
-                if convert_json:
-                    req = json.loads(req.decode())
-                return req, 200
+                return pickle.loads(req)
             else:
-                req, status_code = self._do_request(request_type, request_args, request_kwargs)
-                if status_code == requests.codes.ok:
+                req = self._do_request(request_type, request_args, request_kwargs)
+                if req.status_code == requests.codes.ok:
                     logger.debug("Status code is 200, saving to redis")
-                    self.redis.set(db_entry, req)
+                    self.redis.set(db_entry, pickle.dumps(req))
                     self.redis.expire(db_entry, 60)
-                if convert_json:
-                    logger.debug(req)
-                    return json.loads(req.decode()), status_code
-                return req, status_code
+                return req
 
 
 Database = _Database()

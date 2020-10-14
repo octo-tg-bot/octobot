@@ -44,16 +44,17 @@ def number_conv(amount):
 
 
 def get_rate(in_c, out_c):
-    rate, status_code = octobot.Database.get_cache(
+    rate_r = octobot.Database.get_cache(
         "https://free.currconv.com/api/v7/convert?compact=ultra",
         params={
             "q": in_c + "_" + out_c,
             "apiKey": Settings.currency_converter_apikey
         }
     )
+    rate_r.raise_for_status()
+    rate = rate_r.json()
     LOGGER.debug(rate)
-    if status_code != 200:
-        raise requests.HTTPError
+
     if rate == {}:
         raise NameError("Invalid currency")
     return rate

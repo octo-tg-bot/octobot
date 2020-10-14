@@ -42,12 +42,14 @@ def good_username(strg, search=re.compile(r'[^a-zA-Z\-_0-9 ]').search):
 
 def get_apex_stats(platform, username, context):
     if good_username(username):
-        res, status_code = octobot.Database.get_cache(API_BASEURL, params={
+        res = octobot.Database.get_cache(API_BASEURL, params={
             "version": "4",
             "platform": platform.upper(),
             "player": username,
             "auth": Settings.mozamibque_here_token
         })
+        status_code = res.status_code
+        res = res.json()
         if status_code != 200:
             context.reply(context.localize("Can't find player {}").format(username))
             return

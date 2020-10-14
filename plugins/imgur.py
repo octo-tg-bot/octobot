@@ -15,8 +15,8 @@ def imgur_search(query, index, max_count, bot: octobot.OctoBot, context: octobot
     logger.debug("page %s, start pos %s", page, start_pos)
     if index < 0:
         raise octobot.catalogs.CatalogCantGoDeeper
-    r, _ = octobot.Database.get_cache(f"https://api.imgur.com/3/gallery/search/time/all/{page}", params={"q": query},
-                                   headers={"Authorization": f"Client-ID {Settings.imgur_clientid}"})
+    r = octobot.Database.get_cache(f"https://api.imgur.com/3/gallery/search/time/all/{page}", params={"q": query},
+                                   headers={"Authorization": f"Client-ID {Settings.imgur_clientid}"}).json()
     if len(r["data"]) == 0:
         if index > 0:
             raise octobot.CatalogCantGoDeeper

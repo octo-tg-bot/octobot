@@ -88,7 +88,7 @@ def rebuild_inline_markup(reply_markup, context):
 def decode_inline(data):
     data = data.split(":")
     keyboard_data = "invalid:"
-    if len(data) == 2:
+    if len(data) == 2 and Database.redis is not None:
         kbd_uuid, button_uuid = data
         db_res = Database.redis.hget(generate_inline_entry(kbd_uuid), button_uuid)
         if db_res is not None:
