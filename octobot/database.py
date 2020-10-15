@@ -70,6 +70,18 @@ def request_create_id(request_type, request_args, request_kwargs):
     return f"request_cache:{request_type}:{json.dumps(request_args)}:{json.dumps(request_kwargs)}"
 
 
+def http_cache(rtype):
+    def decorator(_):
+        def cache(*args, **request_kwargs):
+            self = args[0]
+            return self.cache_requests(request_type=rtype, request_args=args[1:],
+                                       request_kwargs=request_kwargs)
+
+        return cache
+
+    return decorator
+
+
 class _Database:
     """
     Base database class.
@@ -89,17 +101,6 @@ class _Database:
             self.redis = None
         else:
             logger.info("Redis connection successful")
-
-    def http_cache(rtype):
-        def decorator(_):
-            def cache(*args, **request_kwargs):
-                self = args[0]
-                return self.cache_requests(request_type=rtype, request_args=args[1:],
-                                           request_kwargs=request_kwargs)
-
-            return cache
-
-        return decorator
 
     @http_cache("GET")
     def get_cache(self, *args, **request_kwargs) -> requests.Response:
@@ -127,6 +128,7 @@ class _Database:
             return r
         else:
             db_entry = request_create_id(request_type, request_args, request_kwargs)
+            logger.debug("Searching for request ID %s", db_entry)
             if self.redis.exists(db_entry) == 1:
                 logger.debug("Using cached result")
                 req = self.redis.get(db_entry)

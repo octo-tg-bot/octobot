@@ -23,7 +23,8 @@ def update_loop(bot, queue, run_event):
     bot.deleteWebhook()
     while run_event.is_set():
         try:
-            for update in bot.getUpdates(update_id, timeout=2):
+            logger.debug("Fetching updates...")
+            for update in bot.getUpdates(update_id, timeout=15):
                 update_id = update.update_id + 1
                 queue.put((bot, update))
         except telegram.error.TimedOut:
