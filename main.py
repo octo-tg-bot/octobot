@@ -24,7 +24,9 @@ def update_loop(bot, queue, run_event):
     while run_event.is_set():
         try:
             logger.debug("Fetching updates...")
-            for update in bot.getUpdates(update_id, timeout=15):
+            for update in bot.getUpdates(update_id, timeout=15,
+                                         allowed_updates=["message", "edited_message",
+                                                          "inline_query", "callback_query"]):
                 update_id = update.update_id + 1
                 queue.put((bot, update))
         except telegram.error.TimedOut:
