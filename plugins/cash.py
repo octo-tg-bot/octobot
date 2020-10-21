@@ -23,6 +23,8 @@ import logging
 import re
 
 import requests
+from babel.numbers import format_currency, format_decimal, get_currency_name
+
 from settings import Settings
 
 import octobot
@@ -34,6 +36,22 @@ CURR_TEMPLATE = octobot.localizable("""
 <a href="http://free.currencyconverterapi.com/">Powered by Currency convert API</a>
 """)
 LOGGER = logging.getLogger("/cash")
+
+
+def get_currency_data():
+    r = octobot.Database.get_cache("https://free.currconv.com/api/v7/currencies", params={
+        "apiKey": Settings.currency_converter_apikey
+    })
+    r.raise_for_status()
+    data, aliases = r.json()["results"], dict()
+    for currency_name, currency_inf in data.items():
+        if currency_inf.get("currencySymbol", False):
+            aliases[currency_inf["currencySymbol"]] = currency_name
+    aliases["$"] = "USD"
+    return data, aliases
+
+
+CURRENCY_DATA, CURRENCY_ALIASES = get_currency_data()
 
 
 def number_conv(amount):
@@ -60,11 +78,16 @@ def get_rate(in_c, out_c):
     return rate
 
 
-def convert(in_c, out_c, count):
+def convert(in_c, out_c, count, ctx):
     rate = get_rate(in_c, out_c)
     out = {}
-    out["in"] = "<b>%s</b> <i>%s</i>" % (count, in_c.upper())
-    out["out"] = "<b>%s</b> <i>%s</i>" % (round(number_conv(count) * float(list(rate.values())[0]), 2), out_c.upper())
+    result = round(number_conv(count) * float(list(rate.values())[0]), 2)
+    out['in'] = "<b>{}</b> <i>{}</i>".format(
+        format_decimal(number_conv(count), locale=ctx.locale),
+        get_currency_name(in_c.upper(), locale=ctx.locale, count=number_conv(count)))
+    out['out'] = "<b>{}</b> <i>{}</i>".format(
+        format_decimal(result, locale=ctx.locale),
+        get_currency_name(out_c.upper(), locale=ctx.locale, count=number_conv(count)))
     return out
 
 
@@ -78,6 +101,9 @@ Example usage:
     100 RUB = 1.66 USD""")
 
 
+def get_currency_id(currency: str):
+    return CURRENCY_ALIASES.get(currency, currency)
+
 
 @octobot.CommandHandler(command=["cash", "currency", "stonks"],
                         description=octobot.localizable("Converts currency"),
@@ -90,7 +116,8 @@ def currency(bot, context):
         except ValueError:
             return context.reply(context.localize("{} is not a valid number").format(context.args[0]))
         else:
-            rate = convert(context.args[1], context.args[-1], context.args[0])
+            rate = convert(get_currency_id(context.args[1]), get_currency_id(context.args[-1]), context.args[0],
+                           context)
     except NameError:
         return context.reply(context.localize('Unknown currency specified'))
     except requests.HTTPError:

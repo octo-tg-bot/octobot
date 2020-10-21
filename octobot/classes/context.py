@@ -144,6 +144,7 @@ class Context:
         self.locale = "en"
         self.bot = bot
         self.update = update
+        self.locale = octobot.localization.get_chat_locale(self.update)
         self.user = update.effective_user
         if self.user is not None:
             self.user_db = Database[self.user.id]
