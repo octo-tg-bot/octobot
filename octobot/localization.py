@@ -4,8 +4,11 @@ import telegram
 
 from octobot import Database
 from typing import Union
-
-AVAILABLE_LOCALES = ["en"] + list(filter(lambda x: os.path.isdir("locales/" + x), os.listdir("locales")))
+import babel
+AVAILABLE_LOCALES = ["en_US"] + list(filter(lambda x: os.path.isdir("locales/" + x), os.listdir("locales")))
+for locale in babel.core.LOCALE_ALIASES.values():
+    if locale not in AVAILABLE_LOCALES:
+        AVAILABLE_LOCALES.append(locale)
 DEFAULT_LOCALE = "en"
 
 

@@ -9,3 +9,4 @@ requests~=2.24.0
 googletrans~=3.0.0
 pillow~=7.2.0
 pygenstub~=1.4.1
+emoji-country-flag~r=1.2.1
