@@ -52,3 +52,13 @@ no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/n
   port = 6379
   db = 0
 
+# Spamwatch settings
+[spamwatch]
+  # Default value is https://api.spamwat.ch
+  # You shouldn't change it in normal circumstances unless using staging API to test
+  api_host = "https://api.spamwat.ch"
+  # Spamwatch API token. Get it at t.me/SpamWatchBot
+  token = "not set"
+  # Default action
+  # Supported values: kick, ban, nothing
+  default_action = "kick"

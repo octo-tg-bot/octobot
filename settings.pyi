@@ -22,6 +22,7 @@ class _Settings:
     no_image = ...  # type: str
     exceptions = ...  # type: dict_exceptions
     redis = ...  # type: dict_redis
+    spamwatch = ...  # type: dict_spamwatch
     def __init__(self) -> Any: ...
     def reload_settings(self) -> Any: ...
     def __getattr__(self, item: Any) -> Any: ...
@@ -41,3 +42,8 @@ class dict_redis(dotdict):
     host = ...  # type: str
     port = ...  # type: int
     db = ...  # type: int
+
+class dict_spamwatch(dotdict):
+    api_host = ...  # type: str
+    token = ...  # type: str
+    default_action = ...  # type: str

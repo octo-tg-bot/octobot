@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-10-21 13:28+0300\n"
+"POT-Creation-Date: 2020-10-22 15:30+0300\n"
 "PO-Revision-Date: 2020-08-08 10:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru_RU\n"
@@ -562,6 +562,54 @@ msgstr "Открыть на safebooru"
 msgid "Source"
 msgstr "Сурс"
 
+#: plugins/spamwatch.py:21
+msgid "Users will be kicked from this chat if they are banned in SpamWatch"
+msgstr "Пользователи будут выкинуты из чата если они забанены в SpamWatch"
+
+#: plugins/spamwatch.py:25
+msgid "Users will be banned from this chat if they are banned in SpamWatch"
+msgstr "Пользователи будут забанены в чате если они забанены в SpamWatch"
+
+#: plugins/spamwatch.py:28
+msgid "SpamWatch plugin is disabled in this chat."
+msgstr "Плагин SpamWatch отключен в чате"
+
+#: plugins/spamwatch.py:35
+msgid "Default"
+msgstr "По умолчанию"
+
+#: plugins/spamwatch.py:57
+msgid ""
+"{user} is banned in SpamWatch since {ban_date}. Reason: "
+"<code>{ban_reason}</code>"
+msgstr ""
+"{user} забанен в SpamWatch с {ban_date}. Причина: "
+"<code>{ban_reason}</code>"
+
+#: plugins/spamwatch.py:58
+msgid "User"
+msgstr ""
+
+#: plugins/spamwatch.py:74
+msgid "Action {action} set. "
+msgstr "Действие {action} установлено. "
+
+#: plugins/spamwatch.py:77
+msgid "is not a valid action."
+msgstr "не является поддерживаемым действием"
+
+#: plugins/spamwatch.py:80
+msgid "You hadn't specified action to set!"
+msgstr "Вы не ввели действие которое нужно установить"
+
+#: plugins/spamwatch.py:82
+msgid "Available actions:"
+msgstr "Доступные действия"
+
+#: plugins/spamwatch.py:89
+msgid "Current action in this chat is"
+msgstr "Текущее действие в этом чате это"
+
 #: plugins/stickers.py:34
 msgid "Stickers"
 msgstr "Стикеры"
@@ -845,4 +893,7 @@ msgstr ""
 
 #~ msgid "Error occured"
 #~ msgstr "Произошла ошибка"
+
+#~ msgid "Пользователь"
+#~ msgstr "Пользователь"
 

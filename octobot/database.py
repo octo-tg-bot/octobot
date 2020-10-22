@@ -89,6 +89,7 @@ class _Database:
     Usage:
     Database[chat_id] to get :class:`RedisData` for chat_id
     """
+    redis: redis.Redis
 
     def __init__(self):
         self.request_session = requests.Session()
@@ -140,6 +141,29 @@ class _Database:
                     self.redis.set(db_entry, pickle.dumps(req))
                     self.redis.expire(db_entry, 60)
                 return req
+
+    def cache(self, ttl=120):
+        def inner(function):
+            @wraps(function)
+            def wrapper(*args, **kwargs):
+                if self.redis is not None:
+                    key = b"func_cache:" + pickle.dumps({"args": args, "kwargs": kwargs, "func_name": function.__name__})
+                    if self.redis.exists(key):
+                        logger.debug("Using cached result for %s", function.__name__)
+                        res = pickle.loads(self.redis.get(key))
+                    else:
+                        res = function(*args, **kwargs)
+                        self.redis.set(key, pickle.dumps(res))
+                        self.redis.expire(key, ttl)
+                        logger.debug("Created cache for %s", function.__name__)
+                else:
+                    res = function(*args, **kwargs)
+                    logger.warning("Redis cache is N/A, function %s is not cached", function.__name__)
+                return res
+
+            return wrapper
+
+        return inner
 
 
 Database = _Database()

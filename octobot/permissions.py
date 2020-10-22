@@ -48,9 +48,9 @@ def check_perms(chat: typing.Union[telegram.Chat, int], user: typing.Union[teleg
             Database.redis.set(db_entry, json.dumps(adm_list))
             Database.redis.expire(db_entry, 240)
     for member in adm_list:
-        if member["user"]["id"] == user_id:
+        if int(member["user"]["id"]) == int(user_id):
             if member["status"] == "creator":
-                return True, permissions_to_check
+                return True, []
             if "is_admin" in permissions_to_check:
                 permissions_to_check.remove("is_admin")
             for user_permission in permissions_to_check.copy():

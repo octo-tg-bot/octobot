@@ -139,7 +139,8 @@ class Context:
     _plugin = "unknown"
     text = None
     message = None
-
+    user: telegram.User
+    chat: telegram.Chat
     def __init__(self, update: telegram.Update, bot):
         self.locale = "en"
         self.bot = bot

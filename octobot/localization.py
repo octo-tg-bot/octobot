@@ -27,10 +27,12 @@ def get_user_locale(user: telegram.User):
     locale = Database[user_id].get("locale", False)
     if not locale:
         locale = user.language_code
-        if locale not in AVAILABLE_LOCALES:
+        if locale not in AVAILABLE_LOCALES and locale is not None:
             locale = locale.split("-")[0]
             if locale not in AVAILABLE_LOCALES:
                 locale = DEFAULT_LOCALE
+        elif locale is None:
+            locale = DEFAULT_LOCALE
     return locale
 
 
