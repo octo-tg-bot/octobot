@@ -20,11 +20,24 @@ class _Settings:
     allowed_chats = ...  # type: list
     disallowed_chat_reason = ...  # type: str
     no_image = ...  # type: str
-    exceptions = ...  # type: dict
-    redis = ...  # type: dict
+    exceptions = ...  # type: dict_exceptions
+    redis = ...  # type: dict_redis
     def __init__(self) -> Any: ...
     def reload_settings(self) -> Any: ...
     def __getattr__(self, item: Any) -> Any: ...
     def get(self, item: Any) -> Any: ...
     def __setitem__(self, key: Any, value: Any) -> Any: ...
     def save_settings_to_disk(self) -> Any: ...
+
+class dotdict(dict):
+    __getattr__ = ...  # type: Any
+    __setattr__ = ...  # type: Any
+    __delattr__ = ...  # type: Any
+
+class dict_exceptions(dotdict):
+    report_type = ...  # type: str
+
+class dict_redis(dotdict):
+    host = ...  # type: str
+    port = ...  # type: int
+    db = ...  # type: int

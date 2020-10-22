@@ -7,7 +7,6 @@ LOGGER = logging.getLogger("Settings")
 
 FOLDER = os.path.abspath(os.path.dirname(__file__))
 
-
 class _Settings():
     _settings: dict = {}
 
@@ -17,11 +16,11 @@ class _Settings():
     def reload_settings(self) -> None:
         settings_backup = self._settings.copy()
         with open(FOLDER + "/settings.base.toml") as f:
-            base_settings = toml.load(f)
+            base_settings = toml.load(f, dotdict)
             self._settings = base_settings
         try:
             with open(FOLDER + "/settings.toml", "r") as f:
-                settings_user = toml.load(f)
+                settings_user = toml.load(f, dotdict)
                 diff = list(set(settings_user.keys()) - set(base_settings.keys()))
                 if len(diff) > 0:
                     self._settings = settings_backup
@@ -55,6 +54,13 @@ class _Settings():
         except FileNotFoundError:
             LOGGER.critical(
                 "Failed to find settings.toml! Continuing anyway cause who knows, maybe doc is getting built?")
+
+
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
 
 
 Settings: _Settings = _Settings()
