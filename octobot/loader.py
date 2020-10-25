@@ -23,6 +23,7 @@ class PluginStates(Enum):
     error = 2
     notfound = 3
     skipped = 4
+    warning = 5
 
 
 class OctoBot(telegram.Bot):
@@ -109,7 +110,7 @@ class OctoBot(telegram.Bot):
         else:
             old_plugin = None
         self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None,
-                                    plugin_info=PluginInfo(name=plugin))
+                                    plugin_info=PluginInfo(name=plugin), last_warning=None)
         if plugin in Settings.exclude_plugins:
             self.plugins[plugin]["state"] = PluginStates.skipped
             return "skipped"
@@ -142,6 +143,10 @@ class OctoBot(telegram.Bot):
                 variable = getattr(plugin_module, variable)
                 if isinstance(variable, PluginInfo):
                     self.plugins[plugin]["plugin_info"] = variable
+                    lw = variable.last_warning
+                    if lw:
+                        self.plugins[plugin]["state"] = PluginStates.warning
+                        self.plugins[plugin]["exception"] = lw
                     break
             logger.info("Loaded plugin %s", plugin)
             res = "loaded"

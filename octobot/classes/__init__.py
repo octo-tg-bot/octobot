@@ -1,7 +1,8 @@
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable
+from typing import Any, Callable, Optional, Dict
+
 
 class UpdateType(Enum):
     """Update types"""
@@ -29,6 +30,13 @@ class PluginInfo():
     handler_kwargs: dict = field(default_factory=dict)
     after_load: Callable[["octobot.OctoBot"], Any] = None
     logger: logging.Logger = field(init=False)
+    last_warning: str = None
+
     def __post_init__(self):
         self.logger = logging.getLogger(self.name)
 
+        def warning(msg, *args, **kwargs):
+            self.last_warning = str(msg) % args
+            logging.Logger.warning(self.logger, msg, *args, **kwargs)
+
+        self.logger.warning = warning

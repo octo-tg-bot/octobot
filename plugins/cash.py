@@ -35,14 +35,16 @@ CURR_TEMPLATE = octobot.localizable("""
 
 <a href="http://free.currencyconverterapi.com/">Powered by Currency convert API</a>
 """)
-LOGGER = logging.getLogger("/cash")
+LOGGER = plugin.logger
 
 
 def get_currency_data():
     r = octobot.Database.get_cache("https://free.currconv.com/api/v7/currencies", params={
         "apiKey": Settings.currency_converter_apikey
     })
-    r.raise_for_status()
+    if not r.ok:
+        LOGGER.warning("Failed to get currency list, conversion using symbols won't work")
+        return {}, {}
     data, aliases = r.json()["results"], dict()
     for currency_name, currency_inf in data.items():
         if currency_inf.get("currencySymbol", False):

@@ -52,7 +52,8 @@ STATES_EMOJIS = {
     octobot.PluginStates.error: "🐞",
     octobot.PluginStates.notfound: "🧐",
     octobot.PluginStates.loaded: "👌",
-    octobot.PluginStates.skipped: "⏩"
+    octobot.PluginStates.skipped: "⏩",
+    octobot.PluginStates.warning: "⚠️"
 }
 
 
@@ -60,7 +61,7 @@ def create_startup_msg(bot):
     msg = "OctoBotV4 loaded."
     for plugin in bot.plugins.values():
         msg += f"\n{STATES_EMOJIS[plugin['state']]} {plugin['name']}"
-        if plugin['state'] in [octobot.PluginStates.error, octobot.PluginStates.skipped]:
+        if plugin['state'] in [octobot.PluginStates.error, octobot.PluginStates.skipped, octobot.PluginStates.warning]:
             msg += f" - {plugin.get('exception', 'skipped')}"
     return msg
 
