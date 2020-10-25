@@ -67,9 +67,8 @@ def test_catalog(query, index, max_amount, bot, context):
                                            reply_markup=telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(
                                                url="https://example.com", text="Test")]]),
                                            photo=[CatalogPhoto(
-                                               url=f"https://picsum.photos/seed/{query}{i + index}/200/200",
-                                               width=200,
-                                               height=200)]))
+                                               url=f"https://picsum.photos/seed/{query}{i + index}/200/300",
+                                           )]))
     return octobot.Catalog(res, current_index=index + 1, next_offset=index + max_amount,
                            previous_offset=index - max_amount, max_count=CATALOG_MAX, photo_primary=True)
 

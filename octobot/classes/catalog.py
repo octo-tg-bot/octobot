@@ -11,14 +11,14 @@ class CatalogPhoto:
     """
     :param url: URL to photo
     :type url: :class:`str`
-    :param width: Photo width. `Required due to Telegram Desktop bug <https://github.com/telegramdesktop/tdesktop/issues/4580>`_
+    :param width: Photo width.
     :type width: :class:`int`
-    :param height: Photo height. `Required due to Telegram Desktop bug <https://github.com/telegramdesktop/tdesktop/issues/4580>`_
+    :param height: Photo height.
     :type height: :class:`int`
     """
     url: str
-    width: int
-    height: int
+    width: int = 100
+    height: int = 100
 
 
 class CatalogKeyArticle:

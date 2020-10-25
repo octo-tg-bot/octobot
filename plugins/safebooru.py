@@ -18,6 +18,7 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
+import base64
 import html
 from dataclasses import dataclass
 from urllib.parse import urlparse
@@ -26,10 +27,10 @@ import bs4
 import requests
 import telegram
 
+import octobot
 from octobot import CatalogPhoto, CatalogKeyArticle, Catalog, CatalogNotFound, OctoBot, Context, \
     localizable, PluginInfo, CatalogCantGoBackwards, CatalogKeyPhoto
 from octobot.catalogs import CatalogHandler
-
 MSG_TEMPLATE = localizable("""<b>Rating:</b> {rating}
 <b>Tags:</b> {tags_str}""")
 
@@ -37,7 +38,7 @@ HEADERS = {"User-Agent": "OctoBot/1.0"}
 
 MAX_RESULTS = 25
 
-plugin_info = PluginInfo("Safebooru")
+plugin = PluginInfo("Safebooru")
 
 
 @dataclass
@@ -69,18 +70,23 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
 
     if offset < 0:
         raise CatalogCantGoBackwards
-
+    if offset // MAX_RESULTS > 0:
+        iter_offset = offset % MAX_RESULTS
+        page = offset // MAX_RESULTS
+    else:
+        page = 0
+        iter_offset = offset
     if limit > MAX_RESULTS:
         limit = MAX_RESULTS
-
-    image = requests.get("https://safebooru.org/index.php",
+    plugin.logger.debug("iter offset %s, page %s", iter_offset, page)
+    image = octobot.Database.get_cache("https://safebooru.org/index.php",
                          params={
                              "page": "dapi",
                              "s": "post",
                              "q": "index",
                              "tags": query,
-                             "limit": limit,
-                             "pid": offset
+                             "limit": MAX_RESULTS,
+                             "pid": page
                          },
                          headers=HEADERS)
     api_q = bs4.BeautifulSoup(image.text, "html.parser").posts
@@ -88,15 +94,23 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
 
     if total == 0:
         raise CatalogNotFound()
-
-    for post in api_q.find_all("post"):
-        tags = html.escape(post.attrs["tags"]).split()[:512]
-
+    posts = api_q.find_all("post")
+    plugin.logger.debug(posts)
+    for post in posts[iter_offset:]:
+        tags_base = html.escape(post.attrs["tags"]).split()
+        tags = []
+        tag_len = 0
+        for tag in tags_base:
+            if tag_len < 800:
+                tags.append(f'<a href="{bot.generate_startlink("/sb " + tag)}">{tag}</a>')
+                tag_len += len(tag)
+            else:
+                tags.append("<code>...</code>")
         item = SafebooruPost(
-            id=post.attrs["rating"],
+            id=post.attrs["id"],
             rating=post.attrs["rating"],
             tags=tags,
-            tags_str=" ".join([f"<code>{tag}</code>" for tag in tags]),
+            tags_str=" ".join(tags),
             source=post.attrs["source"],
             file_url=post.attrs["file_url"],
             width=int(post.attrs["width"]),
@@ -115,7 +129,6 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
                   CatalogPhoto(url=item.preview_url,
                                width=item.preview_width,
                                height=item.preview_height)]
-
         reply_markup = [
             [telegram.InlineKeyboardButton(
                 url="https://safebooru.org/index.php?page=post&s=view&id={}".format(item.id),

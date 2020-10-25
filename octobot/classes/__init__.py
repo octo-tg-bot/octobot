@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable
@@ -27,4 +28,7 @@ class PluginInfo():
     reply_kwargs: dict = field(default_factory=dict)
     handler_kwargs: dict = field(default_factory=dict)
     after_load: Callable[["octobot.OctoBot"], Any] = None
+    logger: logging.Logger = field(init=False)
+    def __post_init__(self):
+        self.logger = logging.getLogger(self.name)
 
