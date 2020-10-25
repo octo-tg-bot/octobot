@@ -21,6 +21,10 @@ class RedisData:
         self._redis = redis_db
         self.chat_id = chat_id
 
+    @property
+    def hashmap_name(self):
+        return f"settings:{self.chat_id}"
+
     def get(self, key, default=None, dont_decode=False):
         """
         Gets key from database. If database cant be accessed or key cant be found, will return value of `default` param
@@ -35,7 +39,7 @@ class RedisData:
         if self._redis is None:
             return default
         else:
-            res = self._redis.hget(str(self.chat_id), key)
+            res = self._redis.hget(self.hashmap_name, key)
             if res is None:
                 return default
             elif dont_decode:
@@ -60,7 +64,7 @@ class RedisData:
         if self._redis is None:
             raise DatabaseNotAvailable
         else:
-            return self._redis.hset(str(self.chat_id), key, value)
+            return self._redis.hset(self.hashmap_name, key, value)
 
     def __setitem__(self, key, value):
         return self.set(key, value)

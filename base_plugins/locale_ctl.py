@@ -35,6 +35,8 @@ def set_locale(bot, ctx):
             octobot.localization.set_chat_locale(ctx.chat.id, ctx.args[0])
         except ValueError:
             ctx.reply(f"Invalid language {ctx.args[0]}.")
+        else:
+            ctx.reply(ctx.localize('Language "{locale}" set').format(locale=Locale.parse(ctx.args[0]).display_name))
 
 
 @InlineButtonHandler("locale_set:")
