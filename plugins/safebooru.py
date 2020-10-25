@@ -106,6 +106,7 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
                 tag_len += len(tag)
             else:
                 tags.append("<code>...</code>")
+                break
         item = SafebooruPost(
             id=post.attrs["id"],
             rating=post.attrs["rating"],
