@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Handlers &#8212; OctoBot 4 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Catalogs" href="catalogs.html" />
+    <link rel="prev" title="Decorators" href="decorators.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="handlers">
+<h1>Handlers<a class="headerlink" href="#handlers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basehandler">
+<h2>BaseHandler<a class="headerlink" href="#basehandler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="octobot.BaseHandler">
+<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">BaseHandler</code><span class="sig-paren">(</span><em class="sig-param">priority=0</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.BaseHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for all handlers</p>
+</dd></dl>
+
+</div>
+<div class="section" id="commandhandler">
+<h2>CommandHandler<a class="headerlink" href="#commandhandler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="octobot.CommandHandler">
+<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">CommandHandler</code><span class="sig-paren">(</span><em class="sig-param">command: Union[list, str], description: str = 'Command description not specified by developer', long_description: str = 'Additional info not specified by developer', hidden=False, prefix='/', inline_support=True, service: bool = False, required_args: int = 0, *args, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.CommandHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command handler. Handles commands in chat and commands in inline queries.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Prefix will not be checked in case of inline queries</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command to handle</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command description</p></li>
+<li><p><strong>long_description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command long description, appears in help for that specific command</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>,</em><em>optional</em>) – Command prefix, defaults to <cite>/</cite></p></li>
+<li><p><strong>hidden</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>,</em><em>optional</em>) – If command should be hidden from /help, defaults to <cite>False</cite></p></li>
+<li><p><strong>inline_support</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>,</em><em>optional</em>) – If command is supported in inline mode, defaults to <cite>True</cite></p></li>
+<li><p><strong>service</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>,</em><em>optional</em>) – If command should be excluded from commands list (not from /help)</p></li>
+<li><p><strong>required_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>,</em><em>optional</em>) – Required args count, defaults to 0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="inlinebuttonhandler">
+<h2>InlineButtonHandler<a class="headerlink" href="#inlinebuttonhandler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="octobot.InlineButtonHandler">
+<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">InlineButtonHandler</code><span class="sig-paren">(</span><em class="sig-param">prefix</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.InlineButtonHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inline keyboard button click handler</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can use <a class="reference internal" href="context.html#octobot.Context.reply" title="octobot.Context.reply"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Context.reply()</span></code></a> to show a toast and <a class="reference internal" href="context.html#octobot.Context.edit" title="octobot.Context.edit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Context.edit()</span></code></a> to edit the message</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prefix</strong> – Prefix. Please end it with some non-letter symbol, like <cite>:</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="messagehandler">
+<h2>MessageHandler<a class="headerlink" href="#messagehandler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="octobot.MessageHandler">
+<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">MessageHandler</code><span class="sig-paren">(</span><em class="sig-param">priority=0</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.MessageHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls function on every message. Simple enough.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">OctoBot</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="octobot.html">OctoBot class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l1"><a class="reference internal" href="localization.html">Localization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kvdb.html">Key-value database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">Decorators</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Handlers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basehandler">BaseHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#commandhandler">CommandHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inlinebuttonhandler">InlineButtonHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#messagehandler">MessageHandler</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalogs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="decorators.html" title="previous chapter">Decorators</a></li>
+      <li>Next: <a href="catalogs.html" title="next chapter">Catalogs</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, OctoNezd.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/handlers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

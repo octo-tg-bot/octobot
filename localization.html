@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Localization &#8212; OctoBot 4 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Key-value database" href="kvdb.html" />
+    <link rel="prev" title="Context" href="context.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="localization">
+<h1>Localization<a class="headerlink" href="#localization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="marking-string-to-be-localizable">
+<h2>Marking string to be “localizable”<a class="headerlink" href="#marking-string-to-be-localizable" title="Permalink to this headline">¶</a></h2>
+<p>This can be used for command descriptions/long descriptions. Please use it only in there, all this function does is make the locale extractor extract the string.</p>
+<dl class="method">
+<dt id="octobot.localization.localizable">
+<code class="sig-prename descclassname">localization.</code><code class="sig-name descname">localizable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#octobot.localization.localizable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to mark which strings can be translated. Use for bot command descriptions and such</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> – String that can be translated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>That exact same string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@CommandHandler</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;helloworld&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">localizable</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="n">bot</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="s2">&quot;This is a test&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="localizing-strings">
+<h2>Localizing strings<a class="headerlink" href="#localizing-strings" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="octobot.Context.localize">
+<code class="sig-prename descclassname">Context.</code><code class="sig-name descname">localize</code><span class="sig-paren">(</span><em class="sig-param">text: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#octobot.Context.localize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Localize string according to user-set localization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – String to translate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Localized string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="generating-localization-files">
+<h3>Generating localization files<a class="headerlink" href="#generating-localization-files" title="Permalink to this headline">¶</a></h3>
+<p>To extract locale strings and/or compile .po files run the <cite>utils/update_locale_data.cmd</cite> file. Despite the fact it’s .cmd, it only contains commands, so you are free to run it on macOS or Linux-based distros. Also notice that you need to run it every time you update locale strings or if it’s first run of bot.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">OctoBot</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="octobot.html">OctoBot class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Localization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#marking-string-to-be-localizable">Marking string to be “localizable”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#localizing-strings">Localizing strings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kvdb.html">Key-value database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalogs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="context.html" title="previous chapter">Context</a></li>
+      <li>Next: <a href="kvdb.html" title="next chapter">Key-value database</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, OctoNezd.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/localization.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

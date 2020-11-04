@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Exceptions &#8212; OctoBot 4 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Other" href="other.html" />
+    <link rel="prev" title="Catalogs" href="catalogs.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-octobot.exceptions">
+<span id="exceptions"></span><h1>Exceptions<a class="headerlink" href="#module-octobot.exceptions" title="Permalink to this headline">¶</a></h1>
+<dl class="exception">
+<dt id="octobot.exceptions.CatalogBaseException">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">CatalogBaseException</code><a class="headerlink" href="#octobot.exceptions.CatalogBaseException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base exception for catalog commands</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.CatalogCantGoBackwards">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">CatalogCantGoBackwards</code><a class="headerlink" href="#octobot.exceptions.CatalogCantGoBackwards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise this exception if it’s impossible to go backwards</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.CatalogCantGoDeeper">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">CatalogCantGoDeeper</code><a class="headerlink" href="#octobot.exceptions.CatalogCantGoDeeper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise this exception is maximum number of results is reached</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.CatalogNotFound">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">CatalogNotFound</code><a class="headerlink" href="#octobot.exceptions.CatalogNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise this exception if no results were found</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.DatabaseNotAvailable">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">DatabaseNotAvailable</code><a class="headerlink" href="#octobot.exceptions.DatabaseNotAvailable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets raised if database cant be accessed</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.DontLoadPlugin">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">DontLoadPlugin</code><a class="headerlink" href="#octobot.exceptions.DontLoadPlugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise this exception if you dont want plugin to continue loading</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.Halt">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">Halt</code><a class="headerlink" href="#octobot.exceptions.Halt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise this exception to make bot stop handling any further updates and quit</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.LoaderCommand">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">LoaderCommand</code><a class="headerlink" href="#octobot.exceptions.LoaderCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base exception for OctoBot handler commands</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.StopHandling">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">StopHandling</code><a class="headerlink" href="#octobot.exceptions.StopHandling" title="Permalink to this definition">¶</a></dt>
+<dd><p>OctoBot stops trying to use other handles if that exception was raised</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octobot.exceptions.UnknownUpdate">
+<em class="property">exception </em><code class="sig-prename descclassname">octobot.exceptions.</code><code class="sig-name descname">UnknownUpdate</code><a class="headerlink" href="#octobot.exceptions.UnknownUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This exception gets raised during update handle if Context failed to determine update</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">OctoBot</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="octobot.html">OctoBot class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l1"><a class="reference internal" href="localization.html">Localization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kvdb.html">Key-value database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalogs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="catalogs.html" title="previous chapter">Catalogs</a></li>
+      <li>Next: <a href="other.html" title="next chapter">Other</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, OctoNezd.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/exceptions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

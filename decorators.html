@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Decorators &#8212; OctoBot 4 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Handlers" href="handlers.html" />
+    <link rel="prev" title="Key-value database" href="kvdb.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="decorators">
+<h1>Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="permission-decorators">
+<h2>Permission decorators<a class="headerlink" href="#permission-decorators" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="octobot.octobot.permissions">
+<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">permissions</code><span class="sig-paren">(</span><em class="sig-param">**perms_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to check permissions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>perms</strong> – Valid permissions that can be found on <a class="reference external" href="https://python-telegram-bot.readthedocs.io/en/stable/telegram.chatmember.html#telegram.ChatMember" title="(in Python Telegram Bot v13.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">telegram.ChatMember</span></code></a> + is_admin. Example: <cite>&#64;permissions(can_delete_messages=True)</cite>. The value does not matter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="octobot.octobot.my_permissions">
+<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">my_permissions</code><span class="sig-paren">(</span><em class="sig-param">**perms_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.my_permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to check bots own permissions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>perms</strong> – Valid permissions that can be found on <a class="reference external" href="https://python-telegram-bot.readthedocs.io/en/stable/telegram.chatmember.html#telegram.ChatMember" title="(in Python Telegram Bot v13.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">telegram.ChatMember</span></code></a> + is_admin. Example: <cite>&#64;my_permissions(can_delete_messages=True)</cite>. The value does not matter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="octobot.octobot.not_admin">
+<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">not_admin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.not_admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to check if sender is not an admin.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="group-type-decorators">
+<h2>Group type decorators<a class="headerlink" href="#group-type-decorators" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="octobot.octobot.supergroup_only">
+<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">supergroup_only</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.supergroup_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that checks if command is issued in supergroup. Disables inline mode for command.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">OctoBot</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="octobot.html">OctoBot class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l1"><a class="reference internal" href="localization.html">Localization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kvdb.html">Key-value database</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Decorators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#permission-decorators">Permission decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#group-type-decorators">Group type decorators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalogs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="kvdb.html" title="previous chapter">Key-value database</a></li>
+      <li>Next: <a href="handlers.html" title="next chapter">Handlers</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, OctoNezd.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/decorators.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
