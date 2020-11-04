@@ -5,7 +5,9 @@ import telegram
 from octobot import Database
 from typing import Union
 import babel
-AVAILABLE_LOCALES = ["en_US"] + list(filter(lambda x: os.path.isdir("locales/" + x), os.listdir("locales")))
+AVAILABLE_LOCALES = ["en_US"]
+if os.path.exists("locales"):
+    AVAILABLE_LOCALES += list(filter(lambda x: os.path.isdir("locales/" + x), os.listdir("locales")))
 for locale in babel.core.LOCALE_ALIASES.values():
     if locale not in AVAILABLE_LOCALES:
         AVAILABLE_LOCALES.append(locale)

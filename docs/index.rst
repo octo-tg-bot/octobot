@@ -10,15 +10,15 @@ Welcome to OctoBot's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   docs/octobot
-   docs/context
-   docs/localization
-   docs/kvdb
-   docs/decorators
-   docs/handlers
-   docs/catalogs
-   docs/exceptions
-   docs/other
+   octobot
+   context
+   localization
+   kvdb
+   decorators
+   handlers
+   catalogs
+   exceptions
+   other
 
 
 Indices and tables
