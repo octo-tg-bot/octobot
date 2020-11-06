@@ -18,6 +18,7 @@ Welcome to OctoBot's documentation!
    handlers
    catalogs
    exceptions
+   plugininfo
    other
 
 
