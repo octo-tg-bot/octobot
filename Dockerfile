@@ -1,7 +1,7 @@
-FROM python:3.8-alpine
-RUN apk add --no-cache gcc jpeg-dev zlib-dev libffi-dev musl-dev openssl-dev libwebp-dev
+FROM alpine:3.12.1
+RUN apk add --no-cache python3~=3.8 py3-cryptography py3-pillow~=7.1.2-r0 py3-pip
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements-alpine.txt .
+RUN pip install --no-cache-dir -r requirements-alpine.txt
 COPY . .
-CMD python /app/main.py
+CMD python3 /app/main.py
