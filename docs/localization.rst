@@ -21,6 +21,7 @@ Localizing strings
 ------------------
 
 .. automethod:: octobot.Context.localize
+    :noindex:
 
 Generating localization files
 _____________________________
