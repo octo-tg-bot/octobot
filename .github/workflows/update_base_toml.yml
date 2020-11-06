@@ -1,0 +1,43 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Update toml in octo-tg-bot/octobot-compose
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches:
+      - master
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  update:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Clone octobot-compose
+      run: git clone https://github.com/octo-tg-bot/octobot-compose.git
+    - name: Compare TOML
+      run: |
+        if cmp settings.base.toml octobot-compose/settings.base.toml; then
+          echo "No changes were made to settings.base.toml"
+          exit 78
+        fi
+        echo "Changes detected, updating"
+    - name: Commit
+      run: |
+        cp settings.base.toml octobot-compose/settings.base.toml
+        cd octobot-compose
+        git add settings.base.toml
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Update settings.base.toml to version $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.USER_GH_TOKEN }}
+        branch: master
+        directory: octobot-compose
+        repository: octo-tg-bot/octobot-compose
