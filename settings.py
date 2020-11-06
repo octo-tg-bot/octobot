@@ -1,3 +1,4 @@
+import json
 import os
 
 import toml
@@ -30,7 +31,19 @@ class _Settings():
                 self._settings.update(settings_user)
         except FileNotFoundError:
             LOGGER.critical(
-                "Failed to find settings.toml! Continuing anyway cause who knows, maybe doc is getting built?")
+                "Failed to find settings.toml!")
+        LOGGER.debug("Iterating over os.environ")
+        for key in os.environ:
+            key = key.lower()
+            LOGGER.debug(key)
+            if key.startswith("ob_"):
+                try:
+                    self._settings[key[3:]] = json.loads(os.environ[key])
+                except json.JSONDecodeError as e:
+                    LOGGER.warning("The key %s has an invalid JSON value of '%s' (error: %s), loading just as plain string", key, os.environ[key], e)
+                    self._settings[key[3:]] = os.environ[key]
+                else:
+                    LOGGER.debug("Loaded settings key %s from environment", key)
         LOGGER.debug(self._settings)
         LOGGER.info("Settings reloaded")
 

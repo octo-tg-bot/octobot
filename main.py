@@ -1,9 +1,9 @@
+import logging
+logging.basicConfig(level=logging.DEBUG) # Set up some basic logging before preimport kicks in and changes logging stuff
 import threading
 from queue import Queue, Empty
 
 import octobot.enums
-import logging
-logging.basicConfig(level=logging.DEBUG) # Set up some basic logging before preimport kicks in and changes logging stuff
 try:
     import preimport
 except ModuleNotFoundError:
@@ -82,7 +82,6 @@ def create_threads():
 
 def main():
     bot = octobot.OctoBot(sys.argv[1:], Settings.telegram_token)
-
     bot.send_message(Settings.owner, create_startup_msg(bot))
     logger.info("Creating update handle threads...")
     threads, queue, run_event = create_threads()

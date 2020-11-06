@@ -31,6 +31,7 @@ class OctoBot(telegram.Bot):
     def __init__(self, load_list, *args, **kwargs):
         dry_run = os.environ.get("DRY_RUN", False)
         if not dry_run:
+            logger.info("Initializing PTB")
             super(OctoBot, self).__init__(*args, **kwargs)
             self.me = self.getMe()
 
