@@ -19,7 +19,8 @@ support_url = "https://example.com"
 # User-Agent used for cached requests
 user_agent = "OctoBot/4.0"
 
-# Mozambiquehe.re token for apex.py plugin
+# Apex Legends API token for apex.py plugin
+# Get token @ https://apexlegendsapi.com/
 mozamibque_here_token = ""
 
 # API Key for currency converter
