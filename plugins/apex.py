@@ -20,7 +20,8 @@ CHARACTER_EMOJIS = {
     "crypto": "🕵️‍♂️",
     "revenant": "⚰️",
     "loba": "💰",
-    "rampart": "🔫"
+    "rampart": "🔫",
+    "horizon": "🚀"
 }
 
 inf = octobot.PluginInfo(octobot.localizable("Apex Legends player stats"))
@@ -137,3 +138,4 @@ octobot.localizable("Crypto")
 octobot.localizable("Revenant")
 octobot.localizable("Loba")
 octobot.localizable("Rampart")
+octobot.localizable("Horizon")
