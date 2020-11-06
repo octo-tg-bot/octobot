@@ -1,6 +1,5 @@
 import base64
 import os
-from enum import Enum
 from glob import glob
 import importlib
 
@@ -10,20 +9,11 @@ import octobot.exceptions
 import octobot.handlers
 import logging
 
-from octobot import PluginInfo, handle_exception
+from octobot import PluginInfo, handle_exception, PluginStates
 from octobot.utils import path_to_module
 from settings import Settings
 
 logger = logging.getLogger("Loader")
-
-
-class PluginStates(Enum):
-    loaded = 0
-    unknown = 1
-    error = 2
-    notfound = 3
-    skipped = 4
-    warning = 5
 
 
 class OctoBot(telegram.Bot):
@@ -85,70 +75,70 @@ class OctoBot(telegram.Bot):
                     var.plugin = plugin
                     if var.priority not in self.handlers:
                         self.handlers[var.priority] = []
-                    if type(var).__name__ in plugin["plugin_info"].handler_kwargs:
-                        for k, v in plugin["plugin_info"].handler_kwargs[type(var).__name__].items():
+                    if type(var).__name__ in plugin.handler_kwargs:
+                        for k, v in plugin.handler_kwargs[type(var).__name__].items():
                             setattr(var, k, v)
                     self.handlers[var.priority].append(var)
         logger.info("Handlers update complete, priority levels: %s", self.handlers.keys())
         logger.debug("Running post-load functions...")
         for plugin in self.plugins.values():
-            func = plugin["plugin_info"].after_load
+            func = plugin.after_load
             if func is not None:
                 func(self)
 
-    def load_plugin(self, plugin: str, single_load=False):
+    def load_plugin(self, plugin_name: str, single_load=False):
         """
         Loads plugin
 
-        :param plugin: Plugin name in module format (ex. `plugins.test`)
-        :type plugin: str
+        :param plugin_name: Plugin name in module format (ex. `plugins.test`)
+        :type plugin_name: str
         :param single_load: If plugin is loaded not together with other plugins (e.g. manually loaded from other plugin). Defaults to False
         :type single_load: bool,optional
         """
-        if plugin in self.plugins:
-            old_plugin = self.plugins[plugin]
+        if plugin_name in self.plugins:
+            old_plugin = self.plugins[plugin_name]
         else:
             old_plugin = None
-        self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None,
-                                    plugin_info=PluginInfo(name=plugin), last_warning=None)
-        if plugin in Settings.exclude_plugins:
-            self.plugins[plugin]["state"] = PluginStates.skipped
+        # self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None,
+        #                             plugin_info=PluginInfo(name=plugin), last_warning=None)
+        plugin = PluginInfo(name=plugin_name)
+        self.plugins[plugin_name] = plugin
+
+        if plugin_name in Settings.exclude_plugins:
+            plugin.state = PluginStates.skipped
             return "skipped"
         try:
-            if old_plugin and old_plugin["module"]:
-                plugin_module = importlib.reload(old_plugin["module"])
+            if old_plugin and old_plugin.module:
+                plugin_module = importlib.reload(old_plugin.module)
             else:
-                plugin_module = importlib.import_module(plugin)
-        except ModuleNotFoundError:
-            self.plugins[plugin]["state"] = PluginStates.notfound
-            logger.error("Plugin %s is defined in load_order, but cannot be found. Please check your load_list.json",
-                         plugin)
-            res = "skipped"
+                plugin_module = importlib.import_module(plugin_name)
         except octobot.DontLoadPlugin as e:
-            self.plugins[plugin]["state"] = PluginStates.skipped
-            self.plugins[plugin]["exception"] = str(e)
+            plugin.state = PluginStates.skipped
+            plugin.state_description = str(e)
             res = "skipped"
         except Exception as e:
             logger.error("Failed to load plugin %s", exc_info=True)
-            self.plugins[plugin]["state"] = PluginStates.error
-            self.plugins[plugin]["exception"] = str(e)
+            plugin.state = PluginStates.error
+            plugin.state_description = str(e)
             res = f"crashed, {e}"
-            if old_plugin and old_plugin["module"]:
+            if old_plugin and old_plugin.module:
                 res = f"crashed ({e}), old version restored"
-                self.plugins[plugin] = old_plugin
+                self.plugins[plugin_name] = old_plugin
         else:
-            self.plugins[plugin]["state"] = PluginStates.loaded
-            self.plugins[plugin]["module"] = plugin_module
+            plugin.state = PluginStates.loaded
+            plugin.module = plugin_module
             for variable in dir(plugin_module):
                 variable = getattr(plugin_module, variable)
                 if isinstance(variable, PluginInfo):
-                    self.plugins[plugin]["plugin_info"] = variable
+                    variable.module = plugin_module
+                    variable.state = PluginStates.loaded
+                    self.plugins[plugin_name] = variable
                     lw = variable.last_warning
                     if lw:
-                        self.plugins[plugin]["state"] = PluginStates.warning
-                        self.plugins[plugin]["exception"] = lw
+                        variable.state = PluginStates.warning
+                        variable.state_description = lw
                     break
-            logger.info("Loaded plugin %s", plugin)
+            logger.info("Loaded plugin %s", plugin_name)
             res = "loaded"
         if single_load:
             self.update_handlers()

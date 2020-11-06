@@ -1,12 +1,13 @@
 import threading
 from queue import Queue, Empty
 
+import octobot.enums
+import logging
+logging.basicConfig(level=logging.DEBUG) # Set up some basic logging before preimport kicks in and changes logging stuff
 try:
     import preimport
 except ModuleNotFoundError:
     pass
-else:
-    preimport.preimport()
 import sys
 import time
 
@@ -48,12 +49,12 @@ def update_handler(upd_queue: Queue, run_event: threading.Event):
 
 
 STATES_EMOJIS = {
-    octobot.PluginStates.unknown: "❓",
-    octobot.PluginStates.error: "🐞",
-    octobot.PluginStates.notfound: "🧐",
-    octobot.PluginStates.loaded: "👌",
-    octobot.PluginStates.skipped: "⏩",
-    octobot.PluginStates.warning: "⚠️"
+    octobot.enums.PluginStates.unknown: "❓",
+    octobot.enums.PluginStates.error: "🐞",
+    octobot.enums.PluginStates.notfound: "🧐",
+    octobot.enums.PluginStates.loaded: "👌",
+    octobot.enums.PluginStates.skipped: "⏩",
+    octobot.enums.PluginStates.warning: "⚠️"
 }
 
 
@@ -61,8 +62,8 @@ def create_startup_msg(bot):
     msg = "OctoBotV4 loaded."
     for plugin in bot.plugins.values():
         msg += f"\n{STATES_EMOJIS[plugin['state']]} {plugin['name']}"
-        if plugin['state'] in [octobot.PluginStates.error, octobot.PluginStates.skipped, octobot.PluginStates.warning]:
-            msg += f" - {plugin.get('exception', 'skipped')}"
+        if plugin['state'] in [octobot.enums.PluginStates.error, octobot.enums.PluginStates.skipped, octobot.enums.PluginStates.warning]:
+            msg += f" - {plugin.state_description}"
     return msg
 
 

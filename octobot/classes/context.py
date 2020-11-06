@@ -101,7 +101,7 @@ def pluginfo_kwargs(field_name):
     def decorator(function):
         @wraps(function)
         def call_func(self, *args, **kwargs):
-            plugin = self._plugin["plugin_info"]
+            plugin = self._plugin
             kw = getattr(plugin, field_name).copy()
             kw.update(kwargs)
             return function(self, *args, **kw)
