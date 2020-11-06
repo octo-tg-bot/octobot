@@ -1,13 +1,10 @@
 import html
-import json
+import os
 import subprocess
-import traceback
 
 import telegram
-from telegram.error import TimedOut
 
 import octobot
-from settings import Settings
 
 inf = octobot.PluginInfo("Bot update",
                          handler_kwargs={
@@ -19,6 +16,9 @@ inf = octobot.PluginInfo("Bot update",
                          },
                          reply_kwargs={"editable": False})
 
+if octobot.is_docker:
+    inf.state = octobot.PluginStates.disabled
+    inf.state_description = "Running inside Docker"
 
 def reload(bot: octobot.OctoBot, ctx):
     msg: telegram.Message = ctx.reply("Reloading...")

@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from octobot.exceptions import *
@@ -11,7 +12,7 @@ from octobot import catalogs
 from octobot.permissions import permissions, my_permissions, reset_cache, not_admin
 from octobot.permissions import check_perms as check_permissions
 from octobot.permissions import create_db_entry_name as _perm_db_entry
-
+is_docker = os.path.exists("/.dockerenv")
 
 def supergroup_only(function):
     """
