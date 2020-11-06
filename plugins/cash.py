@@ -36,7 +36,9 @@ CURR_TEMPLATE = octobot.localizable("""
 <a href="http://free.currencyconverterapi.com/">Powered by Currency convert API</a>
 """)
 LOGGER = plugin.logger
-
+if Settings.currency_converter_apikey == "":
+    plugin.state = octobot.PluginStates.disabled
+    plugin.state_description = "API Key is not set. Get it @ https://free.currencyconverterapi.com/"
 
 def get_currency_data():
     r = octobot.Database.get_cache("https://free.currconv.com/api/v7/currencies", params={

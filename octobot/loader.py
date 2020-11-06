@@ -135,7 +135,7 @@ class OctoBot(telegram.Bot):
                         variable.state = PluginStates.loaded
                     self.plugins[plugin_name] = variable
                     lw = variable.last_warning
-                    if lw:
+                    if lw and variable.state != PluginStates.disabled:
                         variable.state = PluginStates.warning
                         variable.state_description = lw
                     break
