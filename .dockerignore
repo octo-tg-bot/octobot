@@ -4,7 +4,6 @@ preimport.py
 # Documentation
 /docs*
 *.md
-*.po
 *.bat
 # Git
 *git*
