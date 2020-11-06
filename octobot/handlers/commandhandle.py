@@ -1,4 +1,5 @@
 import octobot
+from octobot import PluginStates
 from octobot.handlers import BaseHandler
 from typing import Union
 import logging
@@ -80,6 +81,10 @@ class CommandHandler(BaseHandler):
         if context.update_type == octobot.UpdateType.button_press:
             return
         elif self.check_command(bot, context):
+            if self.plugin.state == PluginStates.disabled:
+                context.reply(
+                    context.localize("Sorry, this command is unavailable. Please contact the bot administrator."))
+                return
             if len(context.args) >= self.required_args:
                 self.execute_function_textmode(bot, context)
             else:
@@ -88,4 +93,4 @@ class CommandHandler(BaseHandler):
                     'Consider reading <a href="{help_url}">help for this command</a>').format(
                     args_amount=self.required_args,
                     help_url=bot.generate_startlink(f"/helpextra {self.command[0]}")),
-                parse_mode="HTML")
+                    parse_mode="HTML")

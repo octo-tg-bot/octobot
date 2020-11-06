@@ -134,16 +134,22 @@ class CatalogHandler(CommandHandler):
     def handle_update(self, bot, context):
         try:
             chk_cmd = self.check_command(bot, context)
-            if (context.query == "" and self.query_required) and context.update_type != octobot.UpdateType.button_press and chk_cmd:
-                return context.reply(context.localize("This command requires query. Specify what you want to find"))
+            if chk_cmd:
+                if self.plugin.state == octobot.PluginStates.disabled:
+                    context.reply(
+                        context.localize("Sorry, this command is unavailable. Please contact the bot administrator."))
+                    return
+                if (context.query == "" and self.query_required) and \
+                        context.update_type != octobot.UpdateType.button_press and chk_cmd:
+                    return context.reply(context.localize("This command requires query. Specify what you want to find"))
+                elif context.update_type in [octobot.UpdateType.message,
+                                             octobot.UpdateType.edited_message] and chk_cmd:
+                    self.handle_command(bot, context)
+                elif context.update_type == octobot.UpdateType.inline_query and chk_cmd:
+                    self.handle_inline(bot, context)
             elif context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[
                 0]:
                 self.handle_page(bot, context)
-            elif context.update_type in [octobot.UpdateType.message,
-                                         octobot.UpdateType.edited_message] and chk_cmd:
-                self.handle_command(bot, context)
-            elif context.update_type == octobot.UpdateType.inline_query and chk_cmd:
-                self.handle_inline(bot, context)
         except CatalogNotFound:
             context.reply(context.localize("Nothing found!"))
         except Exception as e:

@@ -4,8 +4,11 @@ import telegram
 
 import octobot
 from settings import Settings
-from logging import getLogger
-logger = getLogger("imgur")
+plugin = octobot.PluginInfo("Imgur")
+if Settings.imgur_clientid == "":
+    plugin.state = octobot.PluginStates.disabled
+    plugin.state_description = "Imgur client ID is not set"
+logger = plugin.logger
 
 @octobot.catalogs.CatalogHandler("imgur", description=octobot.localizable("Search for image on Imgur"))
 def imgur_search(query, index, max_count, bot: octobot.OctoBot, context: octobot.Context):

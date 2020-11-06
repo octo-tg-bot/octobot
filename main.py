@@ -54,7 +54,8 @@ STATES_EMOJIS = {
     octobot.enums.PluginStates.notfound: "🧐",
     octobot.enums.PluginStates.loaded: "👌",
     octobot.enums.PluginStates.skipped: "⏩",
-    octobot.enums.PluginStates.warning: "⚠️"
+    octobot.enums.PluginStates.warning: "⚠️",
+    octobot.enums.PluginStates.disabled: "🔽"
 }
 
 
@@ -62,7 +63,7 @@ def create_startup_msg(bot):
     msg = "OctoBotV4 loaded."
     for plugin in bot.plugins.values():
         msg += f"\n{STATES_EMOJIS[plugin['state']]} {plugin['name']}"
-        if plugin['state'] in [octobot.enums.PluginStates.error, octobot.enums.PluginStates.skipped, octobot.enums.PluginStates.warning]:
+        if plugin['state'] != octobot.enums.PluginStates.loaded:
             msg += f" - {plugin.state_description}"
     return msg
 

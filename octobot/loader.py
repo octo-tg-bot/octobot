@@ -131,7 +131,8 @@ class OctoBot(telegram.Bot):
                 variable = getattr(plugin_module, variable)
                 if isinstance(variable, PluginInfo):
                     variable.module = plugin_module
-                    variable.state = PluginStates.loaded
+                    if variable.state == PluginStates.unknown:
+                        variable.state = PluginStates.loaded
                     self.plugins[plugin_name] = variable
                     lw = variable.last_warning
                     if lw:

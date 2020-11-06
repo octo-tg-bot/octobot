@@ -6,7 +6,7 @@ import telegram
 
 import octobot
 from settings import Settings
-
+plugin = octobot.PluginInfo("Spamwatch")
 
 def kick(bot: octobot.OctoBot, chat: telegram.Chat, user: telegram.User):
     bot.unban_chat_member(chat.id, user.id)
@@ -29,9 +29,17 @@ VALID_ACTIONS = {
         ...)
 }
 if Settings.spamwatch.default_action not in VALID_ACTIONS:
-    raise octobot.DontLoadPlugin(f"Invalid default action set ({Settings.spamwatch.default_action})")
+    plugin.state = octobot.PluginStates.disabled
+    plugin.state_description = f"Invalid default action set ({Settings.spamwatch.default_action})"
 
-SW_CLIENT = spamwatch.Client(Settings.spamwatch.token, host=Settings.spamwatch.api_host)
+if Settings.spamwatch.token != "not set":
+    SW_CLIENT = spamwatch.Client(Settings.spamwatch.token, host=Settings.spamwatch.api_host)
+    plugin.logger.debug("Created spamwatch class OK")
+else:
+    plugin.logger.error("SW token is N/A (%s)", Settings.spamwatch.token)
+    plugin.state = octobot.PluginStates.disabled
+    plugin.state_description = f"Spamwatch token is not set"
+    SW_CLIENT = None
 octobot.localizable("Default")
 SPAMWATCH_DB_KEY = "sw_act"
 

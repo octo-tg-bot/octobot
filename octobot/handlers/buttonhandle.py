@@ -1,3 +1,4 @@
+from octobot.enums import PluginStates
 from octobot.handlers import BaseHandler
 import octobot
 class InlineButtonHandler(BaseHandler):
@@ -13,6 +14,8 @@ class InlineButtonHandler(BaseHandler):
         self.prefix = prefix
 
     def handle_update(self, bot, context):
+        if self.plugin.state == PluginStates.disabled:
+            return
         if context.update_type == octobot.UpdateType.button_press:
             if context.text.startswith(self.prefix):
                 try:
