@@ -35,7 +35,7 @@ def update_loop(bot, queue, run_event):
                                                           "inline_query", "callback_query"]):
                 update_id = update.update_id + 1
                 queue.put((bot, update))
-        except telegram.error.TimedOut:
+        except (telegram.error.TimedOut, telegram.error.NetworkError):
             time.sleep(1)
 
 
