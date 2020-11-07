@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - master
+      - watchtower-http # REMOVE AFTER MERGE!!!
     paths:
       - '**.py'
       - 'requirements*.txt'
@@ -16,7 +17,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-
+    name: Build docker image
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +30,28 @@ jobs:
           password: ${{ secrets.USER_GH_TOKEN }}
           registry: ghcr.io
           buildargs: CI,GITHUB_SHA,GITHUB_RUN_NUMBER,GITHUB_REF
+  deployment:
+    name: Deploy docker image
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: start deployment
+        uses: bobheadxi/deployments@master
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: telegram
+
+      - name: Send request to Watchtower HTTP API
+        run: 'curl -H "Token: ${{ secrets.WT_TOKEN }}" ${{ secrets.WT_URL }}'
+
+      - name: update deployment status
+        uses: bobheadxi/deployments@master
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
