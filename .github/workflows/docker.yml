@@ -40,10 +40,10 @@ jobs:
           password: ${{ secrets.USER_GH_TOKEN }}
           registry: ghcr.io
           build-args: |
-          CI=${{ env.CI }}
-          GITHUB_SHA=${{ github.sha }}
-          GITHUB_RUN_NUMBER=${{ github.run_number }}
-          GITHUB_REF=${{ github.ref }}
+            CI=${{ env.CI }}
+            GITHUB_SHA=${{ github.sha }}
+            GITHUB_RUN_NUMBER=${{ github.run_number }}
+            GITHUB_REF=${{ github.ref }}
           push: ${{ github.event_name == 'push' }}
   deployment:
     name: Deploy docker image
