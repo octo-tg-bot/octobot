@@ -6,6 +6,7 @@ name: Docker
 # events but only for the master branch
 on:
   workflow_dispatch: # on button click
+  pull_request: # PRs
   push:
     branches:
       - master
