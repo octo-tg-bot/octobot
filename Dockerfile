@@ -8,7 +8,7 @@ WORKDIR /workdir
 COPY locales locales
 RUN /packages/bin/pybabel compile -d locales
 
-FROM alpine:3.12.1
+FROM alpine:3.12.1 AS release
 RUN apk add --no-cache python3~=3.8 libwebp jpeg
 COPY --from=pip-install-env /packages /packages
 COPY --from=pip-install-env /workdir/locales locales
