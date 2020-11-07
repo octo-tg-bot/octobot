@@ -1,9 +1,14 @@
 import logging
-logging.basicConfig(level=logging.DEBUG) # Set up some basic logging before preimport kicks in and changes logging stuff
+
+import requests
+
+logging.basicConfig(
+    level=logging.DEBUG)  # Set up some basic logging before preimport kicks in and changes logging stuff
 import threading
 from queue import Queue, Empty
 
 import octobot.enums
+
 try:
     import preimport
 except ModuleNotFoundError:
@@ -81,11 +86,15 @@ def create_threads():
 
 
 def main():
-    bot = octobot.OctoBot(sys.argv[1:], Settings.telegram_token)
+    if Settings.telegram_base_url != "https://api.telegram.org/bot":
+        r = requests.get(f"https://api.telegram.org/bot{Settings.telegram_token}/logOut")
+        logger.info("Using local bot API, logout result: %s", r.text)
+    bot = octobot.OctoBot(sys.argv[1:], Settings.telegram_token, base_url=Settings.telegram_base_url,
+                          base_file_url=Settings.telegram_base_url)
     bot.send_message(Settings.owner, create_startup_msg(bot))
     logger.info("Creating update handle threads...")
     threads, queue, run_event = create_threads()
-
+    logger.debug("API endpoint: %s", bot.base_url)
     logger.info("Starting update loop.")
     try:
         update_loop(bot, queue, run_event)

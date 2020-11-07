@@ -29,6 +29,7 @@ def create_stub_for_settings():
     with open("settings.py") as f:
         generator = pygenstub.StubGenerator(f.read(), True)
         for setting_name in settings:
+            print("Creating node for", setting_name)
             create_vnode(setting_name, settings[setting_name], generator)
         generator.root.add_variable(pygenstub.VariableNode("Settings", "_Settings"))
         stub = generator.generate_stub()

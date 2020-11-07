@@ -7,6 +7,12 @@ production = false
 # Telegram bot owner ID
 owner = 0
 
+# Telegram API endpoint
+# Change if using local Bot API
+# Notice that the call to api.telegram.org/botTOKEN/logout will be made to log out
+telegram_base_url = "https://api.telegram.org/bot"
+telegram_base_file_url = "https://api.telegram.org/file/bot"
+
 # Thread amount
 threads = 4
 
@@ -45,7 +51,6 @@ no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/n
   # describe - shows error description to user. May leak data, dont use in production
   # none - doesnt show any sort of error description to user
   report_type = "describe"
-
 
 # Redis information
 [redis]

@@ -10,6 +10,8 @@ class _Settings:
     telegram_token = ...  # type: str
     production = ...  # type: bool
     owner = ...  # type: int
+    telegram_base_url = ...  # type: str
+    telegram_base_file_url = ...  # type: str
     threads = ...  # type: int
     exclude_plugins = ...  # type: list
     support_url = ...  # type: str
