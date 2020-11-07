@@ -27,4 +27,4 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.USER_GH_TOKEN }}
           registry: ghcr.io
-          buildargs: CI,GITHUB_SHA,GITHUB_RUN_ID,GITHUB_REF
+          buildargs: CI,GITHUB_SHA,GITHUB_RUN_NUMBER,GITHUB_REF

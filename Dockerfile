@@ -9,9 +9,9 @@ COPY . .
 ARG CI=false
 ARG GITHUB_SHA=unknown
 ARG GITHUB_REF=unknown
-ARG GITHUB_RUN_ID=unknown
+ARG GITHUB_RUN_NUMBER=unknown
 RUN if [ $CI = "true" ]; then \
-  echo "$GITHUB_SHA on $GITHUB_REF (CI Run #$GITHUB_RUN_ID)" > .git-version; \
+  echo "$GITHUB_SHA on $GITHUB_REF (CI Run #$GITHUB_RUN_NUMBER)" > .git-version; \
  else \
   echo "Built outside CI, unknown ver" >  .git-version; \
  fi
