@@ -21,7 +21,6 @@ jobs:
   build:
     name: Build docker image
     runs-on: ubuntu-latest
-    timeout-minutes: 6
     steps:
       - uses: actions/checkout@master
       - name: Set up Docker Buildx
