@@ -3,7 +3,7 @@
 [![Documentation](https://img.shields.io/badge/-Documentation-brightgreen)](https://aigis_bot.gitlab.io/octobotv4/)
 
 
-## Installation
+## Installation 
 
 1. Install the requirements:
 
