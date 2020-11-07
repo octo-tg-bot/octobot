@@ -37,6 +37,8 @@ def update_loop(bot, queue, run_event):
                 queue.put((bot, update))
         except (telegram.error.TimedOut, telegram.error.NetworkError):
             time.sleep(1)
+        except (telegram.error.RetryAfter) as e:
+            time.sleep(e.retry_after + 1)
 
 
 def update_handler(upd_queue: Queue, run_event: threading.Event):
