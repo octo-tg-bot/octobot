@@ -35,9 +35,7 @@ jobs:
       - name: Publish to Registry
         uses: docker/build-push-action@v2
         with:
-          name: octo-tg-bot/octotgbot
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.USER_GH_TOKEN }}
+          tags: octo-tg-bot/octotgbot:latest
           registry: ghcr.io
           build-args: |
             CI=${{ env.CI }}
@@ -45,6 +43,9 @@ jobs:
             GITHUB_RUN_NUMBER=${{ github.run_number }}
             GITHUB_REF=${{ github.ref }}
           push: ${{ github.event_name == 'push' }}
+      - name: Inspect
+        run: |
+          docker image inspect octotgbot:latest
   deployment:
     name: Deploy docker image
     needs: build
