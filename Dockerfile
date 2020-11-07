@@ -1,10 +1,19 @@
-FROM alpine:3.12.1
-RUN apk add --no-cache python3~=3.8 py3-cryptography py3-pillow~=7.1.2-r0 py3-pip
-WORKDIR /app
-COPY requirements-alpine.txt .
-RUN pip install --no-cache-dir -r requirements-alpine.txt
+# syntax = docker/dockerfile:1.0-experimental
+FROM alpine:3.12.1 AS pip-install-env
+RUN apk add --no-cache python3~=3.8 py3-pip gcc python3-dev~=3.8 musl-dev libffi-dev openssl-dev zlib-dev libwebp-dev jpeg-dev
+COPY requirements.txt .
+RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip pip install wheel && pip install -r requirements.txt -t /packages
+ENV PYTHONPATH=/packages
+WORKDIR /workdir
 COPY locales locales
-RUN pybabel compile -d locales
+RUN /packages/bin/pybabel compile -d locales
+
+FROM alpine:3.12.1
+RUN apk add --no-cache python3~=3.8 libwebp jpeg
+COPY --from=pip-install-env /packages /packages
+COPY --from=pip-install-env /workdir/locales locales
+ENV PYTHONPATH=/packages
+WORKDIR /app
 COPY . .
 ARG CI=false
 ARG GITHUB_SHA=unknown
