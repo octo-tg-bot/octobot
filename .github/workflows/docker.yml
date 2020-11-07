@@ -32,7 +32,7 @@ jobs:
           buildargs: CI,GITHUB_SHA,GITHUB_RUN_NUMBER,GITHUB_REF
   deployment:
     name: Deploy docker image
-
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
