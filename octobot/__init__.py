@@ -12,6 +12,7 @@ from octobot import catalogs
 from octobot.permissions import permissions, my_permissions, reset_cache, not_admin
 from octobot.permissions import check_perms as check_permissions
 from octobot.permissions import create_db_entry_name as _perm_db_entry
+
 is_docker = os.path.exists("/.dockerenv")
 
 def supergroup_only(function):
@@ -27,8 +28,12 @@ def supergroup_only(function):
 
     return wrapper
 
-try:
-    __version__ = subprocess.check_output('git log -n 1 --pretty="%h"',
-                                      shell=True).decode('utf-8')
-except subprocess.CalledProcessError:
-    __version__ = "Unknown"
+
+if not is_docker:
+    try:
+        __version__ = subprocess.check_output('git log -n 1 --pretty="%h"',
+                                              shell=True).decode('utf-8').replace("\n", "")
+    except subprocess.CalledProcessError:
+        __version__ = "Unknown"
+else:
+    __version__ = open(".git-version").read().replace("\n", "")

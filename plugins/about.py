@@ -29,10 +29,10 @@ plugin = octobot.PluginInfo("About bot")
                         hidden=False,
                         service=True)
 def about(bot, context):
-    about_string = context.localize("OctoBot4 based on commit <code>{ob_version}</code>" + \
+    about_string = context.localize("OctoBot4 based on commit <code>{ob_version}</code>\n" + \
                                     "Python-Telegram-Bot version: <code>{ptb_version}</code>\n" + \
-                                    '<a href="gitlab.com/aigis_bot">GitLab page</a>\n').format(
+                                    '<a href="https://github.com/octo-tg-bot/">GitHub page</a>\n').format(
         ob_version=octobot.__version__,
         ptb_version=telegram.__version__
-    )
+    ) + (context.localize("🐳Running inside Docker") if octobot.is_docker else context.localize("🖥️Running on normal system"))
     context.reply(text=about_string, parse_mode="HTML")
