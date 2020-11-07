@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - master
-      - watchtower-http # REMOVE AFTER MERGE!!!
     paths:
       - '**.py'
       - 'requirements*.txt'
