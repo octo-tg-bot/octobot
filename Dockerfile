@@ -7,7 +7,7 @@ COPY locales locales
 RUN pybabel compile -d locales
 COPY . .
 ARG CI=false
-ARG GIHUB_SHA=unknown
+ARG GITHUB_SHA=unknown
 ARG GITHUB_REF=unknown
 ARG GITHUB_RUN_ID=unknown
 RUN if [ $CI = "true" ]; then \
