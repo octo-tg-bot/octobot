@@ -6,6 +6,7 @@ name: Docker
 # events but only for the master branch
 on:
   push:
+    workflow_dispatch: # on button click
     branches:
       - master
     paths:
