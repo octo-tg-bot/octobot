@@ -35,10 +35,9 @@ jobs:
       - name: Publish to Registry
         uses: docker/build-push-action@v2
         with:
-          tags: octo-tg-bot/octotgbot:latest
-          registry: ghcr.io
+          tags: ghcr.io/octo-tg-bot/octotgbot:latest
           build-args: |
-            CI=${{ env.CI }}
+            CI=true
             GITHUB_SHA=${{ github.sha }}
             GITHUB_RUN_NUMBER=${{ github.run_number }}
             GITHUB_REF=${{ github.ref }}
