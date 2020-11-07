@@ -5,8 +5,8 @@ name: Docker
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
+  workflow_dispatch: # on button click
   push:
-    workflow_dispatch: # on button click
     branches:
       - master
     paths:
@@ -19,7 +19,7 @@ jobs:
   build:
     name: Build docker image
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@master
       - name: Publish to Registry
@@ -32,10 +32,12 @@ jobs:
           password: ${{ secrets.USER_GH_TOKEN }}
           registry: ghcr.io
           buildargs: CI,GITHUB_SHA,GITHUB_RUN_NUMBER,GITHUB_REF
+          no_push: ${{ github.event_name != 'push' }}
   deployment:
     name: Deploy docker image
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
 
     steps:
       - name: start deployment
