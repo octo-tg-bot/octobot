@@ -1,4 +1,4 @@
-git+https://github.com/octo-tg-bot/python-telegram-bot.git
+python-telegram-bot
 toml
 redis~=3.5.3
 Babel~=2.8.0
