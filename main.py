@@ -95,6 +95,9 @@ def main():
                           base_file_url=Settings.telegram_base_file_url)
     bot.send_message(Settings.owner, create_startup_msg(bot))
     logger.info("Creating update handle threads...")
+    if Settings.telegram_base_file_url_force:
+        logger.warning("Forcefully overriding base url")
+        bot.base_file_url = Settings.telegram_base_file_url
     threads, queue, run_event = create_threads()
     logger.debug("API endpoint: %s", bot.base_url)
     logger.debug("API file endpoint: %s", bot.base_file_url)

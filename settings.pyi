@@ -12,6 +12,7 @@ class _Settings:
     owner = ...  # type: int
     telegram_base_url = ...  # type: str
     telegram_base_file_url = ...  # type: str
+    telegram_base_file_url_force = ...  # type: bool
     threads = ...  # type: int
     exclude_plugins = ...  # type: list
     support_url = ...  # type: str

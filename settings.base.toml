@@ -12,7 +12,8 @@ owner = 0
 # Notice that the call to api.telegram.org/botTOKEN/logout will be made to log out
 telegram_base_url = "https://api.telegram.org/bot"
 telegram_base_file_url = "https://api.telegram.org/file/bot"
-
+# If base file url should be set forcefully without appending token, for example if you are selfhosting bot api with --local
+telegram_base_file_url_force = false
 # Thread amount
 threads = 4
 
