@@ -1,19 +1,24 @@
 import html
 
 import googletrans
+from cachetools import cached, TTLCache
 
 import octobot
 import octobot.localization
 
-translator = googletrans.Translator()
-
 inf = octobot.PluginInfo(octobot.localizable("Google Translate"))
+
+@cached(cache=TTLCache(maxsize=1, ttl=600))
+def get_translator():
+    inf.logger.debug("Creating translator class")
+    return googletrans.Translator()
+
 
 TRANSLATION_TEMPLATE = octobot.localizable("From <i>{source_language}</i> to <i>{target_language}</i>\n<code>{text}</code>")
 
-
 @octobot.CommandHandler(["tl", "translate"], description=octobot.localizable("Translates text using Google Translate"))
 def gtl(bot: octobot.OctoBot, context: octobot.Context):
+    translator = get_translator()
     if context.update.message is not None and context.update.message.reply_to_message is not None:
         reply = context.update.message.reply_to_message
         if reply.caption is not None:
