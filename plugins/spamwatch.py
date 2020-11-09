@@ -3,6 +3,7 @@ import html
 import babel.dates
 import spamwatch
 import telegram
+from cachetools import cached, TTLCache
 
 import octobot
 from settings import Settings
@@ -43,7 +44,7 @@ else:
 octobot.localizable("Default")
 SPAMWATCH_DB_KEY = "sw_act"
 
-@octobot.Database.cache()
+@cached(cache=TTLCache(maxsize=100, ttl=600))
 def check_spamwatch_ban(user: telegram.User):
     ban_data = SW_CLIENT.get_ban(user.id)
     return ban_data
