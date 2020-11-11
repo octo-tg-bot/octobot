@@ -57,9 +57,9 @@ def help_command(query, idx, max_amount, bot: octobot.OctoBot, ctx: octobot.Cont
         raise catalogs.CatalogCantGoDeeper
     last_plugin = ""
     for handler in handlers[idx]:
-        if last_plugin != handler.plugin["plugin_info"].name:
-            last_plugin = handler.plugin["plugin_info"].name
-            handlers_msg += f"<b>{ctx.localize(handler.plugin['plugin_info'].name)}:</b>\n"
+        if last_plugin != handler.plugin.name:
+            last_plugin = handler.plugin.name
+            handlers_msg += f"<b>{ctx.localize(handler.plugin.name)}:</b>\n"
         handlers_msg += '{commands} – {description}. <i><a href="t.me/{bot.me.username}?start=b64-{command}">{learnmore}</a></i>\n'.format(
             commands=", ".join(handler.commandlist),
             description=html.escape(ctx.localize(handler.description)),
