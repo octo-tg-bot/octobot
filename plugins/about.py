@@ -26,8 +26,7 @@ plugin = octobot.PluginInfo("About bot")
 
 @octobot.CommandHandler(command="about",
                         description=octobot.localizable("About bot"),
-                        hidden=False,
-                        service=True)
+                        hidden=False)
 def about(bot, context):
     about_string = context.localize("OctoBot4 based on commit <code>{ob_version}</code>\n" + \
                                     "Python-Telegram-Bot version: <code>{ptb_version}</code>\n" + \
@@ -35,4 +34,4 @@ def about(bot, context):
         ob_version=octobot.__version__,
         ptb_version=telegram.__version__
     ) + (context.localize("🐳Running inside Docker") if octobot.is_docker else context.localize("🖥️Running on normal system"))
-    context.reply(text=about_string, parse_mode="HTML")
+    context.reply(text=about_string, parse_mode="HTML", no_preview=True)
