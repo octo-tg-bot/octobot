@@ -8,7 +8,7 @@ import octobot.localization
 
 inf = octobot.PluginInfo(octobot.localizable("Google Translate"))
 
-@cached(cache=TTLCache(maxsize=1, ttl=600))
+@cached(cache=TTLCache(maxsize=1, ttl=90))
 def get_translator():
     inf.logger.debug("Creating translator class")
     return googletrans.Translator()
