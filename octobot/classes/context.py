@@ -12,7 +12,8 @@ from telegram import InputMediaPhoto
 import octobot
 import octobot.exceptions
 from octobot.classes import UpdateType
-from octobot.database import Database
+from octobot import database
+Database = database.Database
 from octobot.utils import add_photo_to_text
 from settings import Settings
 

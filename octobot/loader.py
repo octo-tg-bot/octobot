@@ -27,6 +27,7 @@ class OctoBot(telegram.Bot):
     """
     plugins = {}
     handlers = {}
+    error_handlers = []
 
     def __init__(self, load_list, *args, **kwargs):
         dry_run = os.environ.get("DRY_RUN", False)
@@ -72,6 +73,8 @@ class OctoBot(telegram.Bot):
             module = plugin["module"]
             for var_name in dir(module):
                 var = getattr(module, var_name)
+                if isinstance(var, octobot.handlers.ExceptionHandler):
+                    self.error_handlers.append(var)
                 if isinstance(var, octobot.handlers.BaseHandler):
                     var.plugin = plugin
                     if var.priority not in self.handlers:

@@ -16,6 +16,22 @@ def test_perm(bot, context):
                   ])
                   )
 
+@CommandHandler(command="exception", description="Test exception")
+def test_exception(*_):
+    1/0
+
+@CommandHandler(command="inline_exc", description="Test exception in inline buttons")
+def test_inline_exception_c(bot, context):
+    context.reply("Hello world! " + context.query,
+                  reply_markup=telegram.InlineKeyboardMarkup([
+                      [telegram.InlineKeyboardButton(callback_data="inlineexc:", text="Exception")]
+                  ])
+                  )
+
+@InlineButtonHandler("inlineexc")
+def test_inline_exception(*_):
+    1/0
+
 
 @CommandHandler(command="test", description="Test")
 def test(bot, context):

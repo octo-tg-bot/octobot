@@ -3,6 +3,8 @@ import html
 import octobot
 import telegram
 
+import octobot.database
+
 inf = octobot.PluginInfo(name="Sticker block")
 
 
@@ -16,7 +18,7 @@ def create_redis_set_name(chat: telegram.Chat):
 @octobot.my_permissions(can_delete_messages=True)
 def toggle_pack_command(bot: octobot.OctoBot, context: octobot.Context):
     if octobot.Database.redis is None:
-        raise octobot.DatabaseNotAvailable
+        raise octobot.database.DatabaseNotAvailable
     no_pack_msg = context.localize(
         "Reply to sticker from stickerpack which you want to ban or pass the pack name as argument")
     if context.update.message.reply_to_message is not None:
@@ -45,7 +47,7 @@ def toggle_pack_command(bot: octobot.OctoBot, context: octobot.Context):
 @octobot.supergroup_only
 def list_bannedpacks(bot: octobot.OctoBot, context: octobot.Context):
     if octobot.Database.redis is None:
-        raise octobot.DatabaseNotAvailable
+        raise octobot.database.DatabaseNotAvailable
     if octobot.Database.redis.scard(create_redis_set_name(context.chat)) > 0:
         message = [context.localize("This stickerpacks are currently banned in <b>{chat_name}</b>:").format(
             chat_name=html.escape(context.chat.title))]

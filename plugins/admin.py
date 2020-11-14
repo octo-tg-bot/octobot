@@ -5,6 +5,8 @@ import telegram
 import octobot
 import typing
 
+import octobot.database
+
 inf = octobot.PluginInfo(
     name=octobot.localizable("Admin commands"),
     reply_kwargs={"editable": False}
@@ -198,7 +200,7 @@ def create_warn_db_id(chat_id, user_id):
 @octobot.supergroup_only
 def warn(bot: octobot.OctoBot, context: octobot.Context):
     if octobot.Database.redis is None:
-        raise octobot.DatabaseNotAvailable
+        raise octobot.database.DatabaseNotAvailable
     if context.update.message.reply_to_message is None:
         context.reply(context.localize("Reply to user to give them a warn"))
         return
@@ -250,7 +252,7 @@ def undo_warn(chat_id, user_id):
 @octobot.InlineButtonHandler("warn_cancel:")
 def inline_undo_warn(bot: octobot.OctoBot, context: octobot.Context):
     if octobot.Database.redis is None:
-        raise octobot.DatabaseNotAvailable
+        raise octobot.database.DatabaseNotAvailable
     execute_cancel(bot=bot, context=context, func=undo_warn, reply_text=context.localize("Warn removed"))
 
 
@@ -258,7 +260,7 @@ def inline_undo_warn(bot: octobot.OctoBot, context: octobot.Context):
 @octobot.supergroup_only
 def warnlist(bot: octobot.OctoBot, context: octobot.Context):
     if octobot.Database.redis is None:
-        raise octobot.DatabaseNotAvailable
+        raise octobot.database.DatabaseNotAvailable
     reply = context.update.message.reply_to_message
     if reply is not None:
         target = reply.from_user.id

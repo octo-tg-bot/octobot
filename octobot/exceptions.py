@@ -1,7 +1,9 @@
-import octobot
 import logging
+import re
 
-from settings import Settings
+import octobot
+from octobot.database import DatabaseNotAvailable
+from octobot.handlers import ExceptionHandler
 
 logger = logging.getLogger("Exceptions")
 
@@ -47,11 +49,6 @@ class CatalogNotFound(CatalogBaseException):
     pass
 
 
-class DatabaseNotAvailable(ConnectionError):
-    """Gets raised if database cant be accessed"""
-    pass
-
-
 class DontLoadPlugin(RuntimeError):
     """Raise this exception if you dont want plugin to continue loading"""
     pass
@@ -62,7 +59,7 @@ class Halt(LoaderCommand):
     pass
 
 
-def handle_exception(bot, context, e, notify=True):
+def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
     logger.info("handling %s", e)
     if isinstance(e, DatabaseNotAvailable):
         if notify:
@@ -74,13 +71,25 @@ def handle_exception(bot, context, e, notify=True):
         raise e
     else:
         logger.error("Exception got thrown somewhere", exc_info=True)
+        message = context.localize("🐞 Failed to execute command due to unknown error.")
+        err_handlers_msgs = [message]
+        err_handlers_markup = []
+        for err_handler in bot.error_handlers:
+            err_handler: ExceptionHandler
+            values = err_handler.handle_exception(bot, context, e)
+            if len(values) == 2:
+                text, markup = values
+                err_handlers_markup.append(markup)
+            else:
+                text = values
+            err_handlers_msgs.append(text)
         if notify:
-            message = context.localize("🐞 Failed to execute command due to unknown error.")
-            report_type = Settings.exceptions["report_type"]
-            if report_type == "describe":
-                message += "\n" + context.localize("Error description: {error}").format(error=str(e))
+            if len(err_handlers_markup) == 0:
+                err_handlers_markup = None
+            message = "\n".join(err_handlers_msgs)
             if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
-                context.reply(message)
+                context.reply(message, parse_mode="HTML", reply_markup=err_handlers_markup)
             elif context.update_type == octobot.UpdateType.button_press:
+                message = re.sub(r"<[^>]*>", '', message)
                 context.update.callback_query.answer(message, show_alert=True)
                 # context.edit(message)

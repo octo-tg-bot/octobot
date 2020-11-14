@@ -1,12 +1,12 @@
 import os
 import subprocess
 
-from octobot.exceptions import *
 from octobot.database import Database
-from octobot.classes import *
-from octobot.handlers import *
-from octobot.loader import OctoBot
 from octobot.enums import PluginStates
+from octobot.exceptions import *
+from octobot.classes import *
+from octobot.handlers import CommandHandler, ExceptionHandler, MessageHandler, InlineButtonHandler
+from octobot.loader import OctoBot
 from octobot.localization import localizable
 from octobot import catalogs
 from octobot.permissions import permissions, my_permissions, reset_cache, not_admin

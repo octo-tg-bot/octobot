@@ -1,9 +1,10 @@
-from octobot import PluginInfo
+from octobot.classes import PluginInfo
 
 
-class BaseHandler():
+class BaseHandler:
     """Base class for all handlers"""
     plugin = {"plugin_info": PluginInfo("unknown")}
+
     def __init__(self, priority=0):
         self.priority = priority
 
@@ -15,13 +16,19 @@ class BaseHandler():
         return self
 
 
+class ExceptionHandler:
+    def handle_exception(self, bot, context, exception):
+        return
+
 class MessageHandler(BaseHandler):
     """
     Calls function on every message. Simple enough.
     """
+
     def handle_update(self, bot, context):
         if context.update.message:
             self.function(bot, context)
+
 
 from octobot.handlers.buttonhandle import InlineButtonHandler
 from octobot.handlers.commandhandle import CommandHandler

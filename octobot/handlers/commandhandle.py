@@ -50,7 +50,7 @@ class CommandHandler(BaseHandler):
         for command in self.command:
             yield self.prefix + command
 
-    def execute_function_textmode(self, bot, context: octobot.Context):
+    def execute_function_textmode(self, bot, context: "octobot.Context"):
         try:
             self.function(bot, context)
         except Exception as e:

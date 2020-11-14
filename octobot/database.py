@@ -6,7 +6,6 @@ from functools import wraps
 import redis
 import requests
 
-from octobot import DatabaseNotAvailable
 from settings import Settings
 
 logger = logging.getLogger("Redis")
@@ -171,3 +170,8 @@ class _Database:
 
 
 Database = _Database()
+
+
+class DatabaseNotAvailable(ConnectionError):
+    """Gets raised if database cant be accessed"""
+    pass
