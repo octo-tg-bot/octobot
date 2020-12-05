@@ -1,5 +1,6 @@
 import html
 
+import babel
 import googletrans
 from cachetools import cached, TTLCache
 
@@ -50,8 +51,11 @@ def gtl(bot: octobot.OctoBot, context: octobot.Context):
     if destination_language not in googletrans.LANGUAGES:
         destination_language = default_language
     translation = translator.translate(text, dest=destination_language, src=source_language)
+    base_l = babel.Locale(context.locale)
+    src = base_l.languages.get(translation.src.replace("_", "-").split("-")[0].lower(), translation.src)
+    dest = base_l.languages.get(destination_language.replace("_", "-").split("-")[0].lower(), destination_language)
     return context.reply(context.localize(TRANSLATION_TEMPLATE).format(
-        source_language=googletrans.LANGUAGES[translation.src].title(),
-        target_language=googletrans.LANGUAGES[translation.dest].title(),
+        source_language=src,
+        target_language=dest,
         text=html.escape(translation.text)
     ), parse_mode="HTML")
