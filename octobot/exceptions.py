@@ -1,6 +1,8 @@
 import logging
 import re
 
+import telegram
+
 import octobot
 from octobot.database import DatabaseNotAvailable
 from octobot.handlers import ExceptionHandler
@@ -88,6 +90,8 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
         if notify:
             if len(err_handlers_markup) == 0:
                 err_handlers_markup = None
+            else:
+                err_handlers_markup = telegram.InlineKeyboardMarkup(err_handlers_markup)
             message = "\n".join(err_handlers_msgs)
             logger.debug(message)
             if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:

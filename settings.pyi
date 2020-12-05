@@ -41,6 +41,8 @@ class dotdict(dict):
 class dict_sentry(dotdict):
     enabled = ...  # type: bool
     dsn = ...  # type: str
+    organization_slug = ...  # type: str
+    project_slug = ...  # type: str
 
 class dict_redis(dotdict):
     host = ...  # type: str

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-10-22 15:30+0300\n"
+"POT-Creation-Date: 2020-12-05 16:14+0300\n"
 "PO-Revision-Date: 2020-08-08 10:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru_RU\n"
@@ -17,32 +17,40 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.9.0\n"
 
 #: plugins/about.py:28
 msgid "About bot"
 msgstr ""
 
-#: plugins/about.py:32
+#: plugins/about.py:31
 msgid ""
-"OctoBot4 based on commit <code>{ob_version}</code>Python-Telegram-Bot "
-"version: <code>{ptb_version}</code>\n"
-"<a href=\"gitlab.com/aigis_bot\">GitLab page</a>\n"
+"OctoBot4 based on commit <code>{ob_version}</code>\n"
+"Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
+"<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
 msgstr ""
 
-#: plugins/admin.py:9
+#: plugins/about.py:36
+msgid "🐳Running inside Docker"
+msgstr ""
+
+#: plugins/about.py:36
+msgid "🖥️Running on normal system"
+msgstr ""
+
+#: plugins/admin.py:11
 msgid "Admin commands"
 msgstr ""
 
-#: plugins/admin.py:31 plugins/admin.py:179
+#: plugins/admin.py:33 plugins/admin.py:181
 msgid "This action was undone by <a href=\"tg://user?id={admin_id}\">{admin}</a>"
 msgstr ""
 
-#: plugins/admin.py:38
+#: plugins/admin.py:40
 msgid "Invalid ID passed"
 msgstr ""
 
-#: octobot/permissions.py:79 plugins/admin.py:41 plugins/admin.py:187
+#: octobot/permissions.py:79 plugins/admin.py:43 plugins/admin.py:189
 msgid ""
 "Sorry, you can't execute this command cause you lack following "
 "permissions: {}"
@@ -50,116 +58,116 @@ msgstr ""
 "У вас не хватает этих прав администратора, чтобы выполнить эту команду: "
 "{} "
 
-#: plugins/admin.py:60
+#: plugins/admin.py:62
 msgid "I hadn't seen the person whose username is @{username}"
 msgstr ""
 
-#: plugins/admin.py:66
+#: plugins/admin.py:68
 msgid ""
 "You hadn't specified the target!Reply to message of person you want to "
 "{action} or specify their ID or username"
 msgstr ""
 
-#: plugins/admin.py:74
+#: plugins/admin.py:76
 msgid "I can't {action} administrators."
 msgstr ""
 
-#: plugins/admin.py:81
+#: plugins/admin.py:83
 msgid ""
 "Can't {action} <a href=\"tg://user?id={target}\">{target_name}</a>.\n"
 "Error: <code>{error}</code>."
 msgstr ""
 
-#: plugins/admin.py:91
+#: plugins/admin.py:93
 msgid "Cancel"
 msgstr ""
 
-#: plugins/admin.py:102
+#: plugins/admin.py:104
 msgid "Bans user in this chat"
 msgstr ""
 
-#: plugins/admin.py:108
+#: plugins/admin.py:110
 msgid ""
 "🔨<a href=\"tg://user?id={admin_id}\">{admin_name}</a> banned <a "
 "href=\"tg://user?id={target}\">{target_name}</a>"
 msgstr ""
 
-#: plugins/admin.py:110
+#: plugins/admin.py:112
 msgid "ban"
 msgstr ""
 
-#: plugins/admin.py:114
+#: plugins/admin.py:116
 msgid "Kicks user from chat"
 msgstr ""
 
-#: plugins/admin.py:120
+#: plugins/admin.py:122
 msgid ""
 "👞<a href=\"tg://user?id={admin_id}\">{admin_name}</a> kicked <a "
 "href=\"tg://user?id={target}\">{target_name}</a>"
 msgstr ""
 
-#: plugins/admin.py:122
+#: plugins/admin.py:124
 msgid "kick"
 msgstr ""
 
-#: plugins/admin.py:128
+#: plugins/admin.py:130
 msgid "Unbanned"
 msgstr ""
 
-#: plugins/admin.py:141
+#: plugins/admin.py:143
 msgid "Pin back the old message"
 msgstr ""
 
-#: plugins/admin.py:142
+#: plugins/admin.py:144
 msgid ""
 "\n"
 "<a href=\"{oldpin_link}\">Old pinned message</a>"
 msgstr ""
 
-#: plugins/admin.py:147
+#: plugins/admin.py:149
 msgid "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> pinned message.\n"
 msgstr ""
 
-#: plugins/admin.py:155
+#: plugins/admin.py:157
 msgid "Pins message in chat"
 msgstr ""
 
-#: plugins/admin.py:163
+#: plugins/admin.py:165
 msgid "Pins message in chat with notification"
 msgstr ""
 
-#: plugins/admin.py:178
+#: plugins/admin.py:180
 msgid "Pinned back the old message"
 msgstr ""
 
-#: plugins/admin.py:195
+#: plugins/admin.py:197
 msgid "Gives user a warning"
 msgstr ""
 
-#: plugins/admin.py:203
+#: plugins/admin.py:205
 msgid "Reply to user to give them a warn"
 msgstr ""
 
-#: plugins/admin.py:207
+#: plugins/admin.py:209
 msgid "Can't warn administrator"
 msgstr ""
 
-#: plugins/admin.py:215
+#: plugins/admin.py:217
 msgid "Warn reason not specified"
 msgstr ""
 
-#: plugins/admin.py:223
+#: plugins/admin.py:225
 msgid ""
 "\n"
 "\n"
 "<i>User had reached maximum warnings in chat and was banned</i>"
 msgstr ""
 
-#: plugins/admin.py:228
+#: plugins/admin.py:230
 msgid "Unban"
 msgstr ""
 
-#: plugins/admin.py:230
+#: plugins/admin.py:232
 msgid ""
 "⚠️<a href=\"tg://user?id={admin_id}\">{admin}</a> warned <a "
 "href=\"tg://user?id={target_id}\">{target_name}</a> "
@@ -167,23 +175,23 @@ msgid ""
 "Reason: <i>{reason}</i>"
 msgstr ""
 
-#: plugins/admin.py:254
+#: plugins/admin.py:256
 msgid "Warn removed"
 msgstr ""
 
-#: plugins/admin.py:257
+#: plugins/admin.py:259
 msgid "Lists all user warns or your warns"
 msgstr ""
 
-#: plugins/admin.py:278
+#: plugins/admin.py:280
 msgid "Failed to find username {username}"
 msgstr ""
 
-#: plugins/admin.py:282
+#: plugins/admin.py:284
 msgid "Warns for {name}:"
 msgstr ""
 
-#: plugins/admin.py:285
+#: plugins/admin.py:287
 msgid "{name} has no warns!"
 msgstr ""
 
@@ -331,59 +339,59 @@ msgstr "Поиск манги на Anilist"
 msgid "Search for character on AniList"
 msgstr "Поиск персонажей на Anilist"
 
-#: plugins/apex.py:26
+#: plugins/apex.py:27
 msgid "Apex Legends player stats"
 msgstr "Статисика в Apex Legends"
 
-#: plugins/apex.py:31
+#: plugins/apex.py:32
 msgid "Kills"
 msgstr "Убийства"
 
-#: plugins/apex.py:32
+#: plugins/apex.py:33
 msgid "Damage"
 msgstr "Урон"
 
-#: plugins/apex.py:33
+#: plugins/apex.py:34
 msgid "Revives"
 msgstr "Возрождений"
 
-#: plugins/apex.py:34
+#: plugins/apex.py:35
 msgid "Games player"
 msgstr "Игр сыграно"
 
-#: plugins/apex.py:35
+#: plugins/apex.py:36
 msgid "Kill/Death ratio"
 msgstr "Соотношение убийств/смертей"
 
-#: plugins/apex.py:54
+#: plugins/apex.py:55
 msgid "Can't find player {}"
 msgstr "Не могу найти игрока {}"
 
-#: plugins/apex.py:57
+#: plugins/apex.py:58
 msgid "Mozambiquehe.re API returned error: {}"
 msgstr "API Mozambiquehe.re вернул ошибку: {}"
 
-#: plugins/apex.py:60
+#: plugins/apex.py:61
 msgid "Player <b>{username}</b>, level {level}"
 msgstr "Игрок <b>{username}</b>, уровень {level}"
 
-#: plugins/apex.py:63
+#: plugins/apex.py:64
 msgid "Rank {rankName} {rankDiv}"
 msgstr "Ранк {rankName} {rankDiv}"
 
-#: plugins/apex.py:65
+#: plugins/apex.py:66
 msgid "Current legend: <b>{}</b>"
 msgstr "Текущая легенда: <b>{}</b>"
 
-#: plugins/apex.py:74
+#: plugins/apex.py:75
 msgid "Player legends stats"
 msgstr "Статистика определенных легенд у игрока"
 
-#: plugins/apex.py:92
+#: plugins/apex.py:93
 msgid "Apex Legends {username} stats"
 msgstr "Статистика {username} в Apex"
 
-#: plugins/apex.py:93
+#: plugins/apex.py:94
 msgid ""
 "Level {level}, ranked level {ranked_level}\n"
 "Current legend:{current_legend}"
@@ -391,85 +399,89 @@ msgstr ""
 "Уровень {level}, уровень в соревновательном режиме {ranked_level}\n"
 "Текущая легенда: {current_legend}"
 
-#: plugins/apex.py:96
+#: plugins/apex.py:97
 msgid "legendsselectedLegendName"
 msgstr ""
 
-#: plugins/apex.py:99
+#: plugins/apex.py:100
 msgid "Invalid username specified!"
 msgstr "Невалидный юзернейм для данной платформы"
 
-#: plugins/apex.py:111
+#: plugins/apex.py:112
 msgid "Specify username to lookup"
 msgstr "Введите юзернейм который надо найти"
 
-#: plugins/apex.py:121
+#: plugins/apex.py:122
 msgid "Lookup Apex player on PC"
 msgstr "Ищет игрока в Apex на ПК"
 
-#: plugins/apex.py:122
+#: plugins/apex.py:123
 msgid "Lookup Apex player on PS4"
 msgstr "Ищет игрока в Apex на PS4"
 
-#: plugins/apex.py:123
+#: plugins/apex.py:124
 msgid "Lookup Apex player on X1"
 msgstr "Ищет игрока в Apex на Xbox One"
 
-#: plugins/apex.py:126
+#: plugins/apex.py:127
 msgid "Bloodhound"
 msgstr "Блудхаунд"
 
-#: plugins/apex.py:127
+#: plugins/apex.py:128
 msgid "Gibraltar"
 msgstr "Гибралтар"
 
-#: plugins/apex.py:128
+#: plugins/apex.py:129
 msgid "Lifeline"
 msgstr "Лайфлайн"
 
-#: plugins/apex.py:129
+#: plugins/apex.py:130
 msgid "Pathfinder"
 msgstr "Патфайндер"
 
-#: plugins/apex.py:130
+#: plugins/apex.py:131
 msgid "Wraith"
 msgstr "Рейф"
 
-#: plugins/apex.py:131
+#: plugins/apex.py:132
 msgid "Bangalore"
 msgstr "Бангалор"
 
-#: plugins/apex.py:132
+#: plugins/apex.py:133
 msgid "Caustic"
 msgstr "Каустик"
 
-#: plugins/apex.py:133
+#: plugins/apex.py:134
 msgid "Mirage"
 msgstr "Мираж"
 
-#: plugins/apex.py:134
+#: plugins/apex.py:135
 msgid "Octane"
 msgstr "Октейн"
 
-#: plugins/apex.py:135
+#: plugins/apex.py:136
 msgid "Wattson"
 msgstr "Ватсон"
 
-#: plugins/apex.py:136
+#: plugins/apex.py:137
 msgid "Crypto"
 msgstr "Крипто"
 
-#: plugins/apex.py:137
+#: plugins/apex.py:138
 msgid "Revenant"
 msgstr "Ревенант"
 
-#: plugins/apex.py:138
+#: plugins/apex.py:139
 msgid "Loba"
 msgstr "Лоба"
 
-#: plugins/apex.py:139
+#: plugins/apex.py:140
 msgid "Rampart"
 msgstr "Рампарт"
+
+#: plugins/apex.py:141
+msgid "Horizon"
+msgstr ""
 
 #: plugins/cash.py:33
 #, python-format
@@ -486,7 +498,7 @@ msgstr ""
 "<a href=\"http://free.currencyconverterapi.com/\">Сделано с помощью "
 "Currency convert API</a>\n"
 
-#: plugins/cash.py:94
+#: plugins/cash.py:98
 msgid ""
 "Powered by The Free Currency Converter API\n"
 "Example usage:\n"
@@ -498,27 +510,27 @@ msgid ""
 "    100 RUB = 1.66 USD"
 msgstr ""
 
-#: plugins/cash.py:109
+#: plugins/cash.py:113
 msgid "Converts currency"
 msgstr "Конвертирует валюту"
 
-#: plugins/cash.py:117
+#: plugins/cash.py:121
 msgid "{} is not a valid number"
 msgstr "{} - неправильное число"
 
-#: plugins/cash.py:122
+#: plugins/cash.py:126
 msgid "Unknown currency specified"
 msgstr "Неизвестная валюта"
 
-#: plugins/cash.py:124
+#: plugins/cash.py:128
 msgid "Currency API is unavailable right now, try later"
 msgstr "API валют сейчас не доступен, попробуйте позже"
 
-#: plugins/gtl.py:10
+#: plugins/gtl.py:9
 msgid "Google Translate"
 msgstr "Переводчик Google"
 
-#: plugins/gtl.py:12
+#: plugins/gtl.py:17
 msgid ""
 "From <i>{source_language}</i> to <i>{target_language}</i>\n"
 "<code>{text}</code>"
@@ -526,27 +538,27 @@ msgstr ""
 "Перевод с <i>{source_language}</i> на <i>{target_language}</i>\n"
 "<code>{text}</code>"
 
-#: plugins/gtl.py:15
+#: plugins/gtl.py:19
 msgid "Translates text using Google Translate"
 msgstr "Переводит текст с помощью Google Translate"
 
-#: plugins/imgur.py:10
+#: plugins/imgur.py:13
 msgid "Search for image on Imgur"
 msgstr "Ищет картинки на Imgur"
 
-#: plugins/imgur.py:38
+#: plugins/imgur.py:41
 msgid "Description:"
 msgstr "Описание:"
 
-#: plugins/imgur.py:41
+#: plugins/imgur.py:44
 msgid "Album with {count} images"
 msgstr "Альбом ({count} картинок)"
 
-#: plugins/imgur.py:48
+#: plugins/imgur.py:51
 msgid "View on Imgur"
 msgstr "Посмотреть на Imgur"
 
-#: plugins/safebooru.py:33
+#: plugins/safebooru.py:34
 msgid ""
 "<b>Rating:</b> {rating}\n"
 "<b>Tags:</b> {tags_str}"
@@ -554,31 +566,64 @@ msgstr ""
 "<b>Рейтинг:</b> {rating}\n"
 "<b>Теги:</b> {tags_str}"
 
-#: plugins/safebooru.py:122
+#: plugins/safebooru.py:136
 msgid "View on safebooru"
 msgstr "Открыть на safebooru"
 
-#: plugins/safebooru.py:129
+#: plugins/safebooru.py:143
 msgid "Source"
 msgstr "Сурс"
 
-#: plugins/spamwatch.py:21
+#: plugins/sentry.py:39
+msgid "Event code is <code>{}</code>"
+msgstr "Код этого события: <code>{}</code>"
+
+#: plugins/sentry.py:41
+msgid "Provide feedback"
+msgstr "Сообщить об ошибке"
+
+#: plugins/sentry.py:49
+msgid "Click here to submit your feedback"
+msgstr "Нажмите здесь чтоб отправить сообщение об ошибке"
+
+#: plugins/sentry.py:52
+msgid "Thanks you for your feedback! Feel free to delete this message"
+msgstr "Спасибо за сообщение об ошибке! Это сообщение можно удалить"
+
+#: plugins/sentry.py:57
+#, fuzzy
+msgid "Invalid event ID"
+msgstr "Неправильный идентификатор события"
+
+#: plugins/sentry.py:58
+msgid "Did you accidentally deleted the feedback event ID?"
+msgstr "Возможно вы его случайно стёрли?"
+
+#: plugins/sentry.py:59 plugins/sentry.py:65
+msgid "Feel free to delete this message"
+msgstr "Это сообщение можно удалить"
+
+#: plugins/sentry.py:64
+msgid "You hadn't wrote the feedback."
+msgstr "Вы не написали сообщение об ошибке"
+
+#: plugins/spamwatch.py:22
 msgid "Users will be kicked from this chat if they are banned in SpamWatch"
 msgstr "Пользователи будут выкинуты из чата если они забанены в SpamWatch"
 
-#: plugins/spamwatch.py:25
+#: plugins/spamwatch.py:26
 msgid "Users will be banned from this chat if they are banned in SpamWatch"
 msgstr "Пользователи будут забанены в чате если они забанены в SpamWatch"
 
-#: plugins/spamwatch.py:28
+#: plugins/spamwatch.py:29
 msgid "SpamWatch plugin is disabled in this chat."
 msgstr "Плагин SpamWatch отключен в чате"
 
-#: plugins/spamwatch.py:35
+#: plugins/spamwatch.py:44
 msgid "Default"
 msgstr "По умолчанию"
 
-#: plugins/spamwatch.py:57
+#: plugins/spamwatch.py:66
 msgid ""
 "{user} is banned in SpamWatch since {ban_date}. Reason: "
 "<code>{ban_reason}</code>"
@@ -586,27 +631,27 @@ msgstr ""
 "{user} забанен в SpamWatch с {ban_date}. Причина: "
 "<code>{ban_reason}</code>"
 
-#: plugins/spamwatch.py:58
+#: plugins/spamwatch.py:67
 msgid "User"
 msgstr ""
 
-#: plugins/spamwatch.py:74
+#: plugins/spamwatch.py:83
 msgid "Action {action} set. "
 msgstr "Действие {action} установлено. "
 
-#: plugins/spamwatch.py:77
+#: plugins/spamwatch.py:86
 msgid "is not a valid action."
 msgstr "не является поддерживаемым действием"
 
-#: plugins/spamwatch.py:80
+#: plugins/spamwatch.py:89
 msgid "You hadn't specified action to set!"
 msgstr "Вы не ввели действие которое нужно установить"
 
-#: plugins/spamwatch.py:82
+#: plugins/spamwatch.py:91
 msgid "Available actions:"
 msgstr "Доступные действия"
 
-#: plugins/spamwatch.py:89
+#: plugins/spamwatch.py:98
 msgid "Current action in this chat is"
 msgstr "Текущее действие в этом чате это"
 
@@ -658,11 +703,11 @@ msgstr ""
 msgid "Adds sticker to personal stickerpack"
 msgstr "Добавляет стикер в личный стикерпак"
 
-#: plugins/stickers_ban.py:13
+#: plugins/stickers_ban.py:15
 msgid "Bans stickerpack in chat"
 msgstr "Заблокировать стикерпак в чате"
 
-#: plugins/stickers_ban.py:20
+#: plugins/stickers_ban.py:22
 msgid ""
 "Reply to sticker from stickerpack which you want to ban or pass the pack "
 "name as argument"
@@ -670,7 +715,7 @@ msgstr ""
 "Ответьте этой командой на стикер, пак которого вы хотите заблокировать, "
 "или передайте название пака аргументом"
 
-#: plugins/stickers_ban.py:33
+#: plugins/stickers_ban.py:35
 msgid ""
 "Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> banned "
 "successfully"
@@ -678,7 +723,7 @@ msgstr ""
 "Стикерпак <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
 "успешно заблокирован"
 
-#: plugins/stickers_ban.py:38
+#: plugins/stickers_ban.py:40
 msgid ""
 "Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
 "unbanned successfully"
@@ -686,23 +731,23 @@ msgstr ""
 "Стикерпак <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
 "успешно разблокирован"
 
-#: plugins/stickers_ban.py:43
+#: plugins/stickers_ban.py:45
 msgid "Lists packs that are banned in this chat"
 msgstr "Список заблокированных стикерпаков"
 
-#: plugins/stickers_ban.py:50
+#: plugins/stickers_ban.py:52
 msgid "This stickerpacks are currently banned in <b>{chat_name}</b>:"
 msgstr "Заблокированные стикерпаки в <b>{chat_name}</b>:"
 
-#: plugins/stickers_ban.py:57
+#: plugins/stickers_ban.py:59
 msgid "There are no stickerpacks that are banned in this chat"
 msgstr "В этом чате нет заблокированных стикерпаков"
 
-#: plugins/test.py:101
+#: plugins/test.py:116
 msgid "Hello, World!"
 msgstr "Привет, мир!"
 
-#: plugins/test.py:103
+#: plugins/test.py:118
 msgid "This is a test"
 msgstr "Это тест"
 
@@ -790,7 +835,7 @@ msgstr "Я не знаю что делает это кнопка. Эта кла�
 msgid "I am sorry Dave, I am afraid I cant do that."
 msgstr "Извини Дейв, боюсь, я не смогу этого сделать"
 
-#: base_plugins/locale_ctl.py:50
+#: base_plugins/locale_ctl.py:39 base_plugins/locale_ctl.py:52
 msgid "Language \"{locale}\" set"
 msgstr "Язык \"{locale}\" установлен"
 
@@ -836,23 +881,81 @@ msgstr "Больше…"
 msgid "Help for"
 msgstr "Справка для"
 
-#: octobot/__init__.py:24
+#: base_plugins/traceback_exc_handler.py:16
+#, fuzzy
+msgid "Error description: <code>{error}</code>"
+msgstr "Описание ошибки: {error}"
+
+#: base_plugins/traceback_exc_handler.py:20
+msgid "On line {line} in <code>{fname}</code>"
+msgstr ""
+
+#: base_plugins/user_id.py:7
+msgid "User ID"
+msgstr ""
+
+#: base_plugins/user_id.py:11
+msgid "Check the user/group/message/inline_query IDs"
+msgstr ""
+
+#: base_plugins/user_id.py:22
+msgid "{} ID:<code>{}</code>"
+msgstr ""
+
+#: base_plugins/user_id.py:22
+#, fuzzy
+msgid "Your"
+msgstr "Сурс"
+
+#: base_plugins/user_id.py:23
+msgid "Chat ID:<code>{}</code>"
+msgstr ""
+
+#: base_plugins/user_id.py:24
+msgid "Chat type is <code>{}</code>"
+msgstr ""
+
+#: base_plugins/user_id.py:27
+msgid "ID of your message: <code>{}</code>"
+msgstr ""
+
+#: base_plugins/user_id.py:30
+msgid "ID of replied message: <code>{}</code>"
+msgstr ""
+
+#: base_plugins/user_id.py:32
+msgid "ID of {} from replied message: {}"
+msgstr ""
+
+#: base_plugins/user_id.py:34
+msgid "Forward {} ID: {}"
+msgstr ""
+
+#: base_plugins/user_id.py:36
+msgid "Forwarded message ID in original chat: {}"
+msgstr ""
+
+#: base_plugins/user_id.py:38
+msgid "Forwarded message original chat ({}) ID: {}"
+msgstr ""
+
+#: octobot/__init__.py:29
 msgid "This command can be used only in supergroups."
 msgstr "Эта команда доступна только в групповых чатах."
 
-#: octobot/exceptions.py:70 octobot/exceptions.py:72
+#: octobot/exceptions.py:69 octobot/exceptions.py:71
 msgid "Failed to execute command due to database problems. Please try later"
 msgstr ""
 "Произошла ошибка в выполнении команды из-за проблем с базой данных. "
 "Пожалуйста, попробуйте позже."
 
-#: octobot/exceptions.py:78
+#: octobot/exceptions.py:76
 msgid "🐞 Failed to execute command due to unknown error."
 msgstr "🐞 Во время выполнения команды произошла непревиденная ошибка."
 
-#: octobot/exceptions.py:81
-msgid "Error description: {error}"
-msgstr "Описание ошибки: {error}"
+#: octobot/loader.py:195
+msgid "Click here for command list"
+msgstr ""
 
 #: octobot/permissions.py:121
 msgid ""
@@ -862,38 +965,32 @@ msgstr ""
 "Извините, я не могу выполнить эту команду из-за отсутствия этих прав "
 "администратора: {}"
 
-#: octobot/classes/context.py:65
+#: octobot/classes/context.py:66
 msgid "Buttons are not available due to database error"
 msgstr "Кнопки не работают из-за ошибки базы данных"
 
-#: octobot/handlers/cataloghandler.py:138
+#: octobot/handlers/cataloghandler.py:140 octobot/handlers/commandhandle.py:86
+msgid "Sorry, this command is unavailable. Please contact the bot administrator."
+msgstr ""
+
+#: octobot/handlers/cataloghandler.py:144
 msgid "This command requires query. Specify what you want to find"
 msgstr ""
 
-#: octobot/handlers/cataloghandler.py:148
+#: octobot/handlers/cataloghandler.py:154
 msgid "Nothing found!"
 msgstr "Не найдено"
 
-#: octobot/handlers/commandhandle.py:86
+#: octobot/handlers/commandhandle.py:91
 msgid ""
 "Not enough arguments! This command takes {args_amount} arguments. "
 "Consider reading <a href=\"{help_url}\">help for this command</a>"
 msgstr ""
 
-#~ msgid "plugin_info"
-#~ msgstr ""
-
 #~ msgid ""
-#~ "Definition for <b>{escape(word)}</b> by <i>{escape(author)}</i>:\n"
-#~ "\n"
-#~ "{definition}\n"
-#~ "Example(s):\n"
-#~ "{example}"
+#~ "OctoBot4 based on commit "
+#~ "<code>{ob_version}</code>Python-Telegram-Bot "
+#~ "version: <code>{ptb_version}</code>\n"
+#~ "<a href=\"gitlab.com/aigis_bot\">GitLab page</a>\n"
 #~ msgstr ""
-
-#~ msgid "Error occured"
-#~ msgstr "Произошла ошибка"
-
-#~ msgid "Пользователь"
-#~ msgstr "Пользователь"
 

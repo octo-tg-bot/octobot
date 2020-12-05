@@ -14,6 +14,8 @@ class UpdateType(Enum):
     """Message"""
     edited_message = 3
     """Edited message"""
+    chosen_inline_result = 4
+    """Chosen inline result"""
 
 
 from octobot.classes.context import Context

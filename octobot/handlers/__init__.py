@@ -29,6 +29,7 @@ class MessageHandler(BaseHandler):
         if context.update.message:
             self.function(bot, context)
 
-
+from octobot.handlers.choseninlineresulthandle import ChosenInlineResultHandler
+from octobot.handlers.inlinequeryhandle import InlineQueryHandler
 from octobot.handlers.buttonhandle import InlineButtonHandler
 from octobot.handlers.commandhandle import CommandHandler

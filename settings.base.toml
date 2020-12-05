@@ -50,6 +50,10 @@ no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/n
   enabled = false
   # Sentry exception report DSN
   dsn = ''
+  # Sentry organization slug
+  organization_slug = ''
+  # Sentry project slug
+  project_slug = ''
 
 # Redis information
 [redis]

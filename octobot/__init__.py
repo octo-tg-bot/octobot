@@ -5,7 +5,8 @@ from octobot.database import Database
 from octobot.enums import PluginStates
 from octobot.exceptions import *
 from octobot.classes import *
-from octobot.handlers import CommandHandler, ExceptionHandler, MessageHandler, InlineButtonHandler
+from octobot.handlers import CommandHandler, ExceptionHandler, MessageHandler, InlineButtonHandler, InlineQueryHandler, \
+    ChosenInlineResultHandler
 from octobot.loader import OctoBot
 from octobot.localization import localizable
 from octobot import catalogs
@@ -14,6 +15,7 @@ from octobot.permissions import check_perms as check_permissions
 from octobot.permissions import create_db_entry_name as _perm_db_entry
 
 is_docker = os.path.exists("/.dockerenv")
+
 
 def supergroup_only(function):
     """

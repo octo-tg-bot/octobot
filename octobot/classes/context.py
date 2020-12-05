@@ -47,7 +47,7 @@ def create_inline_button_id(kbd_id):
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
     cleantext = re.sub(cleanr, '', raw_html)
-    return cleantext
+    return html.unescape(cleantext)
 
 
 def encode_callback_data(callback_data, keyboard_id):
@@ -195,6 +195,9 @@ class Context:
                     logger.debug("Not handling update %s cause not available in database", update.update_id)
                     raise octobot.StopHandling
                 logger.debug("edit target = %s", self.edit_tgt)
+        elif update.chosen_inline_result:
+            self.update_type = UpdateType.chosen_inline_result
+            self.text = update.chosen_inline_result.query
         else:
             raise octobot.exceptions.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
         if self.text is None:
