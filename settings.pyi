@@ -23,7 +23,7 @@ class _Settings:
     allowed_chats = ...  # type: list
     disallowed_chat_reason = ...  # type: str
     no_image = ...  # type: str
-    exceptions = ...  # type: dict_exceptions
+    sentry = ...  # type: dict_sentry
     redis = ...  # type: dict_redis
     spamwatch = ...  # type: dict_spamwatch
     def __init__(self) -> Any: ...
@@ -38,8 +38,9 @@ class dotdict(dict):
     __setattr__ = ...  # type: Any
     __delattr__ = ...  # type: Any
 
-class dict_exceptions(dotdict):
-    report_type = ...  # type: str
+class dict_sentry(dotdict):
+    enabled = ...  # type: bool
+    dsn = ...  # type: str
 
 class dict_redis(dotdict):
     host = ...  # type: str

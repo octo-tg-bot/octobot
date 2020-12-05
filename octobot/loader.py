@@ -180,6 +180,7 @@ class OctoBot(telegram.Bot):
                 for handler in handlers:
                     try:
                         ctx._plugin = handler.plugin
+                        ctx._handler = handler
                         handler.handle_update(bot, ctx)
                     except octobot.exceptions.Halt as e:
                         raise e

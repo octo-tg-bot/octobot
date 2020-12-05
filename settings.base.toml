@@ -45,13 +45,11 @@ disallowed_chat_reason = "I am sorry, I can't work in this chat cause it is not 
 # Fallback image when bot failed to send image
 no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/no_image.png"
 
-# Exception handling
-[exceptions]
-  # How error will be reported to user
-  # Allowed values:
-  # describe - shows error description to user. May leak data, dont use in production
-  # none - doesnt show any sort of error description to user
-  report_type = "describe"
+[sentry]
+  # If sentry exception reporting should be enabled or not
+  enabled = false
+  # Sentry exception report DSN
+  dsn = ''
 
 # Redis information
 [redis]

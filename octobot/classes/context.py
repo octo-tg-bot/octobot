@@ -138,6 +138,7 @@ class Context:
     :vartype update: :class:`telegram.Update`
     """
     _plugin = "unknown"
+    _handler = "unknown"
     text = None
     message = None
     user: telegram.User

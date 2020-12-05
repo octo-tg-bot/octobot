@@ -77,7 +77,9 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
         for err_handler in bot.error_handlers:
             err_handler: ExceptionHandler
             values = err_handler.handle_exception(bot, context, e)
-            if len(values) == 2:
+            if values is None:
+                continue
+            elif len(values) == 2:
                 text, markup = values
                 err_handlers_markup.append(markup)
             else:
@@ -87,6 +89,7 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
             if len(err_handlers_markup) == 0:
                 err_handlers_markup = None
             message = "\n".join(err_handlers_msgs)
+            logger.debug(message)
             if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
                 context.reply(message, parse_mode="HTML", reply_markup=err_handlers_markup)
             elif context.update_type == octobot.UpdateType.button_press:
