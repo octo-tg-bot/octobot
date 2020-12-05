@@ -160,7 +160,7 @@ class OctoBot(telegram.Bot):
         self.update_handlers()
         return
 
-    def handle_update(self, bot, update):
+    def handle_update(self, bot, update: telegram.Update):
         logger.debug("handling update %s", update.to_dict())
         try:
             ctx = octobot.Context(update, bot)
@@ -191,6 +191,8 @@ class OctoBot(telegram.Bot):
                         handle_exception(self, ctx, e, notify=False)
             except octobot.exceptions.StopHandling:
                 break
+        if update.inline_query and not ctx.replied:
+            update.inline_query.answer([], switch_pm_text=ctx.localize("Click here for command list"), switch_pm_parameter="help")
 
     def generate_startlink(self, command):
         command = f"b64-{base64.urlsafe_b64encode(command.encode()).decode()}"

@@ -140,6 +140,7 @@ class Context:
     _plugin = "unknown"
     _handler = "unknown"
     text = None
+    replied = False
     message = None
     user: telegram.User
     chat: telegram.Chat
@@ -234,6 +235,7 @@ class Context:
         :param inline_description: Description for inline mode, optional, defaults to first 400 symbols of `text`
         :type inline_description: :class:`str`
         """
+        self.replied = True
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url and not photo_primary:
             if parse_mode is None or parse_mode.lower() != "html":
@@ -301,7 +303,6 @@ class Context:
         :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
         :type parse_mode: :class:`str`, optional
         """
-
         reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url and not photo_primary:
             if parse_mode is None or parse_mode.lower() != "html":
