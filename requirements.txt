@@ -6,7 +6,7 @@ jstyleson~=0.0.2
 pytz~=2020.4
 beautifulsoup4~=4.9.3
 requests~=2.25.0
-git+https://github.com/alainrouillon/py-googletrans@feature/enhance-use-of-direct-api
+googletrans==3.1.0a0
 pillow~=8.0.1
 pygenstub~=1.4.1
 emoji-country-flag~=1.2.3
