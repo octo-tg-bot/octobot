@@ -12,4 +12,4 @@ pygenstub~=1.4.1
 emoji-country-flag~=1.2.3
 spamwatch~=0.3.0
 cachetools==4.1.1
-sentry-sdk~=0.19.4
+sentry-sdk~=0.19.5
