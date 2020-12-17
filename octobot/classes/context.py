@@ -13,6 +13,7 @@ import octobot
 import octobot.exceptions
 from octobot.classes import UpdateType
 from octobot import database
+
 Database = database.Database
 from octobot.utils import add_photo_to_text
 from settings import Settings
@@ -134,17 +135,22 @@ class Context:
     :vartype query: :class:`str`
     :var args: Command arguments, parsed like sys.argv
     :vartype args: :class:`list`
+    :var reply_to_message: Reply_to_message equivalent in Context form
+    :vartype reply_to_message: :class:`octobot.Context`, optional
     :var update: Original update
     :vartype update: :class:`telegram.Update`
     """
     _plugin = "unknown"
     _handler = "unknown"
+    reply_to_message = None
     text = None
     replied = False
     message = None
     user: telegram.User
     chat: telegram.Chat
-    def __init__(self, update: telegram.Update, bot):
+
+    def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
+        # TODO: Move class creation into from_update and from_reply functions cause this is a mess
         self.locale = "en"
         self.bot = bot
         self.update = update
@@ -159,6 +165,9 @@ class Context:
             self.chat = self.user
         self.chat_db = Database[self.chat.id]
         self.kbd_id = None
+        is_reply = message is not None
+        if message is None and update.message is not None:
+            message = update.message
         if update.inline_query:
             self.text = update.inline_query.query
             self.update_type = UpdateType.inline_query
@@ -166,15 +175,17 @@ class Context:
             self.kbd_id = update.callback_query.data.split(":")[0]
             self.text = decode_inline(update.callback_query.data)
             self.update_type = UpdateType.button_press
-        elif update.message:
-            if update.message.caption is not None:
-                self.text = update.message.caption
+        elif message:
+            if message.caption is not None:
+                self.text = message.caption
             else:
-                self.text = update.message.text
+                self.text = message.text
             self.update_type = UpdateType.message
-            if octobot.Database.redis is not None:
+            if octobot.Database.redis is not None and not is_reply:
                 octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), 0)
                 octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
+            if message.reply_to_message:
+                self.reply_to_message = Context(update, bot, update.message.reply_to_message)
         elif update.edited_message:
             if octobot.Database.redis is None:
                 raise octobot.StopHandling
