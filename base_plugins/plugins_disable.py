@@ -29,7 +29,7 @@ PLUGINS = {}
 def create_plugins_list(bot: octobot.OctoBot):
     PLUGINS.clear()
     for plugin, info in bot.plugins.items():
-        if not plugin.split(".")[0] == "base_plugins" and info.state in (octobot.PluginStates.loaded, octobot.PluginStates.warning):
+        if not plugin.split(".")[0] == "base_plugins" and info.state in (octobot.PluginStates.loaded, octobot.PluginStates.warning) and info.can_disable:
             PLUGINS[plugin] = info.name
     plugin_inf.logger.info("Created plugins list: %s",PLUGINS)
 
