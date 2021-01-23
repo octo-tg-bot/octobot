@@ -8,8 +8,7 @@ from settings import Settings
 info = octobot.PluginInfo("Test plugin")
 
 if Settings.production:
-    info.state = octobot.PluginStates.disabled
-    info.state_description = "Test plugin is not made for production"
+    raise octobot.DontLoadPlugin
 
 @CommandHandler(command="ptest", description="Permissions test")
 @octobot.permissions(can_restrict_members=True)
