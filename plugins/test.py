@@ -4,7 +4,12 @@ import octobot
 from octobot.classes.catalog import CatalogPhoto
 from octobot.handlers import CommandHandler, InlineButtonHandler
 from octobot.localization import localizable
+from settings import Settings
+info = octobot.PluginInfo("Test plugin")
 
+if Settings.production:
+    info.state = octobot.PluginStates.disabled
+    info.state_description = "Test plugin is not made for production"
 
 @CommandHandler(command="ptest", description="Permissions test")
 @octobot.permissions(can_restrict_members=True)
@@ -124,4 +129,3 @@ def pmtest(bot, ctx: octobot.Context):
     ctx.reply("Test", to_pm=True)
 
 
-info = octobot.PluginInfo("Test plugin")
