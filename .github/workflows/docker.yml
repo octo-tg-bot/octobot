@@ -73,7 +73,7 @@ jobs:
           environment: prod
 
       - name: Send request to Watchtower HTTP API
-        run: 'curl -H "Token: ${{ secrets.WT_TOKEN }}" http://${{ secrets.WT_HOST }}:${{ secrets.WT_PORT }}/v1/update'
+        run: 'curl -H "Authorization: Bearer ${{ secrets.WT_TOKEN }}" http://${{ secrets.WT_HOST }}:${{ secrets.WT_PORT }}/v1/update'
 
       - name: update deployment status
         uses: bobheadxi/deployments@master
