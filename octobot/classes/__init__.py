@@ -55,7 +55,7 @@ class PluginInfo():
     state_description: str = "state_description was not overwritten"
     last_warning: str = None
     module = None
-    can_disable = True
+    can_disable: bool = True
 
     def __post_init__(self):
         self.logger = logging.getLogger(self.name)
