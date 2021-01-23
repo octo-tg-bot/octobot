@@ -103,8 +103,6 @@ class OctoBot(telegram.Bot):
             old_plugin = self.plugins[plugin_name]
         else:
             old_plugin = None
-        # self.plugins[plugin] = dict(name=plugin, state=PluginStates.unknown, module=None,
-        #                             plugin_info=PluginInfo(name=plugin), last_warning=None)
         plugin = PluginInfo(name=plugin_name)
         self.plugins[plugin_name] = plugin
 
@@ -173,11 +171,16 @@ class OctoBot(telegram.Bot):
             return
         except octobot.exceptions.StopHandling:
             return
+        disabled_plugins = []
+        if update.effective_message is not None and update.effective_chat.type == "supergroup":
+            disabled_plugins = octobot.Database.redis.smembers(f"plugins_disabled{update.effective_chat.id}")
         for priority in sorted(self.handlers.keys()):
             handlers = self.handlers[priority]
             logger.debug(f"handling priority level {priority}")
             try:
                 for handler in handlers:
+                    if handler.plugin.module.__name__.encode() in disabled_plugins:
+                        continue
                     try:
                         ctx._plugin = handler.plugin
                         ctx._handler = handler

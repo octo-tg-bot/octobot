@@ -24,7 +24,7 @@ import html
 
 import octobot
 
-plugin = octobot.PluginInfo
+plugin = octobot.PluginInfo("/me command")
 
 
 @octobot.CommandHandler(command="me",

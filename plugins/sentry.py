@@ -12,7 +12,7 @@ from settings import Settings
 
 if not Settings.sentry.enabled:
     raise octobot.DontLoadPlugin("Sentry is disabled")
-plugin = octobot.PluginInfo("Sentry")
+plugin = octobot.PluginInfo("Sentry", can_disable=False)
 sentry_sdk.init(
     Settings.sentry.dsn,
     debug=not Settings.production,
