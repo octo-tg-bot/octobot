@@ -11,5 +11,5 @@ pillow~=8.1.0
 pygenstub~=1.4.1
 emoji-country-flag~=1.2.3
 spamwatch~=0.3.0
-cachetools==4.2.0
+cachetools==4.2.1
 sentry-sdk~=0.19.5
