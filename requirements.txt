@@ -7,7 +7,7 @@ pytz~=2020.5
 beautifulsoup4~=4.9.3
 requests~=2.25.1
 googletrans==4.0.0rc1
-pillow~=8.1.0
+pillow~=8.1.1
 pygenstub~=1.4.1
 emoji-country-flag~=1.2.3
 spamwatch~=0.3.0
