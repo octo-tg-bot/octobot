@@ -271,6 +271,7 @@ class Context:
                 del kwargs["reply_to_message_id"]
             if photo_url and photo_primary:
                 try:
+                    if "disable_web_page_preview" in kwargs: del kwargs["disable_web_page_preview"]
                     message = self.bot.send_photo(caption=text, photo=photo_url[0], **kwargs)
                 except telegram.error.TelegramError:
                     if parse_mode.lower() != 'html':
