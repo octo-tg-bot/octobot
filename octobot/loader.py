@@ -194,8 +194,8 @@ class OctoBot(telegram.Bot):
                         handle_exception(self, ctx, e, notify=False)
             except octobot.exceptions.StopHandling:
                 break
-        if update.inline_query and not ctx.replied:
-            update.inline_query.answer([], switch_pm_text=ctx.localize("Click here for command list"), switch_pm_parameter="help")
+        # if update.inline_query and not ctx.replied:
+        #     update.inline_query.answer([], switch_pm_text=ctx.localize("Click here for command list"), switch_pm_parameter="help")
 
     def generate_startlink(self, command):
         command = f"b64-{base64.urlsafe_b64encode(command.encode()).decode()}"

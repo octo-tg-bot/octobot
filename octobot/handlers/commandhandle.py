@@ -3,6 +3,7 @@ from octobot import PluginStates
 from octobot.handlers import BaseHandler
 from typing import Union
 import logging
+logger = logging.getLogger("commandhandle")
 
 
 class CommandHandler(BaseHandler):
@@ -57,6 +58,7 @@ class CommandHandler(BaseHandler):
             octobot.exceptions.handle_exception(bot, context, e)
 
     def check_command(self, bot, context):
+        logger.debug(f"{repr(context.text)} com:{self.command}")
         if context.update_type == octobot.UpdateType.inline_query:
             if not self.inline_support:
                 return False
