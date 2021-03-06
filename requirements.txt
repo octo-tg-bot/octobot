@@ -1,4 +1,4 @@
-python-telegram-bot
+python-telegram-bot<14
 toml
 redis~=3.5.3
 Babel~=2.9.0
