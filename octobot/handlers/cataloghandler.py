@@ -64,6 +64,7 @@ class CatalogHandler(CommandHandler):
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.max_count, res.previous_offset,
                                   res.next_offset))
+        reply_markup.inline_keyboard.append(self.create_current_query_button(query, context))
         context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
                      reply_markup=reply_markup, photo_primary=res.photo_primary)
 
@@ -74,6 +75,8 @@ class CatalogHandler(CommandHandler):
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.max_count, res.previous_offset,
                                   res.next_offset))
+        reply_markup.inline_keyboard.append(self.create_current_query_button(query, context))
+
         context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
                       reply_to_previous=False,
                       reply_markup=reply_markup, photo_primary=res.photo_primary)
@@ -92,6 +95,9 @@ class CatalogHandler(CommandHandler):
             return
         inline_res = []
         for item in res:
+            if item.reply_markup is None:
+                item.reply_markup = telegram.InlineKeyboardMarkup()
+            item.reply_markup.inline_keyboard.append(self.create_current_query_button(query, context))
             if item.photo is not None:
                 if item.parse_mode is None or item.parse_mode.lower() != "html":
                     item.parse_mode = 'html'
@@ -154,3 +160,6 @@ class CatalogHandler(CommandHandler):
             context.reply(context.localize("Nothing found!"))
         except Exception as e:
             handle_exception(bot, context, e)
+
+    def create_current_query_button(self, query, ctx):
+        return [telegram.InlineKeyboardButton(switch_inline_query_current_chat=f"{self.command[0]} {query}", text=ctx.localize("➡️Search using inline mode"))]
