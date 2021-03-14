@@ -2,8 +2,6 @@ import logging
 
 import requests
 
-logging.basicConfig(
-    level=logging.DEBUG)  # Set up some basic logging before preimport kicks in and changes logging stuff
 import threading
 from queue import Queue, Empty
 
@@ -12,7 +10,8 @@ import octobot.enums
 try:
     import preimport
 except ModuleNotFoundError:
-    pass
+    logging.basicConfig(
+        level=logging.DEBUG)  # We need SOME logging probably
 import sys
 import time
 

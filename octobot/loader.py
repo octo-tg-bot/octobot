@@ -11,7 +11,7 @@ import octobot.handlers
 import logging
 
 from octobot import PluginInfo, handle_exception, PluginStates
-from octobot.utils import path_to_module
+from octobot.utils import path_to_module, thread_local
 from settings import Settings
 
 logger = logging.getLogger("Loader")
@@ -161,10 +161,10 @@ class OctoBot(telegram.Bot):
 
     def handle_update(self, bot, update: telegram.Update):
         logger.debug("handling update %s", update.to_dict())
-        threading.local().current_context = None
+        thread_local.current_context = None
         try:
             ctx = octobot.Context(update, bot)
-            threading.local().current_context = ctx
+            thread_local.current_context = ctx
         except octobot.exceptions.UnknownUpdate:
             unknown_thing = "unknown, update dict: %s" % update.to_dict()
             for var_name, var in vars(update).items():

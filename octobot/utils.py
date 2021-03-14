@@ -2,7 +2,7 @@ import logging
 import threading
 
 from octobot.classes.catalog import CatalogPhoto
-
+thread_local = threading.local()
 
 def add_photo_to_text(text, photo_url):
     if not isinstance(photo_url, list):
@@ -27,7 +27,7 @@ def path_to_module(path: str):
 class AddContextDataToLoggingRecord(logging.Filter):
 
     def filter(self, record):
-        ctx: "Context" = getattr(threading.local(), "context", None)
+        ctx: "Context" = getattr(thread_local, "current_context", None)
         if ctx is not None:
             record.update_type = ctx.update_type
             if ctx.chat:
