@@ -27,10 +27,12 @@ def path_to_module(path: str):
 class AddContextDataToLoggingRecord(logging.Filter):
 
     def filter(self, record):
-        ctx: "Context" = threading.local().context
+        ctx: "Context" = getattr(threading.local(), "context", None)
         if ctx is not None:
             record.update_type = ctx.update_type
             if ctx.chat:
                 record.chat_name = ctx.chat.title
             record.called_command = ctx.called_command
+        else:
+            record.context_not_available = True
         return True
