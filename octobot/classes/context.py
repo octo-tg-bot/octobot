@@ -164,6 +164,8 @@ class Context:
         self.chat = update.effective_chat
         if self.chat is None and self.user is not None:
             self.chat_db = Database[self.user.id]
+        if self.chat is not None:
+            self.chat_db = Database[self.chat.id]
         self.kbd_id = None
         is_reply = message is not None
         if message is None and update.message is not None:
