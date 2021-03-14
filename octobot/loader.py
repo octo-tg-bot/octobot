@@ -172,7 +172,7 @@ class OctoBot(telegram.Bot):
         except octobot.exceptions.StopHandling:
             return
         disabled_plugins = []
-        if update.effective_message is not None and update.effective_chat.type == "supergroup":
+        if octobot.Database.redis is not None and update.effective_message is not None and update.effective_chat.type == "supergroup":
             disabled_plugins = octobot.Database.redis.smembers(f"plugins_disabled{update.effective_chat.id}")
         for priority in sorted(self.handlers.keys()):
             handlers = self.handlers[priority]

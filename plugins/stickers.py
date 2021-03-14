@@ -134,9 +134,10 @@ def gsticker_add(bot, ctx):
         except OSError:
             return ctx.reply(ctx.localize("This file doesn't look like image file"), failed=True)
         try:
-            bot.addStickerToSet(user_id=get_chat_creator(ctx.update.message.chat),
+            sticker_result = bot.addStickerToSet(user_id=get_chat_creator(ctx.update.message.chat),
                                 name=create_pack_name(bot, ctx.update),
                                 png_sticker=image, emojis=emoji)
+            LOGGER.info("addStickerToSet result for %s: %s", create_pack_name(bot, ctx.update), sticker_result)
         except BadRequest:
             image.seek(0)
             try:
