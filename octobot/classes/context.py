@@ -146,6 +146,7 @@ class Context:
     text = None
     replied = False
     message = None
+    called_command = None
     user: telegram.User
     chat: telegram.Chat
 
@@ -161,8 +162,8 @@ class Context:
         else:
             self.user_db = None
         self.chat = update.effective_chat
-        if self.chat is None and self.user is not None:
-            self.chat = self.user
+        # if self.chat is None and self.user is not None:
+        #     self.chat = self.user
         self.chat_db = Database[self.chat.id]
         self.kbd_id = None
         is_reply = message is not None

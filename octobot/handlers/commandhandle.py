@@ -58,7 +58,6 @@ class CommandHandler(BaseHandler):
             octobot.exceptions.handle_exception(bot, context, e)
 
     def check_command(self, bot, context):
-        logger.debug(f"{repr(context.text)} com:{self.command}")
         if context.update_type == octobot.UpdateType.inline_query:
             if not self.inline_support:
                 return False
@@ -76,6 +75,8 @@ class CommandHandler(BaseHandler):
                 state_mention_command = incmd.startswith(
                     command + "@" + bot.me.username)
                 if state_only_command or state_word_swap or state_mention_command:
+                    context.called_command = self.command[0]
+                    logger.info("%s called %s using %s", context.user.name, self.command[0], context.update_type)
                     return True
         return False
 

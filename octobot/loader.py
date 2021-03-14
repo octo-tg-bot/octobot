@@ -1,5 +1,6 @@
 import base64
 import os
+import threading
 from glob import glob
 import importlib
 
@@ -160,8 +161,10 @@ class OctoBot(telegram.Bot):
 
     def handle_update(self, bot, update: telegram.Update):
         logger.debug("handling update %s", update.to_dict())
+        threading.local().current_context = None
         try:
             ctx = octobot.Context(update, bot)
+            threading.local().current_context = ctx
         except octobot.exceptions.UnknownUpdate:
             unknown_thing = "unknown, update dict: %s" % update.to_dict()
             for var_name, var in vars(update).items():
