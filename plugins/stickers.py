@@ -26,7 +26,6 @@ from PIL import Image
 from telegram.error import BadRequest, TimedOut
 import octobot
 
-LOGGER = logging.getLogger("Sticker Optimizer")
 PLUGINVERSION = 2
 maxwidth, maxheight = 512, 512
 # Always name this variable as `plugin`
@@ -34,7 +33,7 @@ maxwidth, maxheight = 512, 512
 inf = octobot.PluginInfo(name=octobot.localizable("Stickers"),
                          reply_kwargs={"editable": False}
                          )
-
+LOGGER = inf.logger
 
 class NoImageProvided(ValueError): pass
 
