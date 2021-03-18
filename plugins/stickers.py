@@ -152,6 +152,8 @@ def gsticker_add(bot, ctx):
                         ctx.localize(
                             "Sorry, but I can't create group pack right now. Ask group creator to PM me and try again."),
                         failed=True)
+                else:
+                    raise e
         sticker = bot.getStickerSet(create_pack_name(bot, ctx.update)).stickers[-1]
         return ctx.update.message.reply_sticker(sticker.file_id)
     except TimedOut:
