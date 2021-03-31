@@ -55,12 +55,14 @@ def resize_sticker(image: Image):
     return io_out
 
 
-def create_pack_name(bot, update, personal=False):
+def create_pack_name(bot, update, personal):
     if personal:
         uid = update.message.from_user.id
+        packtype = "user"
     else:
         uid = str(update.message.chat_id)[1:]
-    name = f"group_{str(uid)}_by_{bot.getMe().username}"
+        packtype = "group"
+    name = f"{packtype}_{uid}_by_{bot.getMe().username}"
     return name
 
 
@@ -112,11 +114,15 @@ def sticker_optimize(bot, ctx):
     doc.reply_sticker(sticker)
 
 
-@octobot.CommandHandler("group_pack_add", octobot.localizable("Adds sticker to group stickerpack"), inline_support=False)
-@octobot.supergroup_only
-@octobot.permissions(is_admin=True)
-def gsticker_add(bot, ctx):
+def sticker_add(bot, ctx, personal):
     args = ctx.args
+    pack_name = create_pack_name(bot, ctx.update, personal=personal)
+    if personal:
+        display_name = f"{ctx.user.first_name[:32]} by @{bot.getMe().username}"
+        creator_id = ctx.user.id
+    else:
+        display_name = f"{ctx.update.message.chat.title[:32]} by @{bot.getMe().username}"
+        creator_id = get_chat_creator(ctx.update.message.chat)
     if len(args) > 0:
         emoji = args[0]
     else:
@@ -134,16 +140,16 @@ def gsticker_add(bot, ctx):
             return ctx.reply(ctx.localize("This file doesn't look like image file"), failed=True)
         try:
             sticker_result = bot.addStickerToSet(user_id=get_chat_creator(ctx.update.message.chat),
-                                name=create_pack_name(bot, ctx.update),
+                                name=pack_name,
                                 png_sticker=image, emojis=emoji)
-            LOGGER.info("addStickerToSet result for %s: %s", create_pack_name(bot, ctx.update), sticker_result)
+            LOGGER.info("addStickerToSet result for %s: %s", pack_name, sticker_result)
         except BadRequest as e:
             LOGGER.info("Bad Request during addStickerToSet: %s", e)
             image.seek(0)
             try:
-                bot.createNewStickerSet(user_id=get_chat_creator(ctx.update.message.chat),
-                                        name=create_pack_name(bot, ctx.update),
-                                        title=f"{ctx.update.message.chat.title[:32]} by @{bot.getMe().username}",
+                bot.createNewStickerSet(user_id=creator_id,
+                                        name=pack_name,
+                                        title=display_name,
                                         png_sticker=image,
                                         emojis=emoji)
             except BadRequest as e:
@@ -154,47 +160,21 @@ def gsticker_add(bot, ctx):
                         failed=True)
                 else:
                     raise e
-        sticker = bot.getStickerSet(create_pack_name(bot, ctx.update)).stickers[-1]
+        sticker = bot.getStickerSet(pack_name).stickers[-1]
         return ctx.update.message.reply_sticker(sticker.file_id)
     except TimedOut:
         return ctx.reply(
             ctx.localize("It seems like I got timed out when creating sticker, that is Telegram-side error. Please try again."),
             failed=True)
+
+
+@octobot.CommandHandler("group_pack_add", octobot.localizable("Adds sticker to group stickerpack"), inline_support=False)
+@octobot.supergroup_only
+@octobot.permissions(is_admin=True)
+def gsticker_add(bot, ctx):
+    sticker_add(bot, ctx, False)
 
 
 @octobot.CommandHandler("pack_add", octobot.localizable("Adds sticker to personal stickerpack"), inline_support=False)
-def sticker_add(bot, ctx):
-    args = ctx.args
-    if len(args) > 0:
-        emoji = args[0]
-    else:
-        emoji = "🤖"
-    try:
-        try:
-            image = resize_sticker(get_file_from_message(bot, ctx.update))
-        except NoImageProvided:
-            return ctx.reply(ctx.localize("No image as photo/file provided."), failed=True)
-        except OverflowError:
-            return ctx.reply(ctx.localize("Failed to compress image after 8 tries"), failed=True)
-        except Image.DecompressionBombError:
-            return ctx.reply(ctx.localize("Attempting to make image bombs, are we?"), failed=True)
-        except OSError:
-            return ctx.reply(ctx.localize("This file doesn't look like image file"), failed=True)
-        try:
-            bot.addStickerToSet(user_id=ctx.update.message.from_user.id,
-                                name=create_pack_name(bot, ctx.update, personal=True),
-                                png_sticker=image,
-                                emojis=emoji)
-        except BadRequest:
-            image.seek(0)
-            bot.createNewStickerSet(user_id=ctx.update.message.from_user.id,
-                                    name=create_pack_name(bot, ctx.update, personal=True),
-                                    title=f"{ctx.update.message.from_user.full_name[:32]} by @{bot.getMe().username}",
-                                    png_sticker=image,
-                                    emojis=emoji)
-        sticker = bot.getStickerSet(create_pack_name(bot, ctx.update, personal=True)).stickers[-1]
-        return ctx.update.message.reply_sticker(sticker.file_id)
-    except TimedOut:
-        return ctx.reply(
-            ctx.localize("It seems like I got timed out when creating sticker, that is Telegram-side error. Please try again."),
-            failed=True)
+def usticker_add(bot, ctx):
+    sticker_add(bot, ctx, True)
