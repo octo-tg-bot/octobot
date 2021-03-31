@@ -178,3 +178,22 @@ def gsticker_add(bot, ctx):
 @octobot.CommandHandler("pack_add", octobot.localizable("Adds sticker to personal stickerpack"), inline_support=False)
 def usticker_add(bot, ctx):
     sticker_add(bot, ctx, True)
+
+
+@octobot.CommandHandler("pack_del", octobot.localizable("Removes sticker from group/user stickerpack"), inline_support=False)
+def sticker_del(bot: octobot.OctoBot, ctx: octobot.Context):
+    reply = ctx.update.message.reply_to_message
+    if reply and reply.sticker:
+        sticker = reply.sticker
+        stickerset = str(sticker.set_name)
+        if_owned_by_bot = stickerset.endswith(f"by_{bot.me.username}")
+        if_personal = stickerset.startswith(f"personal_{ctx.user.id}")
+        if_group = stickerset.startswith(f"group_{ctx.chat.id * -1}")
+        print(stickerset, if_owned_by_bot, if_personal, if_group, f"group_{ctx.chat.id * -1}")
+        if if_owned_by_bot and (if_personal or if_group):
+            if if_group and not octobot.check_permissions(ctx.chat, ctx.user, {"is_admin"}, bot)[0]:
+                return ctx.reply(ctx.localize("You can't delete this chat stickers cause you are not an admin."))
+            bot.deleteStickerFromSet(sticker.file_id)
+            return ctx.reply(ctx.localize("🚮Sticker deleted."))
+        return ctx.reply(ctx.localize("You can't delete stickers in this stickerpack"))
+    ctx.reply(ctx.localize("Please reply to sticker from group/user pack"))
