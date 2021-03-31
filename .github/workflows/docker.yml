@@ -47,6 +47,8 @@ jobs:
             GITHUB_REF=${{ github.ref }}
           push: ${{ github.event_name == 'push' }}
           target: release
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
   deployment:
     name: Deploy docker image
     needs: build
