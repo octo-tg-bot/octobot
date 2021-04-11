@@ -13,23 +13,26 @@ def create_poeditor_catalog(catalog):
     catalog_poeditor = []
     for message in catalog:
         msgid = message if isinstance(message, str) else message.id
-        msgstr = {}
+        msgext = {}
         if not isinstance(message, str):
-            msgstr["translation"] = {"content": message.string}
+            msgext["translation"] = {"content": message.string}
+            msgext["context"] = ""
+            for location in message.locations:
+                msgext["context"] += f"{location[0]} #{location[1]} "
         if msgid != '':
             catalog_poeditor.append({
                 "term": msgid,
-                **msgstr
+                **msgext
             })
     return catalog_poeditor
 
 
 def send_poeditor_catalog(endpoint, action, catalog, extra_args={}):
+    print(f"Uploading catalog to {endpoint}/{action}, args: {extra_args}")
     if not catalog:
         print("Nothing to send...")
         return
     catalog = json.dumps(create_poeditor_catalog(catalog))
-    print(f"Uploading catalog to {endpoint}/{action}, args: {extra_args}")
     r = requests.post(f"https://api.poeditor.com/v2/{endpoint}/{action}",
                       data={"data": catalog,
                             **BASE_ARGS,
