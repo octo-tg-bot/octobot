@@ -16,6 +16,7 @@ def chunks(lst, n):
 
 
 @CommandHandler("language", description="Set language", inline_support=False)
+@octobot.permissions(is_admin=True)
 def set_locale(bot, ctx):
     if len(ctx.args) == 0:
         kbd = []
