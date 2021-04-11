@@ -1,6 +1,6 @@
 # OctoBotV4
 
-[![Documentation](https://img.shields.io/badge/-Documentation-brightgreen)](https://aigis_bot.gitlab.io/octobotv4/)
+[![Documentation](https://img.shields.io/badge/-Documentation-brightgreen)](http://octo-tg-bot.github.io/octobotv4/)
 
 
 ## Installation
@@ -19,4 +19,4 @@
    python3 main.py
    ```
 
-More information is available in the [![Documentation](https://img.shields.io/badge/-Documentation-brightgreen)](https://aigis_bot.gitlab.io/octobotv4/)
+More information is available in the [![Documentation](https://img.shields.io/badge/-Documentation-brightgreen)](http://octo-tg-bot.github.io/octobotv4/)
