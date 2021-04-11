@@ -134,24 +134,14 @@ def pin(bot, context, loud=False):
     if context.update.message.reply_to_message is None:
         context.reply("Reply to message you want to pin")
         return
-    old_pin = bot.get_chat(context.chat.id).pinned_message
-    old_pin_message = ""
-    reply_markup = None
-    if old_pin is not None:
-        reply_markup = telegram.InlineKeyboardMarkup.from_button(
-            telegram.InlineKeyboardButton(callback_data=f"pin:{context.chat.id}:{old_pin.message_id}",
-                                          text=context.localize("Pin back the old message")))
-        old_pin_message = context.localize('\n<a href="{oldpin_link}">Old pinned message</a>').format(
-            oldpin_link=old_pin.link)
     bot.pin_chat_message(chat_id=context.chat.id,
                          message_id=context.update.message.reply_to_message.message_id,
                          disable_notification=not loud)
     context.reply(context.localize('📌<a href="tg://user?id={admin_id}">{admin}</a> pinned message.\n').format(
         admin_id=context.user.id,
         admin=html.escape(context.user.first_name)
-    ) + old_pin_message,
-                  reply_markup=reply_markup,
-                  parse_mode="HTML")
+    ),
+        parse_mode="HTML")
 
 
 @octobot.CommandHandler("pin", octobot.localizable("Pins message in chat"))
@@ -168,26 +158,6 @@ def command_pin(bot: octobot.OctoBot, context: octobot.Context):
 @octobot.supergroup_only
 def command_pin_loud(bot: octobot.OctoBot, context: octobot.Context):
     pin(bot, context, loud=True)
-
-
-@octobot.InlineButtonHandler("pin:")
-def button_pin(bot: octobot.OctoBot, context: octobot.Context):
-    chat_id, message_id = context.text.split(":")[1:]
-    perm_check, missing_perms = octobot.check_permissions(chat=chat_id, user=context.user.id, bot=bot,
-                                                          permissions_to_check={"can_pin_messages"})
-    if perm_check:
-        bot.pin_chat_message(chat_id, message_id, disable_notification=True)
-        context.reply(context.localize("Pinned back the old message"))
-        msg = context.update.effective_message.text_html + "\n\n" + context.localize(
-            'This action was undone by <a href="tg://user?id={admin_id}">{admin}</a>').format(
-            admin_id=context.user.id,
-            admin=html.escape(context.user.first_name)
-        )
-        context.edit(msg, parse_mode="HTML")
-    else:
-        context.reply(
-            context.localize("Sorry, you can't execute this command cause you lack following permissions: {}").format(
-                ", ".join(missing_perms)))
 
 
 def create_warn_db_id(chat_id, user_id):
