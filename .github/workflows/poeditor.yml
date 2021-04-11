@@ -1,0 +1,29 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  upload:
+    name: Upload latest locale terms to POEditor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.7.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@master
+      - name: Setup Python
+        run: apt update && apt install python3 python3-pip
+      - name: Install dependencies
+        run: pip3 install -r requirements.txt
+      - name: Generate latest locales
+        run: sh utils/update_locale_data.cmd
+      - name: Upload latest locale terms and delete outdated to POEditor
+        run: cd locales && python upload_to_poeditor.py
+        env:
+          POEDITOR_TOKEN: ${{ secrets.POEDITOR_TOKEN }}
+          POEDITOR_ID: ${{ secrets.POEDITOR_ID }}
+

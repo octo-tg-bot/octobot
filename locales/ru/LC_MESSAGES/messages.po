@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-11 21:46+0300\n"
+"POT-Creation-Date: 2021-04-11 23:23+0300\n"
 "PO-Revision-Date: 2020-08-08 10:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru_RU\n"
@@ -42,7 +42,7 @@ msgstr "🖥️Бот запущен в обычной среде"
 msgid "Admin commands"
 msgstr "Команды администратора"
 
-#: plugins/admin.py:33 plugins/admin.py:181
+#: plugins/admin.py:33
 msgid "This action was undone by <a href=\"tg://user?id={admin_id}\">{admin}</a>"
 msgstr "<a href=\"tg://user?id={admin_id}\">{admin}</a> отменил это действие"
 
@@ -50,7 +50,7 @@ msgstr "<a href=\"tg://user?id={admin_id}\">{admin}</a> отменил это д
 msgid "Invalid ID passed"
 msgstr "Неверный идентификатор!"
 
-#: octobot/permissions.py:79 plugins/admin.py:43 plugins/admin.py:189
+#: octobot/permissions.py:79 plugins/admin.py:43
 msgid ""
 "Sorry, you can't execute this command cause you lack following "
 "permissions: {}"
@@ -68,7 +68,6 @@ msgid ""
 "{action} or specify their ID or username"
 msgstr ""
 
-
 #: plugins/admin.py:76
 msgid "I can't {action} administrators."
 msgstr "Я не могу {action} администраторов."
@@ -78,7 +77,8 @@ msgid ""
 "Can't {action} <a href=\"tg://user?id={target}\">{target_name}</a>.\n"
 "Error: <code>{error}</code>."
 msgstr ""
-"Не получилось {action} <a href=\"tg://user?id={target}\">{target_name}</a>.\n"
+"Не получилось {action} <a "
+"href=\"tg://user?id={target}\">{target_name}</a>.\n"
 "Ошибка: <code>{error}</code>."
 
 #: plugins/admin.py:93
@@ -121,49 +121,35 @@ msgstr "кик"
 msgid "Unbanned"
 msgstr "Разбанен"
 
-#: plugins/admin.py:143
-msgid "Pin back the old message"
-msgstr ""
-
-#: plugins/admin.py:144
-msgid ""
-"\n"
-"<a href=\"{oldpin_link}\">Old pinned message</a>"
-msgstr ""
-
-#: plugins/admin.py:149
+#: plugins/admin.py:140
 msgid "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> pinned message.\n"
 msgstr "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> закрепил сообщение.\n"
 
-#: plugins/admin.py:157
+#: plugins/admin.py:147
 msgid "Pins message in chat"
 msgstr "Закрепляет сообщение"
 
-#: plugins/admin.py:165
+#: plugins/admin.py:155
 msgid "Pins message in chat with notification"
 msgstr "Закрепляет сообщение со звуком"
 
-#: plugins/admin.py:180
-msgid "Pinned back the old message"
-msgstr ""
-
-#: plugins/admin.py:197
+#: plugins/admin.py:167
 msgid "Gives user a warning"
 msgstr "Выдаёт предупреждение пользователю"
 
-#: plugins/admin.py:205
+#: plugins/admin.py:175
 msgid "Reply to user to give them a warn"
 msgstr "Ответь на сообщение пользователя для выдачи ему предупреждения"
 
-#: plugins/admin.py:209
+#: plugins/admin.py:179
 msgid "Can't warn administrator"
 msgstr "Не могу выдать предупреждение админу"
 
-#: plugins/admin.py:217
+#: plugins/admin.py:187
 msgid "Warn reason not specified"
 msgstr "Причина предупреждения не введена"
 
-#: plugins/admin.py:225
+#: plugins/admin.py:195
 msgid ""
 "\n"
 "\n"
@@ -171,13 +157,14 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"<i>Пользователь достиг максимального количества предупреждений и был забанен.</i>"
+"<i>Пользователь достиг максимального количества предупреждений и был "
+"забанен.</i>"
 
-#: plugins/admin.py:230
+#: plugins/admin.py:200
 msgid "Unban"
 msgstr "Разбанить"
 
-#: plugins/admin.py:232
+#: plugins/admin.py:202
 msgid ""
 "⚠️<a href=\"tg://user?id={admin_id}\">{admin}</a> warned <a "
 "href=\"tg://user?id={target_id}\">{target_name}</a> "
@@ -189,23 +176,23 @@ msgstr ""
 "({warn_count}/{max_warns})\n"
 "Причина: <i>{reason}</i>"
 
-#: plugins/admin.py:256
+#: plugins/admin.py:226
 msgid "Warn removed"
 msgstr "Предупреждение удалено"
 
-#: plugins/admin.py:259
+#: plugins/admin.py:229
 msgid "Lists all user warns or your warns"
 msgstr "Показывает все предупрждения пользователя или выданные вам предупреждения"
 
-#: plugins/admin.py:280
+#: plugins/admin.py:250
 msgid "Failed to find username {username}"
 msgstr "Не могу найти {username}"
 
-#: plugins/admin.py:284
+#: plugins/admin.py:254
 msgid "Warns for {name}:"
 msgstr "Выданные {name} предупреждения:"
 
-#: plugins/admin.py:287
+#: plugins/admin.py:257
 msgid "{name} has no warns!"
 msgstr "У {name} нет предупреждений"
 
@@ -871,7 +858,7 @@ msgstr "Я не знаю что делает это кнопка. Эта кла�
 msgid "I am sorry Dave, I am afraid I cant do that."
 msgstr "Извини Дейв, боюсь, я не смогу этого сделать"
 
-#: base_plugins/locale_ctl.py:39 base_plugins/locale_ctl.py:52
+#: base_plugins/locale_ctl.py:40 base_plugins/locale_ctl.py:53
 msgid "Language \"{locale}\" set"
 msgstr "Язык \"{locale}\" установлен"
 
@@ -911,8 +898,8 @@ msgid ""
 "You hadn't specified plugin to disable/enable. Following plugins can be "
 "disabled:\n"
 msgstr ""
-"Вы не ввели плагины для отключения/включения. Следующие плагины могут быть "
-"отключены:\n"
+"Вы не ввели плагины для отключения/включения. Следующие плагины могут "
+"быть отключены:\n"
 
 #: base_plugins/plugins_disable.py:74
 msgid "All disable-able plugins were disabled."
@@ -1077,5 +1064,16 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Click here for command list"
+#~ msgstr ""
+
+#~ msgid "Pin back the old message"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "<a href=\"{oldpin_link}\">Old pinned message</a>"
+#~ msgstr ""
+
+#~ msgid "Pinned back the old message"
 #~ msgstr ""
 

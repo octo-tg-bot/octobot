@@ -31,10 +31,25 @@ To extract locale strings and/or compile .po files run the `utils/update_locale_
 Creating your own locale
 ------------------------
 
-To create your own locale you need:
+There are two ways to add your locale:
+
+- The easy way, using POEditor
+- The hard way, manually creating locale files
+
+The easy way
+____________
+
+1. Ask in telegram chat or in github issues for developer to create locale for your language
+2. Get translating at `POEditor <https://poeditor.com/join/project?hash=P2Yx5Sp1GA>`_!
+
+.. note::
+   If for some reason your language isn't available at POEditor, you can use hard way.
+
+The hard way
+____________
 
 1. Generate .po template using `utils/update_locale_data.cmd`
-2. Create a folder in `locales` folder with your locale name according to this syntax: `locale_TERRITORY`. For example: `ru_RU`
+2. Create a folder in `locales` folder with your locale name from `POEditor locale list <https://poeditor.com/docs/languages>`_. If your language isn't on POEditor list, name it following way: `language_TERRITORY`
 3. Copy generated `base.pot` file to your `locale_TERRITORY/LC_MESSAGES/` folder and name it messages.po
 4. Edit `messages.po` file. Be sure to edit first message string to include your locale name and feel free to credit yourself
-5. To compile the strings in bot run `utils/update_locale_data.cmd`
+5. `Submit a pull request to repository <https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests>`_
