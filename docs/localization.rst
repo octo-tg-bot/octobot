@@ -29,7 +29,7 @@ _____________________________
 To extract locale strings and/or compile .po files run the `utils/update_locale_data.cmd` file. Despite the fact it's .cmd, it only contains commands, so you are free to run it on macOS or Linux-based distros. Also notice that you need to run it every time you update locale strings or if it's first run of bot.
 
 Creating your own locale
-________________________
+------------------------
 
 To create your own locale you need:
 
