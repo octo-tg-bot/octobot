@@ -53,14 +53,32 @@
 </div>
 <div class="section" id="creating-your-own-locale">
 <h2>Creating your own locale<a class="headerlink" href="#creating-your-own-locale" title="Permalink to this headline">¶</a></h2>
-<p>To create your own locale you need:</p>
+<p>There are two ways to add your locale:</p>
+<ul class="simple">
+<li><p>The easy way, using POEditor</p></li>
+<li><p>The hard way, manually creating locale files</p></li>
+</ul>
+<div class="section" id="the-easy-way">
+<h3>The easy way<a class="headerlink" href="#the-easy-way" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Ask in telegram chat or in github issues for developer to create locale for your language</p></li>
+<li><p>Get translating at <a class="reference external" href="https://poeditor.com/join/project?hash=P2Yx5Sp1GA">POEditor</a>!</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If for some reason your language isn’t available at POEditor, you can use hard way.</p>
+</div>
+</div>
+<div class="section" id="the-hard-way">
+<h3>The hard way<a class="headerlink" href="#the-hard-way" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Generate .po template using <cite>utils/update_locale_data.cmd</cite></p></li>
-<li><p>Create a folder in <cite>locales</cite> folder with your locale name according to this syntax: <cite>locale_TERRITORY</cite>. For example: <cite>ru_RU</cite></p></li>
+<li><p>Create a folder in <cite>locales</cite> folder with your locale name from <a class="reference external" href="https://poeditor.com/docs/languages">POEditor locale list</a>. If your language isn’t on POEditor list, name it following way: <cite>language_TERRITORY</cite></p></li>
 <li><p>Copy generated <cite>base.pot</cite> file to your <cite>locale_TERRITORY/LC_MESSAGES/</cite> folder and name it messages.po</p></li>
 <li><p>Edit <cite>messages.po</cite> file. Be sure to edit first message string to include your locale name and feel free to credit yourself</p></li>
-<li><p>To compile the strings in bot run <cite>utils/update_locale_data.cmd</cite></p></li>
+<li><p><a class="reference external" href="https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests">Submit a pull request to repository</a></p></li>
 </ol>
+</div>
 </div>
 </div>
 
