@@ -36,43 +36,9 @@
 <h1>Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="permission-decorators">
 <h2>Permission decorators<a class="headerlink" href="#permission-decorators" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
-<dt id="octobot.octobot.permissions">
-<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">permissions</code><span class="sig-paren">(</span><em class="sig-param">**perms_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.permissions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator to check permissions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>perms</strong> – Valid permissions that can be found on <a class="reference external" href="https://python-telegram-bot.readthedocs.io/en/stable/telegram.chatmember.html#telegram.ChatMember" title="(in Python Telegram Bot v13.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">telegram.ChatMember</span></code></a> + is_admin. Example: <cite>&#64;permissions(can_delete_messages=True)</cite>. The value does not matter.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="octobot.octobot.my_permissions">
-<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">my_permissions</code><span class="sig-paren">(</span><em class="sig-param">**perms_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.my_permissions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator to check bots own permissions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>perms</strong> – Valid permissions that can be found on <a class="reference external" href="https://python-telegram-bot.readthedocs.io/en/stable/telegram.chatmember.html#telegram.ChatMember" title="(in Python Telegram Bot v13.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">telegram.ChatMember</span></code></a> + is_admin. Example: <cite>&#64;my_permissions(can_delete_messages=True)</cite>. The value does not matter.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="octobot.octobot.not_admin">
-<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">not_admin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.not_admin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator to check if sender is not an admin.</p>
-</dd></dl>
-
 </div>
 <div class="section" id="group-type-decorators">
 <h2>Group type decorators<a class="headerlink" href="#group-type-decorators" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
-<dt id="octobot.octobot.supergroup_only">
-<code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">supergroup_only</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#octobot.octobot.supergroup_only" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator that checks if command is issued in supergroup. Disables inline mode for command.</p>
-</dd></dl>
-
 </div>
 </div>
 

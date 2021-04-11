@@ -37,20 +37,6 @@
 <div class="section" id="marking-string-to-be-localizable">
 <h2>Marking string to be “localizable”<a class="headerlink" href="#marking-string-to-be-localizable" title="Permalink to this headline">¶</a></h2>
 <p>This can be used for command descriptions/long descriptions. Please use it only in there, all this function does is make the locale extractor extract the string.</p>
-<dl class="method">
-<dt id="octobot.localization.localizable">
-<code class="sig-prename descclassname">localization.</code><code class="sig-name descname">localizable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#octobot.localization.localizable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to mark which strings can be translated. Use for bot command descriptions and such</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string</strong> – String that can be translated</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>That exact same string</p>
-</dd>
-</dl>
-</dd></dl>
-
 <p>Example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@CommandHandler</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;helloworld&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">localizable</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
 <span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="n">bot</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
@@ -60,26 +46,20 @@
 </div>
 <div class="section" id="localizing-strings">
 <h2>Localizing strings<a class="headerlink" href="#localizing-strings" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
-<dt>
-<code class="sig-prename descclassname">Context.</code><code class="sig-name descname">localize</code><span class="sig-paren">(</span><em class="sig-param">text: str</em><span class="sig-paren">)</span> &#x2192; str</dt>
-<dd><p>Localize string according to user-set localization</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – String to translate</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Localized string</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
 <div class="section" id="generating-localization-files">
 <h3>Generating localization files<a class="headerlink" href="#generating-localization-files" title="Permalink to this headline">¶</a></h3>
 <p>To extract locale strings and/or compile .po files run the <cite>utils/update_locale_data.cmd</cite> file. Despite the fact it’s .cmd, it only contains commands, so you are free to run it on macOS or Linux-based distros. Also notice that you need to run it every time you update locale strings or if it’s first run of bot.</p>
+</div>
+<div class="section" id="creating-your-own-locale">
+<h3>Creating your own locale<a class="headerlink" href="#creating-your-own-locale" title="Permalink to this headline">¶</a></h3>
+<p>To create your own locale you need:</p>
+<ol class="arabic simple">
+<li><p>Generate .po template using <cite>utils/update_locale_data.cmd</cite></p></li>
+<li><p>Create a folder in <cite>locales</cite> folder with your locale name according to this syntax: <cite>locale_TERRITORY</cite>. For example: <cite>ru_RU</cite></p></li>
+<li><p>Copy generated <cite>base.pot</cite> file to your <cite>locale_TERRITORY/LC_MESSAGES/</cite> folder and name it messages.po</p></li>
+<li><p>Edit <cite>messages.po</cite> file. Be sure to edit first message string to include your locale name and feel free to credit yourself</p></li>
+<li><p>To compile the strings in bot run <cite>utils/update_locale_data.cmd</cite></p></li>
+</ol>
 </div>
 </div>
 </div>

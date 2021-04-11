@@ -36,66 +36,15 @@
 <h1>Handlers<a class="headerlink" href="#handlers" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="basehandler">
 <h2>BaseHandler<a class="headerlink" href="#basehandler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="octobot.BaseHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">BaseHandler</code><span class="sig-paren">(</span><em class="sig-param">priority=0</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.BaseHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base class for all handlers</p>
-</dd></dl>
-
 </div>
 <div class="section" id="commandhandler">
 <h2>CommandHandler<a class="headerlink" href="#commandhandler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="octobot.CommandHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">CommandHandler</code><span class="sig-paren">(</span><em class="sig-param">command: Union[list, str], description: str = 'Command description not specified by developer', long_description: str = 'Additional info not specified by developer', hidden=False, prefix='/', inline_support=True, service: bool = False, required_args: int = 0, *args, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.CommandHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command handler. Handles commands in chat and commands in inline queries.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Prefix will not be checked in case of inline queries</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command to handle</p></li>
-<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command description</p></li>
-<li><p><strong>long_description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command long description, appears in help for that specific command</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>,</em><em>optional</em>) – Command prefix, defaults to <cite>/</cite></p></li>
-<li><p><strong>hidden</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>,</em><em>optional</em>) – If command should be hidden from /help, defaults to <cite>False</cite></p></li>
-<li><p><strong>inline_support</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>,</em><em>optional</em>) – If command is supported in inline mode, defaults to <cite>True</cite></p></li>
-<li><p><strong>service</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>,</em><em>optional</em>) – If command should be excluded from commands list (not from /help)</p></li>
-<li><p><strong>required_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>,</em><em>optional</em>) – Required args count, defaults to 0</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="inlinebuttonhandler">
 <h2>InlineButtonHandler<a class="headerlink" href="#inlinebuttonhandler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="octobot.InlineButtonHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">InlineButtonHandler</code><span class="sig-paren">(</span><em class="sig-param">prefix</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.InlineButtonHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inline keyboard button click handler</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>You can use <a class="reference internal" href="context.html#octobot.Context.reply" title="octobot.Context.reply"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Context.reply()</span></code></a> to show a toast and <a class="reference internal" href="context.html#octobot.Context.edit" title="octobot.Context.edit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Context.edit()</span></code></a> to edit the message</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>prefix</strong> – Prefix. Please end it with some non-letter symbol, like <cite>:</cite></p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="messagehandler">
 <h2>MessageHandler<a class="headerlink" href="#messagehandler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="octobot.MessageHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">MessageHandler</code><span class="sig-paren">(</span><em class="sig-param">priority=0</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.MessageHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls function on every message. Simple enough.</p>
-</dd></dl>
-
 </div>
 </div>
 
