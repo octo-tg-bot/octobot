@@ -23,7 +23,7 @@ def set_locale(bot, ctx):
         for locales in chunks(list(octobot.localization.AVAILABLE_LOCALES), 4):
             kbd_line = []
             for locale in locales:
-                l = Locale.parse(locale)
+                l = Locale.parse(locale, sep="-")
                 try:
                     emoji = flag.flag(l.territory)
                 except AttributeError:
