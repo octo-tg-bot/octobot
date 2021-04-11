@@ -49,7 +49,7 @@ The hard way
 ____________
 
 1. Generate .po template using `utils/update_locale_data.cmd`
-2. Create a folder in `locales` folder with your locale name from `POEditor locale list <https://poeditor.com/docs/languages>`_. If your language isn't on POEditor list, name it following way: `language_TERRITORY`
-3. Copy generated `base.pot` file to your `locale_TERRITORY/LC_MESSAGES/` folder and name it messages.po
+2. Create a folder in `locales` folder with your locale name from `POEditor locale list <https://poeditor.com/docs/languages>`_. If your language isn't on POEditor list, name it following way: `language-territory`
+3. Copy generated `base.pot` file to your `locale-territory/LC_MESSAGES/` folder and name it messages.po
 4. Edit `messages.po` file. Be sure to edit first message string to include your locale name and feel free to credit yourself
 5. `Submit a pull request to repository <https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests>`_
