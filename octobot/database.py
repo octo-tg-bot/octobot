@@ -68,6 +68,9 @@ class RedisData:
     def __setitem__(self, key, value):
         return self.set(key, value)
 
+    def __contains__(self, key):
+        return self._redis.hexists(self.hashmap_name, key)
+
 
 def request_create_id(request_type, request_args, request_kwargs):
     return f"request_cache:{request_type}:{json.dumps(request_args)}:{json.dumps(request_kwargs)}"
