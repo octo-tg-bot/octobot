@@ -94,7 +94,7 @@ def get_apex_stats(platform, username, context):
                       inline_description=context.localize("Level {level}, ranked level {ranked_level}\nCurrent legend:{current_legend}").format(
                           level=res["global"]["level"],
                           ranked_level="{rankName} {rankDiv}".format(**res["global"]["rank"]),
-                          current_legend=context.localize(res["legends"]["selected"]["LegendName"])
+                          current_legend=context.localize(selected_legend_name)
                       ))
     else:
         context.reply(context.localize("Invalid username specified!"))
