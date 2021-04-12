@@ -9,16 +9,19 @@ BASE_ARGS = {"api_token": os.environ["POEDITOR_TOKEN"],
              "id": os.environ["POEDITOR_ID"], }
 
 
-def create_poeditor_catalog(catalog):
+def create_poeditor_catalog(catalog, endpoint):
     catalog_poeditor = []
     for message in catalog:
         msgid = message if isinstance(message, str) else message.id
         msgext = {}
         if not isinstance(message, str):
             msgext["translation"] = {"content": message.string}
-            msgext["context"] = ""
-            for location in message.locations:
-                msgext["context"] += f"{location[0]} #{location[1]} "
+            if not endpoint == "translations":
+                msgext["reference"] = ""
+                msgext["tags"] = []
+                for location in message.locations:
+                    msgext["reference"] += f"{location[0]}#{location[1]} "
+                    msgext["tags"].append(location[0])
         if msgid != '':
             catalog_poeditor.append({
                 "term": msgid,
@@ -32,7 +35,7 @@ def send_poeditor_catalog(endpoint, action, catalog, extra_args={}):
     if not catalog:
         print("Nothing to send...")
         return
-    catalog = json.dumps(create_poeditor_catalog(catalog))
+    catalog = json.dumps(create_poeditor_catalog(catalog, endpoint))
     r = requests.post(f"https://api.poeditor.com/v2/{endpoint}/{action}",
                       data={"data": catalog,
                             **BASE_ARGS,
