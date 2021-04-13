@@ -95,4 +95,4 @@ jobs:
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
       - name: Edit Telegram message about finished deployment
-        run: curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/editMessageText -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛬Deployment for ${{ github.sha }} finished" -d message_id=${{ steps.sendMsg.message_id }}
+        run: curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/editMessageText -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛬Deployment for ${{ github.sha }} finished" -d message_id=${{ steps.sendMsg.outputs.message_id }}
