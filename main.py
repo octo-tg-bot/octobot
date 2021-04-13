@@ -45,11 +45,12 @@ def update_loop(bot, queue, run_event):
 def update_handler(upd_queue: Queue, run_event: threading.Event):
     while run_event.is_set():
         try:
-            update = upd_queue.get_nowait()
+            qupdate = upd_queue.get_nowait()
         except Empty:
             time.sleep(0.2)
         else:
-            bot, update = update
+            bot = qupdate[0]
+            update: telegram.Update = qupdate[1]
             try:
                 bot.handle_update(bot, update)
             except octobot.Halt:
