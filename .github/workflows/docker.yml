@@ -71,7 +71,7 @@ jobs:
         id: sendMsg
         run: |
           export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛫Deployment ${{ github.sha }} started" | jq .result.message_id)
-          echo "::set-output name=message_id=$message_id"
+          echo "::set-output name=message_id::$message_id"
       - uses: actions/checkout@v2
       - name: Sentry Release
         uses: getsentry/action-release@v1.0.0
