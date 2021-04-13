@@ -962,3 +962,7 @@ msgstr "➡️Искать через инлайн"
 msgid "Not enough arguments! This command takes {args_amount} arguments. Consider reading <a href=\"{help_url}\">help for this command</a>"
 msgstr "Недостаточно аргументов! Эта команда требует {args_amount} аргументов. Возможно стоит прочитать <a href=\"{help_url}\">документацию к этой команде</a>."
 
+#: plugins/stickers.py#164 
+msgid "This pack has too much stickers already! Creating new pack..."
+msgstr "У этого пака слишком много стикеров! Создаю новый..."
+
