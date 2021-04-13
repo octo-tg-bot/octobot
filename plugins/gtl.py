@@ -46,6 +46,9 @@ def gtl(bot: octobot.OctoBot, context: octobot.Context):
         source_language = "auto"
     if destination_language not in googletrans.LANGUAGES:
         destination_language = default_language
+    if not destination_language.startswith("zh"):
+        destination_language = destination_language.split("-")[0]
+    inf.logger.debug("dest lang %s", destination_language)
     translation = translator.translate(text, dest=destination_language, src=source_language)
     base_l = context.locale
     src = base_l.languages.get(translation.src.replace("_", "-").split("-")[0].lower(), translation.src)

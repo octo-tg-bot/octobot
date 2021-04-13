@@ -37,7 +37,7 @@ def set_locale(bot, ctx):
         except ValueError:
             ctx.reply(f"Invalid language {ctx.args[0]}.")
         else:
-            ctx.reply(ctx.localize('Language "{locale}" set').format(locale=Locale.parse(ctx.args[0]).display_name))
+            ctx.reply(ctx.localize('Language "{locale}" set').format(locale=Locale.parse(ctx.args[0], sep="-").display_name))
 
 
 @InlineButtonHandler("locale_set:")
@@ -50,5 +50,5 @@ def set_locale_button(bot, ctx):
         ctx.edit(f"Invalid language {language}")
         ctx.reply("❌")
     else:
-        ctx.edit(ctx.localize('Language "{locale}" set').format(locale=Locale.parse(language).display_name))
+        ctx.edit(ctx.localize('Language "{locale}" set').format(locale=Locale.parse(language, sep="-").display_name))
         ctx.reply("👌")
