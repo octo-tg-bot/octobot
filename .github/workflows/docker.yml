@@ -68,7 +68,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           env: telegram
       - name: Send Telegram message about started deployment
-        run: export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="Deployment for $GITHUB_SHA started" | jq .result.message_id)
+        id: sendMsg
+        run: |
+          export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛫Deployment ${{ github.sha }} started" | jq .result.message_id)
+          echo "::set-output name=message_id=$message_id"
       - uses: actions/checkout@v2
       - name: Sentry Release
         uses: getsentry/action-release@v1.0.0
@@ -91,5 +94,5 @@ jobs:
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
-      - name: Send Telegram message about started deployment
-        run: curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/editMessageText -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="Deployment for $GITHUB_SHA finished" -d message_id=$message_id
+      - name: Edit Telegram message about finished deployment
+        run: curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/editMessageText -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛬Deployment for ${{ github.sha }} finished" -d message_id=${{ steps.sendMsg.message_id }}
