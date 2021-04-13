@@ -68,7 +68,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           env: telegram
       - name: Send Telegram message about started deployment
-        run: export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secret.TELEGRAM_CHAT}} -d text="Deployment for $GITHUB_SHA started" | jq .result.message_id)
+        run: export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="Deployment for $GITHUB_SHA started" | jq .result.message_id)
       - uses: actions/checkout@v2
       - name: Sentry Release
         uses: getsentry/action-release@v1.0.0
