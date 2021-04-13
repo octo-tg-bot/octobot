@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - '**.py'
+      - '**.po'
       - '.github/workflows/poeditor.yml'
 
 jobs:
@@ -29,4 +30,6 @@ jobs:
         env:
           POEDITOR_TOKEN: ${{ secrets.POEDITOR_TOKEN }}
           POEDITOR_ID: ${{ secrets.POEDITOR_ID }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
 
