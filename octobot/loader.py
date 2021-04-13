@@ -192,6 +192,9 @@ class OctoBot(telegram.Bot):
                         raise e
                     except octobot.exceptions.StopHandling as e:
                         raise e
+                    except telegram.error.Unauthorized as e:
+                        if "bot was kicked" in e.message:
+                            return
                     except telegram.error.BadRequest as e:
                         if e.message == "Have no rights to send a message":
                             chat = update.effective_chat
