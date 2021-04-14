@@ -348,20 +348,17 @@ def anilist_search_media(query: str, offset: str, count: int, bot: OctoBot, ctx:
     )
 
 
-@CatalogHandler(command=["anilist", "anime"],
-                description=localizable("Search anime on AniList"))
+@CatalogHandler(command="anime", description=localizable("Search anime on AniList"))
 def anilist_search_anime(query, offset, count, bot, ctx):
     return anilist_search_media(query, offset, count, bot, ctx, media_type=MEDIA_ANIME)
 
 
-@CatalogHandler(command=["anilist_manga", "manga"],
-                description=localizable("Search manga on AniList"))
+@CatalogHandler(command="manga", description=localizable("Search manga on AniList"))
 def anilist_search_manga(query, offset, count, bot, ctx):
     return anilist_search_media(query, offset, count, bot, ctx, media_type=MEDIA_MANGA)
 
 
-@CatalogHandler(command=["anilist_character", "anichar", "character"],
-                description=localizable("Search for character on AniList"))
+@CatalogHandler(command="character", description=localizable("Search characters on AniList"))
 def anilist_search_character(query: str, offset: str, count: int, bot: OctoBot, ctx: Context) -> Catalog:
     res = []
 
