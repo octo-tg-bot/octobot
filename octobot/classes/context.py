@@ -128,7 +128,7 @@ class Context:
     :var chat_db: Per-chat key-value database
     :vartype chat_db: :class:`octobot.database.RedisData`
     :var locale: User/Chat locale
-    :vartype locale: :class:`str`
+    :vartype locale: :class:`babel.Locale`
     :var update_type: Type of update
     :vartype update_type: :class:`octobot.UpdateType`
     :var query: Command query
