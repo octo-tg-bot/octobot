@@ -343,7 +343,7 @@ def anilist_search_media(query: str, offset: str, count: int, bot: OctoBot, ctx:
         results=res,
         max_count=total,
         previous_offset=offset - count,
-        current_index=offset,
+        current_index=offset + 1,
         next_offset=next_offset
     )
 
