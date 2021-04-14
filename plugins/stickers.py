@@ -55,14 +55,20 @@ def resize_sticker(image: Image):
     return io_out
 
 
-def create_pack_name(bot, update, personal):
+def create_pack_name(bot, ctx, personal):
+    extra = ''
+    if octobot.Database.redis is not None:
+        db = ctx.user_db if personal else ctx.chat_db
+        if 'packidx' in db:
+            extra = db['packidx']
+            LOGGER.debug('packidx: %s', extra)
     if personal:
-        uid = update.message.from_user.id
+        uid = ctx.update.message.from_user.id
         packtype = "user"
     else:
-        uid = str(update.message.chat_id)[1:]
+        uid = str(ctx.update.message.chat_id)[1:]
         packtype = "group"
-    name = f"{packtype}_{uid}_by_{bot.getMe().username}"
+    name = f"{packtype}_{uid}{extra}_by_{bot.getMe().username}"
     return name
 
 
@@ -115,8 +121,9 @@ def sticker_optimize(bot, ctx):
 
 
 def sticker_add(bot, ctx, personal):
+    print("aaaa")
     args = ctx.args
-    pack_name = create_pack_name(bot, ctx.update, personal=personal)
+    pack_name = create_pack_name(bot, ctx, personal=personal)
     if personal:
         display_name = f"{ctx.user.first_name[:32]} by @{bot.getMe().username}"
         creator_id = ctx.user.id
@@ -146,20 +153,31 @@ def sticker_add(bot, ctx, personal):
         except BadRequest as e:
             LOGGER.info("Bad Request during addStickerToSet: %s", e)
             image.seek(0)
-            try:
-                bot.createNewStickerSet(user_id=creator_id,
-                                        name=pack_name,
-                                        title=display_name,
-                                        png_sticker=image,
-                                        emojis=emoji)
-            except BadRequest as e:
-                if str(e).lower() == "peer_id_invalid":
-                    return ctx.relpy(
-                        ctx.localize(
-                            "Sorry, but I can't create group pack right now. Ask group creator to PM me and try again."),
-                        failed=True)
+            if str(e).lower() == "stickers_too_much":
+                if personal:
+                    db = ctx.user_db
                 else:
-                    raise e
+                    db = ctx.chat_db
+                currentidx = int(db.get("packidx", '0'))
+                db['packidx'] = currentidx + 1
+                LOGGER.debug("increasing packidx...")
+                ctx.reply(ctx.localize("This pack has too much stickers already! Creating new pack..."))
+                return sticker_add(bot, ctx, personal)
+            else:
+                try:
+                    bot.createNewStickerSet(user_id=creator_id,
+                                            name=pack_name,
+                                            title=display_name,
+                                            png_sticker=image,
+                                            emojis=emoji)
+                except BadRequest as e:
+                    if str(e).lower() == "peer_id_invalid":
+                        return ctx.relpy(
+                            ctx.localize(
+                                "Sorry, but I can't create group pack right now. Ask group creator to PM me and try again."),
+                            failed=True)
+                    else:
+                        raise e
         sticker = bot.getStickerSet(pack_name).stickers[-1]
         return ctx.update.message.reply_sticker(sticker.file_id)
     except TimedOut:

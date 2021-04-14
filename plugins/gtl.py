@@ -21,7 +21,7 @@ TRANSLATION_TEMPLATE = octobot.localizable("From <i>{source_language}</i> to <i>
 def gtl(bot: octobot.OctoBot, context: octobot.Context):
     translator = get_translator()
     if context.update.message is not None and context.reply_to_message is not None:
-        text = context.reply_to_message.text
+        text = context.reply_to_message.text or context.reply_to_message.caption
         text_type = "reply"
     else:
         text = str(context.query)
@@ -46,8 +46,11 @@ def gtl(bot: octobot.OctoBot, context: octobot.Context):
         source_language = "auto"
     if destination_language not in googletrans.LANGUAGES:
         destination_language = default_language
+    if not destination_language.startswith("zh"):
+        destination_language = destination_language.split("-")[0]
+    inf.logger.debug("dest lang %s", destination_language)
     translation = translator.translate(text, dest=destination_language, src=source_language)
-    base_l = babel.Locale(context.locale)
+    base_l = context.locale
     src = base_l.languages.get(translation.src.replace("_", "-").split("-")[0].lower(), translation.src)
     dest = base_l.languages.get(destination_language.replace("_", "-").split("-")[0].lower(), destination_language)
     return context.reply(context.localize(TRANSLATION_TEMPLATE).format(

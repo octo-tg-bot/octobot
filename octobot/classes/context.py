@@ -6,6 +6,7 @@ import shlex
 from functools import wraps
 from uuid import uuid4
 
+import babel
 import telegram
 from telegram import InputMediaPhoto
 
@@ -156,6 +157,11 @@ class Context:
         self.bot = bot
         self.update = update
         self.locale = octobot.localization.get_chat_locale(self.update)
+        if "_" in self.locale:
+            loc_sep = "_"
+        else:
+            loc_sep = "-"
+        self.locale = babel.Locale.parse(self.locale, sep=loc_sep)
         self.user = update.effective_user
         if self.user is not None:
             self.user_db = Database[self.user.id]

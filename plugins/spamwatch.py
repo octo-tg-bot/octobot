@@ -1,6 +1,8 @@
 import html
 
 import babel.dates
+import requests
+
 import spamwatch
 import telegram
 from cachetools import cached, TTLCache
@@ -60,7 +62,11 @@ def spamwatch_handle_user(bot: octobot.OctoBot, ctx: octobot.Context):
     if chat_action == "nothing":
         return
     chat_action = VALID_ACTIONS[chat_action]
-    banned = check_spamwatch_ban(ctx.user)
+    try:
+        banned = check_spamwatch_ban(ctx.user)
+    except requests.ConnectionError as e:
+        plugin.logger.warning("Spamwatch api is unavailable... (%s)", e)
+        return
     if banned:
         chat_action[-1](bot, ctx.chat, ctx.user)
         bot.send_message(ctx.chat.id, ctx.localize("{user} is banned in SpamWatch since {ban_date}. Reason: <code>{ban_reason}</code>").format(

@@ -8,6 +8,10 @@ import babel
 AVAILABLE_LOCALES = ["en-us"]
 if os.path.exists("locales"):
     AVAILABLE_LOCALES += list(filter(lambda x: os.path.isdir("locales/" + x), os.listdir("locales")))
+    try:
+        AVAILABLE_LOCALES.remove("__pycache__")
+    except ValueError:
+        pass
 # for locale in babel.core.LOCALE_ALIASES.values():
 #     if locale not in AVAILABLE_LOCALES:
 #         AVAILABLE_LOCALES.append(locale)

@@ -192,6 +192,23 @@ class OctoBot(telegram.Bot):
                         raise e
                     except octobot.exceptions.StopHandling as e:
                         raise e
+                    except telegram.error.Unauthorized as e:
+                        if "bot was kicked" in e.message:
+                            return
+                    except telegram.error.BadRequest as e:
+                        if e.message == "Have no rights to send a message":
+                            chat = update.effective_chat
+                            if chat is None:
+                                # Shouldn't happen, but check just in case
+                                raise e
+                            logger.info("Chat %s probably restricted or kicked bot. Attempting to leave...", chat.id)
+                            try:
+                                chat.leave()
+                            except telegram.error.TelegramError:
+                                pass
+                            return
+                        else:
+                            raise e
                     except Exception as e:
                         logger.error("Handler threw an exception!", exc_info=True)
                         handle_exception(self, ctx, e, notify=False)
