@@ -28,6 +28,22 @@ def localizable(string: str) -> str:
     return string
 
 
+def nlocalizable(singular: str, plural: str, n: int) -> str:
+    """
+    Function to mark which strings can be translated. Use for bot command descriptions and such
+
+    :param singular: Singular form of the string that can be translated
+    :type singular: :class:`str`
+    :param plural: Plural form of the string that can be translated
+    :type plural: :class:`str`
+    :param n: The number in question
+    :type n: :class:`int`
+    :return: `singular` if n == 1, else `plural`
+    :rtype: :class:`str`
+    """
+    return singular if n == 1 else plural
+
+
 def get_user_locale(user: telegram.User):
     user_id = user.id
     locale = Database[user_id].get("locale", False)
