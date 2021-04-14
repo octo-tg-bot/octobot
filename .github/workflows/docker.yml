@@ -63,7 +63,7 @@ jobs:
           cache-to: type=inline
   deployment:
     name: Deploy docker image
-    needs: "build-linux/amd64"
+    needs: build
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
 
