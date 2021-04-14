@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.0-experimental
 FROM alpine:3.12.1 AS pip-install-env
-RUN apk add --no-cache python3~=3.8 py3-pip gcc python3-dev~=3.8 musl-dev libffi-dev openssl-dev zlib-dev libwebp-dev jpeg-dev git
+RUN apk add --no-cache python3~=3.8 py3-pip gcc python3-dev~=3.8 zlib-dev libwebp-dev jpeg-dev git musl-dev
 COPY requirements.txt .
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip pip install wheel && pip install -r requirements.txt -t /packages
 ENV PYTHONPATH=/packages
