@@ -26,6 +26,7 @@ from typing import Union
 
 import babel.dates
 import requests
+import telegram
 
 from octobot import Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound, localizable, \
     PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper, UpdateType
@@ -62,6 +63,11 @@ query Media($query: String, $page: Int, $perPage: Int, $type: MediaType) {
         medium
       }
       startDate {
+        year
+        month
+        day
+      }
+      endDate {
         year
         month
         day
@@ -106,24 +112,6 @@ query Character($query: String, $page: Int, $perPage: Int) {
 }
 """
 HEADERS = {"User-Agent": "OctoBot/1.0"}
-
-MEDIA_TEMPLATE_STR = localizable("""<b>{title}</b>
-<i>{metadata}</i>
-<a href="{siteUrl}">on anilist</a>
-
-{description}
-
-<i>{genres}</i>
-""")
-
-CHARACTER_TEMPLATE_STR = localizable("""<b>{full_name}</b>
-<i>{alternative_names}</i><a href="{siteUrl}">on anilist</a>
-
-{description}
-
-<i>Present in:</i>
-{present_in}
-""")
 
 ANIME_MEDIA_STATUSES_STR = {
     "FINISHED": localizable("finished"),
@@ -225,40 +213,37 @@ def get_media_metadata(media, ctx: Context):
     mtype = media["type"]
     metadata = []
 
-    if media["format"] is not None and media["format"] in MEDIA_FORMAT_STR:
-        metadata.append(ctx.localize(MEDIA_FORMAT_STR[media["format"]]))
-
     if media["status"] is not None:
         if mtype == MEDIA_ANIME:
             status_str = ctx.localize(ANIME_MEDIA_STATUSES_STR.get(media["status"], media["status"]))
         elif mtype == MEDIA_MANGA:
             status_str = ctx.localize(MANGA_MEDIA_STATUSES_STR.get(media["status"], media["status"]))
         else:
-            status_str = f"<pre>{media['status']}</pre>"
-        metadata.append(status_str)
+            status_str = media['status']
+        metadata.append("<b>{}:</b> {}".format(ctx.localize("status"), status_str))
 
     if mtype == MEDIA_ANIME and media["episodes"] is not None:
-        episodes_str = ctx.localize("{} episodes").format(media["episodes"])
-        metadata.append(episodes_str)
+        metadata.append(ctx.nlocalize("{} episode", "{} episodes", media["episodes"]).format(media["episodes"]))
 
     if mtype == MEDIA_MANGA:
         if media["volumes"] is not None:
-            volumes_str = ctx.localize("{} volumes").format(media['volumes'])
-            metadata.append(volumes_str)
-
+            metadata.append(ctx.nlocalize("{} volume", "{} volumes", media["volumes"]).format(media['volumes']))
         if media["chapters"] is not None:
-            chapters_str = ctx.localize("{} chapters").format(media['chapters'])
-            metadata.append(chapters_str)
+            metadata.append(ctx.nlocalize("{} chapter", "{} chapters", media["chapters"]).format(media["chapters"]))
 
     if media["averageScore"] is not None:
         score = media["averageScore"] / 10
-        score_str = ctx.localize("rating {:0.1f}/10").format(score)
-        metadata.append(score_str)
+        metadata.append("<b>{}:</b> {:0.1f}/10".format(ctx.localize("rating"), score))
 
     if media["startDate"] is not None:
-        start_date_str = get_fuzzy_date_str(media["startDate"], ctx)
-        if start_date_str is not None:
-            metadata.append(start_date_str)
+        end_date_str = get_fuzzy_date_str(media["startDate"], ctx)
+        if end_date_str is not None:
+            metadata.append("<b>{}:</b> {}".format(ctx.localize("first released on"), end_date_str))
+
+    if media["endDate"] is not None:
+        end_date_str = get_fuzzy_date_str(media["startDate"], ctx)
+        if end_date_str is not None:
+            metadata.append("<b>{}:</b> {}".format(ctx.localize("last released on"), end_date_str))
 
     return metadata
 
@@ -325,21 +310,39 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
 
     for item in media:
         item["title"] = get_media_title(item["title"])
-        item["metadata"] = ", ".join(get_media_metadata(item, ctx))
+        item["format"] = ctx.localize(MEDIA_FORMAT_STR.get(item["format"], item["format"]))
+
+        item["metadata"] = "\n".join(get_media_metadata(item, ctx))
         item["description"], short_description = format_media_description(item["description"], ctx)
         item["genres"] = ", ".join(item["genres"])
 
-        text = ctx.localize(MEDIA_TEMPLATE_STR).format(**item)
+        text = """<b>{title}</b>
+<i>{format}</i>
+
+{metadata}
+
+{description}
+
+<i>{genres}</i>
+""".format(**item)
 
         photos = [
             CatalogPhoto(url=item["coverImage"]["large"], width=0, height=0),
             CatalogPhoto(url=item["coverImage"]["medium"], width=0, height=0),
         ]
 
-        res.append(CatalogKeyArticle(text=text,
-                                     title=item["title"],
+        reply_markup = telegram.InlineKeyboardMarkup([
+            [telegram.InlineKeyboardButton(
+                url=item["siteUrl"],
+                text=ctx.localize("View on AniList")
+            )]
+        ])
+
+        res.append(CatalogKeyArticle(title=f"{item['title']} ({item['format']})",
                                      description=short_description,
+                                     text=text,
                                      photo=photos,
+                                     reply_markup=reply_markup,
                                      parse_mode="HTML"))
 
     return res
@@ -352,30 +355,43 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     res = []
 
     for item in characters:
-        item["full_name"] = item["name"]["full"]
-
         if len(item["name"]["alternative"]) > 0 and item["name"]["alternative"][0] != "":
-            item["alternative_names"] = "aka " + ", ".join(item["name"]["alternative"]) + "\n"
+            item["alternative_names"] = "Also known as " + ", ".join(item["name"]["alternative"]) + "\n"
         else:
             item["alternative_names"] = ""
 
         item["description"], short_description = format_media_description(item["description"], ctx)
 
         item["present_in"] = "\n".join(
-            [f"<a href=\"{media['siteUrl']}\">{get_media_title(media['title'])}</a>" for media in
+            ['<a href="{siteUrl}">{title}</a>'.format(**media, title=get_media_title(media['title'])) for media in
              item["media"]["nodes"]])
 
-        text = ctx.localize(CHARACTER_TEMPLATE_STR).format(**item)
+        text = """<b>{name[full]}</b>
+{alternative_names}
+
+{description}
+
+<i>{present_in_title}:</i>
+{present_in}
+""".format(**item, present_in_title=ctx.localize("Present in"))
 
         photos = [
             CatalogPhoto(url=item["image"]["large"], width=0, height=0),
             CatalogPhoto(url=item["image"]["medium"], width=0, height=0),
         ]
 
-        res.append(CatalogKeyArticle(text=text,
-                                     title=item["full_name"],
+        reply_markup = telegram.InlineKeyboardMarkup([
+            [telegram.InlineKeyboardButton(
+                url=item["siteUrl"],
+                text=ctx.localize("View on AniList")
+            )]
+        ])
+
+        res.append(CatalogKeyArticle(title=item["full_name"],
                                      description=short_description,
+                                     text=text,
                                      photo=photos,
+                                     reply_markup=reply_markup,
                                      parse_mode="HTML"))
 
     return res

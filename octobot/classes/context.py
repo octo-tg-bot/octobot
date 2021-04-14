@@ -392,3 +392,23 @@ class Context:
         gt.install()
 
         return gt.gettext(text)
+
+
+    def nlocalize(self, singular: str, plural: str, n: int) -> str:
+        """
+        Localize string according to user-set localization, taking pluralization into account
+
+        :param singular: Singular form of the string to translate
+        :type singular: :class:`str`
+        :param plural: Plural form of the string to translate
+        :type plural: :class:`str`
+        :param n: The number in question
+        :type n: :class:`int`
+        :return: Localized string
+        :rtype: :class:`str`
+        """
+        chat_locale = octobot.localization.get_chat_locale(self.update)
+        gt = gettext.translation("messages", localedir="locales", languages=[chat_locale], fallback=True)
+        gt.install()
+
+        return gt.ngettext(singular, plural, n)
