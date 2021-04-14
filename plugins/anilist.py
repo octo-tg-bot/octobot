@@ -19,13 +19,12 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-import calendar
-import locale
+import datetime
 import re
 import textwrap
 from typing import Union
 
+import babel.dates
 import requests
 
 from octobot import Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound, localizable, \
@@ -156,7 +155,7 @@ MEDIA_FORMAT_STR = {
 MEDIA_ANIME = "ANIME"
 MEDIA_MANGA = "MANGA"
 
-plugin_info = PluginInfo("AniList")
+plugin = PluginInfo("AniList")
 
 
 def cleanse_html(raw_html):
@@ -191,35 +190,19 @@ def get_media_title(title):
     return title_str
 
 
-class different_locale:
-    def __init__(self, _locale):
-        self.locale = _locale
-
-    def __enter__(self):
-        self.old_locale = locale.getlocale(locale.LC_TIME)
-        try:
-            locale.setlocale(locale.LC_TIME, self.locale)
-        except locale.Error:
-            pass
-
-    def __exit__(self, *args):
-        locale.setlocale(locale.LC_TIME, self.old_locale)
-
-
 def get_fuzzy_date_str(fuzzy_date, ctx: Context):
     year = fuzzy_date["year"]
     month = fuzzy_date["month"]
     day = fuzzy_date["day"]
 
-    with different_locale(ctx.locale.language):
-        if day is not None:
-            return f"{calendar.month_abbr[month]} {day}, {year}"
-        elif month is not None:
-            return f"{calendar.month_abbr[month]} {year}"
-        elif year is not None:
-            return str(year)
-        else:
-            return None
+    if day is not None:
+        return babel.dates.format_date(date=datetime.date(year, month, day), locale=ctx.locale)
+    elif month is not None:
+        return f"{babel.dates.get_month_names(locale=ctx.locale)[month]} {year}"
+    elif year is not None:
+        return str(year)
+    else:
+        return None
 
 
 def format_media_description(description: Union[str, None], ctx: Context):
