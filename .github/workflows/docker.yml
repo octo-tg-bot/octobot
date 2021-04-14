@@ -20,7 +20,10 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: Build docker image for
+    strategy:
+      matrix:
+        arch: ["linux/amd64", "linux/386", "linux/arm64", "linux/arm/v7", "linux/arm/v6", "linux/ppc64le", "linux/s390x"]
+    name: Build docker image for ${{ matrix.arch }}
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
@@ -42,7 +45,7 @@ jobs:
         uses: docker/setup-qemu-action@v1
         with:
           image: tonistiigi/binfmt:latest
-          platforms: all
+          platforms: ${{ matrix.arch }}
       - name: Publish to Registry
         if: always()
         uses: docker/build-push-action@v2
@@ -55,7 +58,7 @@ jobs:
             GITHUB_REF=${{ github.ref }}
           push: ${{ github.event_name == 'push' }}
           target: release
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x
+          platforms: ${{ matrix.arch }}
           cache-from: type=registry,ref=ghcr.io/octo-tg-bot/octotgbot:latest
           cache-to: type=inline
   deployment:
