@@ -216,7 +216,7 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
     month = fuzzy_date["month"]
     day = fuzzy_date["day"]
 
-    with different_locale(ctx.locale):
+    with different_locale(ctx.locale.language):
         if day is not None:
             return f"{calendar.month_abbr[month]} {day}, {year}"
         elif month is not None:
