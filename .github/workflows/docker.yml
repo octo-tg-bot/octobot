@@ -20,7 +20,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: Build docker image for
+    name: Build docker image
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
