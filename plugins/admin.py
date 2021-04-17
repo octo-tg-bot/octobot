@@ -59,7 +59,7 @@ def execute_command(func: typing.Callable, context: octobot.Context, success_mes
             target_name = f"@{target}"
             success, target = lookup_username(target)
             if not success:
-                context.reply(context.localize("I hadn't seen the person whose username is @{username}").format(target))
+                context.reply(context.localize("I hadn't seen the person whose username is @{username}").format(username=target))
                 return
         else:
             target = int(target)
