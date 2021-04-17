@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-14 23:30+0700\n"
+"POT-Creation-Date: 2021-04-17 11:22+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -528,6 +528,10 @@ msgstr ""
 #: plugins/gtl.py:20
 msgid "Translates text using Google Translate"
 msgstr "Переводит текст с помощью Google Translate"
+
+#: plugins/gtl.py:53
+msgid "No text to translate was specified/replied to!"
+msgstr "Не был введен текст для перевода! Для перевода, введите текст после аргумента языка или ответьте на сообщение с другим языком."
 
 #: plugins/imgur.py:13
 msgid "Search for image on Imgur"

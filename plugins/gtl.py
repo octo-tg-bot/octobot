@@ -49,6 +49,8 @@ def gtl(bot: octobot.OctoBot, context: octobot.Context):
     if not destination_language.startswith("zh"):
         destination_language = destination_language.split("-")[0]
     inf.logger.debug("dest lang %s", destination_language)
+    if text is None or len(text) == 0:
+        return context.reply(context.localize("No text to translate was specified/replied to!"))
     translation = translator.translate(text, dest=destination_language, src=source_language)
     base_l = context.locale
     src = base_l.languages.get(translation.src.replace("_", "-").split("-")[0].lower(), translation.src)
