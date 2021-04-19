@@ -83,7 +83,8 @@ def execute_command(func: typing.Callable, context: octobot.Context, success_mes
             context.localize(
                 'Can\'t {action} <a href="tg://user?id={target}">{target_name}</a>.\nError: <code>{error}</code>.').format(
                 action=action,
-                target=html.escape(target_name),
+                target=target,
+                target_name=html.escape(target_name),
                 error=html.escape(e.message)),
             parse_mode="html")
     else:
