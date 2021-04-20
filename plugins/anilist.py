@@ -249,6 +249,9 @@ def anilist_command(operation_name: str, **kwargs):
 
             if offset < 0:
                 raise CatalogCantGoBackwards
+            
+            if count < 20:
+                count = 20
 
             r = Database.post_cache(GRAPHQL_URL, json={
                 "query": GRAPHQL_QUERY,
