@@ -387,7 +387,7 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
             )]
         ])
 
-        res.append(CatalogKeyArticle(title=item["full_name"],
+        res.append(CatalogKeyArticle(title=item["name"]["full"],
                                      description=short_description,
                                      text=text,
                                      photo=photos,
