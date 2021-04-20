@@ -316,7 +316,7 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     res = []
 
     for item in media:
-        item["short_title"] = item["title"].get("english", item["title"].get("romaji"))
+        item["short_title"] = item["title"]["english"] or item["title"]["romaji"]
         item["title"] = get_media_title(item["title"])
         item["format"] = ctx.localize(MEDIA_FORMAT_STR.get(item["format"], item["format"]))
 
