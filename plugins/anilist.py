@@ -363,7 +363,7 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
         item["description"], short_description = format_media_description(item["description"], ctx)
 
         item["present_in"] = "\n".join(
-            ['<a href="{siteUrl}">{title}</a>'.format(**media, title=get_media_title(media['title'])) for media in
+            ['<a href="{siteUrl}">{title}</a>'.format(siteUrl=media['siteUrl'], title=get_media_title(media['title'])) for media in
              item["media"]["nodes"]])
 
         text = """<b>{name[full]}</b>
