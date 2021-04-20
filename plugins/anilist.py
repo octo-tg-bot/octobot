@@ -143,6 +143,9 @@ MEDIA_FORMAT_STR = {
 MEDIA_ANIME = "ANIME"
 MEDIA_MANGA = "MANGA"
 
+MAX_PER_PAGE = 50
+
+
 plugin = PluginInfo("AniList")
 
 
@@ -258,16 +261,18 @@ def anilist_command(operation_name: str, **kwargs):
             if offset < 0:
                 raise CatalogCantGoBackwards
             
-            if count < 20:
-                count = 20
+            if count > MAX_PER_PAGE:
+                count = MAX_PER_PAGE
+            
+            page = offset // MAX_PER_PAGE + 1
 
             r = Database.post_cache(GRAPHQL_URL, json={
                 "query": GRAPHQL_QUERY,
                 "operationName": operation_name,
                 "variables": {
                     "query": query,
-                    "page": offset,
-                    "perPage": count,
+                    "page": page,
+                    "perPage": MAX_PER_PAGE,
                     **kwargs,
                 },
             })
@@ -285,20 +290,18 @@ def anilist_command(operation_name: str, **kwargs):
                 raise CatalogNotFound
 
             res = func(page_data, bot, ctx)
-            if len(res) == 0:
-                if ctx.update_type == UpdateType.inline_query:
-                    return None
-                else:
-                    raise CatalogCantGoDeeper
 
-            previous_offset = current_page - 1 if offset > 0 else -1
+            prev_offset = offset - count
+            next_offset = offset + count
+            if next_offset > total:
+                next_offset = None
 
             return Catalog(
-                results=res,
-                max_count=last_page,
-                previous_offset=previous_offset,
-                current_index=current_page,
-                next_offset=current_page + 1
+                results=res[offset % MAX_PER_PAGE:],
+                max_count=total,
+                previous_offset=prev_offset,
+                current_index=offset + 1,
+                next_offset=next_offset
             )
 
         return handler
