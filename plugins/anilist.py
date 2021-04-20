@@ -29,7 +29,7 @@ import requests
 import telegram
 
 from octobot import Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound, localizable, \
-    PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper, UpdateType
+    PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper, UpdateType, Database
 from octobot.catalogs import CatalogHandler
 
 GRAPHQL_URL = "https://graphql.anilist.co"
@@ -111,7 +111,6 @@ query Character($query: String, $page: Int, $perPage: Int) {
   }
 }
 """
-HEADERS = {"User-Agent": "OctoBot/1.0"}
 
 ANIME_MEDIA_STATUSES_STR = {
     "FINISHED": localizable("finished"),
@@ -157,14 +156,6 @@ def cleanse_spoilers(raw_text: str, replacement_text: str):
     r = re.compile("~!.*!~", flags=re.S)
     cleansed_text = re.sub(r, replacement_text, raw_text)
     return cleansed_text
-
-
-def graphql(query, operation_name, params):
-    r = requests.post(GRAPHQL_URL, json={"query": query, "operationName": operation_name, "variables": params},
-                      headers=HEADERS)
-    r.raise_for_status()
-    json = r.json()
-    return json
 
 
 def get_media_title(title):
@@ -248,7 +239,7 @@ def get_media_metadata(media, ctx: Context):
     return metadata
 
 
-def anilist_command(query_name: str, **kwargs):
+def anilist_command(operation_name: str, **kwargs):
     def wrapper(func):
         def handler(query: str, offset: str, count: int, bot: OctoBot, ctx: Context):
             try:
@@ -259,16 +250,18 @@ def anilist_command(query_name: str, **kwargs):
             if offset < 0:
                 raise CatalogCantGoBackwards
 
-            defaults = {
-                "query": query,
-                "page": offset,
-                "perPage": count
-            }
-
-            resp = graphql(GRAPHQL_QUERY, query_name, {
-                **defaults,
-                **kwargs,
+            r = Database.post_cache(GRAPHQL_URL, json={
+                "query": GRAPHQL_QUERY,
+                "operationName": operation_name,
+                "variables": {
+                    "query": query,
+                    "page": offset,
+                    "perPage": count,
+                    **kwargs,
+                },
             })
+            r.raise_for_status()
+            resp = r.json()
 
             page_data = resp["data"]["Page"]
 
@@ -355,7 +348,8 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     res = []
 
     for item in characters:
-        if len(item["name"]["alternative"]) > 0 and item["name"]["alternative"][0] != "":
+        item["name"]["alternative"] = list(filter(lambda s: len(s.strip()), item["name"]["alternative"]))
+        if len(item["name"]["alternative"]) > 0:
             item["alternative_names"] = "Also known as " + ", ".join(item["name"]["alternative"]) + "\n"
         else:
             item["alternative_names"] = ""
@@ -368,7 +362,6 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
 
         text = """<b>{name[full]}</b>
 {alternative_names}
-
 {description}
 
 <i>{present_in_title}:</i>
