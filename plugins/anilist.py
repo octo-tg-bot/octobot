@@ -313,6 +313,7 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     res = []
 
     for item in media:
+        item["short_title"] = item["title"].get("english", item["title"].get("romaji"))
         item["title"] = get_media_title(item["title"])
         item["format"] = ctx.localize(MEDIA_FORMAT_STR.get(item["format"], item["format"]))
 
@@ -343,7 +344,7 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
         ])
 
         res.append(CatalogKeyArticle(item_id=item["id"],
-                                     title=f"{item['title']} ({item['format']})",
+                                     title=f"{item['short_title']} ({item['format']})",
                                      description=short_description,
                                      text=text,
                                      photo=photos,
