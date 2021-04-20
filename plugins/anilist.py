@@ -189,9 +189,9 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
     month = fuzzy_date["month"]
     day = fuzzy_date["day"]
 
-    if day is not None:
+    if day is not None and month is not None and year is not None:
         return babel.dates.format_date(date=datetime.date(year, month, day), locale=ctx.locale)
-    elif month is not None:
+    elif month is not None and year is not None:
         return f"{babel.dates.get_month_names(locale=ctx.locale)[month]} {year}"
     elif year is not None:
         return str(year)
@@ -260,7 +260,7 @@ def anilist_command(operation_name: str, **kwargs):
 
             if offset < 0:
                 raise CatalogCantGoBackwards
-            
+
             if count > MAX_PER_PAGE:
                 count = MAX_PER_PAGE
             
