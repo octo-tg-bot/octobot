@@ -88,6 +88,7 @@ query Character($query: String, $page: Int, $perPage: Int) {
       hasNextPage
     }
     characters(search: $query) {
+      id
       name {
         full
         alternative
@@ -341,7 +342,8 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
             )]
         ])
 
-        res.append(CatalogKeyArticle(title=f"{item['title']} ({item['format']})",
+        res.append(CatalogKeyArticle(item_id=item["id"],
+                                     title=f"{item['title']} ({item['format']})",
                                      description=short_description,
                                      text=text,
                                      photo=photos,
@@ -390,7 +392,8 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
             )]
         ])
 
-        res.append(CatalogKeyArticle(title=item["name"]["full"],
+        res.append(CatalogKeyArticle(item_id=item["id"],
+                                     title=item["name"]["full"],
                                      description=short_description,
                                      text=text,
                                      photo=photos,
