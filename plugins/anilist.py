@@ -145,10 +145,17 @@ MEDIA_MANGA = "MANGA"
 plugin = PluginInfo("AniList")
 
 
+def shorten(text: str, length: int):
+    if len(text) > length:
+        return text[:-3] + "..." # "…" is also 3 bytes and looks the same, but less supported
+    return text
+
+
 def cleanse_html(raw_html):
     r = re.compile("<.*?>")
     cleansed_text = re.sub(r, "", raw_html)
-    cleansed_text = cleansed_text.replace('&', '&amp;')
+    # not necessary?
+    # cleansed_text = cleansed_text.replace('&', '&amp;')
     return cleansed_text
 
 
@@ -156,6 +163,10 @@ def cleanse_spoilers(raw_text: str, replacement_text: str):
     r = re.compile("~!.*!~", flags=re.S)
     cleansed_text = re.sub(r, replacement_text, raw_text)
     return cleansed_text
+
+
+def collapse_whitespace(text: str):
+    return "\n".join([re.sub(" +", " ", line).strip() for line in text.split("\n")])
 
 
 def get_media_title(title):
@@ -186,18 +197,14 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
 
 def format_media_description(description: Union[str, None], ctx: Context):
     if description is None:
-        short = ctx.localize("No description provided.")
-        long = f"<i>{short}</i>"
+        description = ctx.localize("No description provided.")
     else:
-        long = cleanse_html(description)
-        replacement_text = ctx.localize("(spoilers redacted)")
-        short = cleanse_spoilers(long, replacement_text)
-        long = cleanse_spoilers(long, f"<i>{replacement_text}</i>")
+        description = cleanse_html(description)
+        description = collapse_whitespace(description)
+        description = cleanse_spoilers(description, ctx.localize("(spoilers redacted)"))
+        description = shorten(description, 1024)
 
-    short = textwrap.shorten(short, width=70, placeholder="…")
-    long = textwrap.shorten(long, width=1024, placeholder="…")
-
-    return long, short
+    return description, description[:70]
 
 
 def get_media_metadata(media, ctx: Context):
