@@ -253,6 +253,9 @@ def get_media_metadata(media, ctx: Context):
 def anilist_command(operation_name: str, **kwargs):
     def wrapper(func):
         def handler(query: str, offset: str, count: int, bot: OctoBot, ctx: Context):
+            if offset == 'None':
+                raise CatalogCantGoDeeper
+
             try:
                 offset = int(offset)
             except ValueError:
@@ -293,7 +296,7 @@ def anilist_command(operation_name: str, **kwargs):
 
             prev_offset = offset - count
             next_offset = offset + count
-            if next_offset > total:
+            if next_offset >= total:
                 next_offset = None
 
             return Catalog(
