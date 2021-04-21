@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-17 11:22+0300\n"
+"POT-Creation-Date: 2021-04-21 17:58+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -82,15 +82,15 @@ msgstr ""
 "href=\"tg://user?id={target}\">{target_name}</a>.\n"
 "Ошибка: <code>{error}</code>."
 
-#: plugins/admin.py:93
+#: plugins/admin.py:94
 msgid "Cancel"
 msgstr "Отмена"
 
-#: plugins/admin.py:104
+#: plugins/admin.py:105
 msgid "Bans user in this chat"
 msgstr "Банит пользователя в этом чате"
 
-#: plugins/admin.py:110
+#: plugins/admin.py:111
 msgid ""
 "🔨<a href=\"tg://user?id={admin_id}\">{admin_name}</a> banned <a "
 "href=\"tg://user?id={target}\">{target_name}</a>"
@@ -98,15 +98,15 @@ msgstr ""
 "🔨<a href=\"tg://user?id={admin_id}\">{admin_name}</a> забанил <a "
 "href=\"tg://user?id={target}\">{target_name}</a>"
 
-#: plugins/admin.py:112
+#: plugins/admin.py:113
 msgid "ban"
 msgstr "бан"
 
-#: plugins/admin.py:116
+#: plugins/admin.py:117
 msgid "Kicks user from chat"
 msgstr "Кикает пользователя из чата"
 
-#: plugins/admin.py:122
+#: plugins/admin.py:123
 msgid ""
 "👞<a href=\"tg://user?id={admin_id}\">{admin_name}</a> kicked <a "
 "href=\"tg://user?id={target}\">{target_name}</a>"
@@ -114,43 +114,43 @@ msgstr ""
 "👞<a href=\"tg://user?id={admin_id}\">{admin_name}</a> кикнул <a "
 "href=\"tg://user?id={target}\">{target_name}</a>"
 
-#: plugins/admin.py:124
+#: plugins/admin.py:125
 msgid "kick"
 msgstr "кик"
 
-#: plugins/admin.py:130
+#: plugins/admin.py:131
 msgid "Unbanned"
 msgstr "Разбанен"
 
-#: plugins/admin.py:140
+#: plugins/admin.py:141
 msgid "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> pinned message.\n"
 msgstr "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> закрепил сообщение.\n"
 
-#: plugins/admin.py:147
+#: plugins/admin.py:148
 msgid "Pins message in chat"
 msgstr "Закрепляет сообщение"
 
-#: plugins/admin.py:155
+#: plugins/admin.py:156
 msgid "Pins message in chat with notification"
 msgstr "Закрепляет сообщение со звуком"
 
-#: plugins/admin.py:167
+#: plugins/admin.py:168
 msgid "Gives user a warning"
 msgstr "Выдаёт предупреждение пользователю"
 
-#: plugins/admin.py:175
+#: plugins/admin.py:176
 msgid "Reply to user to give them a warn"
 msgstr "Ответь на сообщение пользователя для выдачи ему предупреждения"
 
-#: plugins/admin.py:179
+#: plugins/admin.py:180
 msgid "Can't warn administrator"
 msgstr "Не могу выдать предупреждение админу"
 
-#: plugins/admin.py:187
+#: plugins/admin.py:188
 msgid "Warn reason not specified"
 msgstr "Причина предупреждения не введена"
 
-#: plugins/admin.py:195
+#: plugins/admin.py:196
 msgid ""
 "\n"
 "\n"
@@ -161,11 +161,11 @@ msgstr ""
 "<i>Пользователь достиг максимального количества предупреждений и был "
 "забанен.</i>"
 
-#: plugins/admin.py:200
+#: plugins/admin.py:201
 msgid "Unban"
 msgstr "Разбанить"
 
-#: plugins/admin.py:202
+#: plugins/admin.py:203
 msgid ""
 "⚠️<a href=\"tg://user?id={admin_id}\">{admin}</a> warned <a "
 "href=\"tg://user?id={target_id}\">{target_name}</a> "
@@ -177,23 +177,23 @@ msgstr ""
 "({warn_count}/{max_warns})\n"
 "Причина: <i>{reason}</i>"
 
-#: plugins/admin.py:226
+#: plugins/admin.py:227
 msgid "Warn removed"
 msgstr "Предупреждение удалено"
 
-#: plugins/admin.py:229
+#: plugins/admin.py:230
 msgid "Lists all user warns or your warns"
 msgstr "Показывает все предупрждения пользователя или выданные вам предупреждения"
 
-#: plugins/admin.py:250
+#: plugins/admin.py:251
 msgid "Failed to find username {username}"
 msgstr "Не могу найти {username}"
 
-#: plugins/admin.py:254
+#: plugins/admin.py:255
 msgid "Warns for {name}:"
 msgstr "Выданные {name} предупреждения:"
 
-#: plugins/admin.py:257
+#: plugins/admin.py:258
 msgid "{name} has no warns!"
 msgstr "У {name} нет предупреждений"
 
@@ -261,64 +261,64 @@ msgstr "ранобэ"
 msgid "one-shot manga"
 msgstr "ван-шот манга"
 
-#: plugins/anilist.py:198
+#: plugins/anilist.py:203
 msgid "No description provided."
 msgstr "Нет описания."
 
-#: plugins/anilist.py:202
+#: plugins/anilist.py:207
 msgid "(spoilers redacted)"
 msgstr "(спойлеры вырезаны)"
 
-#: plugins/anilist.py:223
+#: plugins/anilist.py:224
 msgid "status"
 msgstr "статус"
 
-#: plugins/anilist.py:226
+#: plugins/anilist.py:227
 msgid "{} episode"
 msgid_plural "{} episodes"
 msgstr[0] "{} эпизод"
 msgstr[1] "{} эпизода"
 msgstr[2] "{} эпизодов"
 
-#: plugins/anilist.py:230
+#: plugins/anilist.py:231
 msgid "{} volume"
 msgid_plural "{} volumes"
 msgstr[0] "{} том"
 msgstr[1] "{} тома"
 msgstr[2] "{} томов"
 
-#: plugins/anilist.py:232
+#: plugins/anilist.py:233
 msgid "{} chapter"
 msgid_plural "{} chapters"
 msgstr[0] "{} глава"
 msgstr[1] "{} главы"
 msgstr[2] "{} глав"
 
-#: plugins/anilist.py:236
+#: plugins/anilist.py:237
 msgid "rating"
 msgstr "оценка"
 
-#: plugins/anilist.py:241
+#: plugins/anilist.py:242
 msgid "first released on"
 msgstr "первый выпуск"
 
-#: plugins/anilist.py:246
+#: plugins/anilist.py:247
 msgid "last released on"
 msgstr "последний выпуск"
 
-#: plugins/anilist.py:305
+#: plugins/anilist.py:314
 msgid "Search on AniList"
 msgstr "Поиск на AniList"
 
-#: plugins/anilist.py:337 plugins/anilist.py:386
+#: plugins/anilist.py:347 plugins/anilist.py:397
 msgid "View on AniList"
 msgstr "Открыть на AniList"
 
-#: plugins/anilist.py:351
+#: plugins/anilist.py:362
 msgid "Search for characters on AniList"
 msgstr "Поиск персонажей на AniList"
 
-#: plugins/anilist.py:376
+#: plugins/anilist.py:387
 msgid "Present in"
 msgstr "Встречается в"
 
@@ -531,7 +531,9 @@ msgstr "Переводит текст с помощью Google Translate"
 
 #: plugins/gtl.py:53
 msgid "No text to translate was specified/replied to!"
-msgstr "Не был введен текст для перевода! Для перевода, введите текст после аргумента языка или ответьте на сообщение с другим языком."
+msgstr ""
+"Не был введен текст для перевода! Для перевода, введите текст после "
+"аргумента языка или ответьте на сообщение с другим языком."
 
 #: plugins/imgur.py:13
 msgid "Search for image on Imgur"
@@ -1021,6 +1023,14 @@ msgstr ""
 msgid "Buttons are not available due to database error"
 msgstr "Кнопки не работают из-за ошибки базы данных"
 
+#: octobot/handlers/cataloghandler.py:60
+msgid "Can't go forward anymore"
+msgstr "Нет следующей страницы"
+
+#: octobot/handlers/cataloghandler.py:62
+msgid "Can't go backwards anymore"
+msgstr "Нет предыдущей страницы"
+
 #: octobot/handlers/cataloghandler.py:146 octobot/handlers/commandhandle.py:89
 msgid "Sorry, this command is unavailable. Please contact the bot administrator."
 msgstr "Данная команда не доступна. Свяжитесь с администратором бота."
@@ -1034,8 +1044,8 @@ msgid "Nothing found!"
 msgstr "Не найдено"
 
 #: octobot/handlers/cataloghandler.py:165
-msgid "➡️Search using inline mode"
-msgstr "➡️Искать через инлайн"
+msgid "➡️ Search using inline mode"
+msgstr "➡️ Искать через инлайн"
 
 #: octobot/handlers/commandhandle.py:94
 msgid ""

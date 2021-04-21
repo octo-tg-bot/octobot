@@ -57,9 +57,9 @@ class CatalogHandler(CommandHandler):
         try:
             res: octobot.Catalog = self.function(query, offset, 1, bot, context)
         except CatalogCantGoDeeper:
-            return context.reply("Can't go forward anymore")
+            return context.reply(context.localize("Can't go forward anymore"))
         except CatalogCantGoBackwards:
-            return context.reply("Can't go backwards anymore")
+            return context.reply(context.localize("Can't go backwards anymore"))
         reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.max_count, res.previous_offset,
@@ -162,4 +162,4 @@ class CatalogHandler(CommandHandler):
             handle_exception(bot, context, e)
 
     def create_current_query_button(self, query, ctx):
-        return [telegram.InlineKeyboardButton(switch_inline_query_current_chat=f"{self.command[0]} {query}", text=ctx.localize("➡️Search using inline mode"))]
+        return [telegram.InlineKeyboardButton(switch_inline_query_current_chat=f"{self.command[0]} {query}", text=ctx.localize("➡️ Search using inline mode"))]
