@@ -156,8 +156,7 @@ def shorten(text: str, length: int):
 
 
 def cleanse_html(raw_html):
-    r = re.compile("<.*?>")
-    cleansed_text = re.sub(r, "", raw_html)
+    cleansed_text = re.sub("<.*?>", "", raw_html)
     # not necessary?
     # cleansed_text = cleansed_text.replace('&', '&amp;')
     return cleansed_text
