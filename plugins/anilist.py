@@ -151,7 +151,7 @@ plugin = PluginInfo("AniList")
 
 def shorten(text: str, length: int):
     if len(text) > length:
-        return text[:-3] + "..." # "…" is also 3 bytes and looks the same, but less supported
+        return text[:length-3] + "..." # "…" is also 3 bytes and looks the same, but less supported
     return text
 
 
