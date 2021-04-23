@@ -196,7 +196,9 @@ class OctoBot(telegram.Bot):
                         if "bot was kicked" or "bot was blocked" in e.message:
                             return
                     except telegram.error.BadRequest as e:
-                        if e.message == "Have no rights to send a message":
+                        if e.message == "Cancelled by new editmessagemedia request":
+                            return
+                        elif e.message == "Have no rights to send a message":
                             chat = update.effective_chat
                             if chat is None:
                                 # Shouldn't happen, but check just in case
