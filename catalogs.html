@@ -42,8 +42,8 @@
 <li><p>Query (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)</p></li>
 <li><p>Index, from which iteration should start in your function (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)</p></li>
 <li><p>Recommended amount of items to return. Notice that in inline mode you can’t have more than 50 results at a time (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
-<li><p>Bot (<code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.OctoBot</span></code>)</p></li>
-<li><p>Context (<code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Context</span></code>)</p></li>
+<li><p>Bot (<a class="reference internal" href="octobot.html#octobot.OctoBot" title="octobot.OctoBot"><code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.OctoBot</span></code></a>)</p></li>
+<li><p>Context (<a class="reference internal" href="context.html#octobot.Context" title="octobot.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Context</span></code></a>)</p></li>
 </ol>
 <p>In return, function should return <code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Catalog</span></code>, with following arguments:</p>
 <ol class="arabic simple">
@@ -76,9 +76,28 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="module-octobot.classes.catalog">
-<span id="classes-documentation"></span><h2>Classes documentation<a class="headerlink" href="#module-octobot.classes.catalog" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes-documentation">
+<h2>Classes documentation<a class="headerlink" href="#classes-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="octobot.catalogs.CatalogHandler">
+<em class="property">class </em><code class="sig-prename descclassname">octobot.catalogs.</code><code class="sig-name descname">CatalogHandler</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.catalogs.CatalogHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Catalog handler. Handles catalogs, surprisingly enough.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Prefix will not be checked in case of inline queries</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command to handle</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command description</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>,</em><em>optional</em>) – Command prefix, defaults to <cite>/</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-octobot.classes.catalog"></span><dl class="class">
 <dt id="octobot.classes.catalog.Catalog">
 <em class="property">class </em><code class="sig-prename descclassname">octobot.classes.catalog.</code><code class="sig-name descname">Catalog</code><span class="sig-paren">(</span><em class="sig-param">results: Union[List[octobot.classes.catalog.CatalogKeyPhoto], List[octobot.classes.catalog.CatalogKeyArticle]], current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int], max_count: Union[str, int] = '?', photo_primary: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.classes.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base catalog class</p>
@@ -193,7 +212,7 @@
 <li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Catalogs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#implementing-catalog">Implementing catalog</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-octobot.classes.catalog">Classes documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes-documentation">Classes documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
