@@ -67,7 +67,7 @@ jobs:
     steps:
       - name: Install jq and curl
         run: sudo apt update && sudo apt install jq curl
-      - name: start deployment
+      - name: Start deployment
         uses: bobheadxi/deployments@master
         id: deployment
         with:
@@ -77,7 +77,7 @@ jobs:
       - name: Send Telegram message about started deployment
         id: sendMsg
         run: |
-          export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛫Deployment ${{ github.sha }} started" | jq .result.message_id)
+          export message_id=$(curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT }} -d text="🔄 Deployment started for commit ${{ github.sha }}" | jq .result.message_id)
           echo "::set-output name=message_id::$message_id"
       - uses: actions/checkout@v2
       - name: Sentry Release
@@ -92,7 +92,7 @@ jobs:
       - name: Send request to Watchtower HTTP API
         run: 'curl -H "Authorization: Bearer ${{ secrets.WT_TOKEN }}" http://${{ secrets.WT_HOST }}:${{ secrets.WT_PORT }}/v1/update'
 
-      - name: update deployment status
+      - name: Update deployment status
         uses: bobheadxi/deployments@v0.4.3
         if: always()
         with:
@@ -102,4 +102,4 @@ jobs:
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
       - name: Edit Telegram message about finished deployment
-        run: curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/editMessageText -d chat_id=${{ secrets.TELEGRAM_CHAT}} -d text="🛬Deployment for ${{ github.sha }} finished" -d message_id=${{ steps.sendMsg.outputs.message_id }}
+        run: curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/editMessageText -d chat_id=${{ secrets.TELEGRAM_CHAT }} -d text="✅ Deployment finished for commit ${{ github.sha }}" -d message_id=${{ steps.sendMsg.outputs.message_id }}

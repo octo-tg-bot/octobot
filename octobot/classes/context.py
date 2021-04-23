@@ -153,15 +153,15 @@ class Context:
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         # TODO: Move class creation into from_update and from_reply functions cause this is a mess
-        self.locale = "en"
+        self.locale_str = "en"
         self.bot = bot
         self.update = update
-        self.locale = octobot.localization.get_chat_locale(self.update)
-        if "_" in self.locale:
+        self.locale_str = octobot.localization.get_chat_locale(self.update)
+        if "_" in self.locale_str:
             loc_sep = "_"
         else:
             loc_sep = "-"
-        self.locale = babel.Locale.parse(self.locale, sep=loc_sep)
+        self.locale = babel.Locale.parse(self.locale_str, sep=loc_sep)
         self.user = update.effective_user
         if self.user is not None:
             self.user_db = Database[self.user.id]
@@ -387,12 +387,9 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        chat_locale = octobot.localization.get_chat_locale(self.update)
-        gt = gettext.translation("messages", localedir="locales", languages=[chat_locale], fallback=True)
-        gt.install()
+        gt = gettext.translation("messages", localedir="locales", languages=[self.locale_str], fallback=True)
 
         return gt.gettext(text)
-
 
     def nlocalize(self, singular: str, plural: str, n: int) -> str:
         """
@@ -407,8 +404,6 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        chat_locale = octobot.localization.get_chat_locale(self.update)
-        gt = gettext.translation("messages", localedir="locales", languages=[chat_locale], fallback=True)
-        gt.install()
+        gt = gettext.translation("messages", localedir="locales", languages=[self.locale_str], fallback=True)
 
         return gt.ngettext(singular, plural, n)

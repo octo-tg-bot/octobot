@@ -31,11 +31,11 @@ def supergroup_only(function):
     return wrapper
 
 
-if not is_docker:
-    try:
+try:
+    if not is_docker:
         __version__ = subprocess.check_output('git log -n 1 --pretty="%h"',
                                               shell=True).decode('utf-8').replace("\n", "")
-    except subprocess.CalledProcessError:
-        __version__ = "Unknown"
-else:
-    __version__ = open(".git-version").read().replace("\n", "")
+    else:
+        __version__ = open(".git-version").read().replace("\n", "")
+except:
+    __version__ = "Unknown"

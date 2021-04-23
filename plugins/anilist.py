@@ -29,7 +29,7 @@ import requests
 import telegram
 
 from octobot import Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound, localizable, \
-    PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper, UpdateType
+    PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper, UpdateType, Database
 from octobot.catalogs import CatalogHandler
 
 GRAPHQL_URL = "https://graphql.anilist.co"
@@ -88,6 +88,7 @@ query Character($query: String, $page: Int, $perPage: Int) {
       hasNextPage
     }
     characters(search: $query) {
+      id
       name {
         full
         alternative
@@ -111,7 +112,6 @@ query Character($query: String, $page: Int, $perPage: Int) {
   }
 }
 """
-HEADERS = {"User-Agent": "OctoBot/1.0"}
 
 ANIME_MEDIA_STATUSES_STR = {
     "FINISHED": localizable("finished"),
@@ -143,13 +143,22 @@ MEDIA_FORMAT_STR = {
 MEDIA_ANIME = "ANIME"
 MEDIA_MANGA = "MANGA"
 
+MAX_PER_PAGE = 50
+
+
 plugin = PluginInfo("AniList")
 
 
+def shorten(text: str, length: int):
+    if len(text) > length:
+        return text[:length-3] + "..." # "…" is also 3 bytes and looks the same, but less supported
+    return text
+
+
 def cleanse_html(raw_html):
-    r = re.compile("<.*?>")
-    cleansed_text = re.sub(r, "", raw_html)
-    cleansed_text = cleansed_text.replace('&', '&amp;')
+    cleansed_text = re.sub("<.*?>", "", raw_html)
+    # not necessary?
+    # cleansed_text = cleansed_text.replace('&', '&amp;')
     return cleansed_text
 
 
@@ -159,12 +168,8 @@ def cleanse_spoilers(raw_text: str, replacement_text: str):
     return cleansed_text
 
 
-def graphql(query, operation_name, params):
-    r = requests.post(GRAPHQL_URL, json={"query": query, "operationName": operation_name, "variables": params},
-                      headers=HEADERS)
-    r.raise_for_status()
-    json = r.json()
-    return json
+def collapse_whitespace(text: str):
+    return "\n".join([re.sub(" +", " ", line).strip() for line in text.split("\n")])
 
 
 def get_media_title(title):
@@ -183,9 +188,9 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
     month = fuzzy_date["month"]
     day = fuzzy_date["day"]
 
-    if day is not None:
+    if day is not None and month is not None and year is not None:
         return babel.dates.format_date(date=datetime.date(year, month, day), locale=ctx.locale)
-    elif month is not None:
+    elif month is not None and year is not None:
         return f"{babel.dates.get_month_names(locale=ctx.locale)[month]} {year}"
     elif year is not None:
         return str(year)
@@ -195,18 +200,14 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
 
 def format_media_description(description: Union[str, None], ctx: Context):
     if description is None:
-        short = ctx.localize("No description provided.")
-        long = f"<i>{short}</i>"
+        description = ctx.localize("No description provided.")
     else:
-        long = cleanse_html(description)
-        replacement_text = ctx.localize("(spoilers redacted)")
-        short = cleanse_spoilers(long, replacement_text)
-        long = cleanse_spoilers(long, f"<i>{replacement_text}</i>")
+        description = cleanse_html(description)
+        description = collapse_whitespace(description)
+        description = cleanse_spoilers(description, ctx.localize("(spoilers redacted)"))
+        description = shorten(description, 1024)
 
-    short = textwrap.shorten(short, width=70, placeholder="…")
-    long = textwrap.shorten(long, width=1024, placeholder="…")
-
-    return long, short
+    return description, description[:70]
 
 
 def get_media_metadata(media, ctx: Context):
@@ -248,9 +249,12 @@ def get_media_metadata(media, ctx: Context):
     return metadata
 
 
-def anilist_command(query_name: str, **kwargs):
+def anilist_command(operation_name: str, **kwargs):
     def wrapper(func):
         def handler(query: str, offset: str, count: int, bot: OctoBot, ctx: Context):
+            if offset == 'None':
+                raise CatalogCantGoDeeper
+
             try:
                 offset = int(offset)
             except ValueError:
@@ -259,16 +263,23 @@ def anilist_command(query_name: str, **kwargs):
             if offset < 0:
                 raise CatalogCantGoBackwards
 
-            defaults = {
-                "query": query,
-                "page": offset,
-                "perPage": count
-            }
+            if count > MAX_PER_PAGE:
+                count = MAX_PER_PAGE
+            
+            page = offset // MAX_PER_PAGE + 1
 
-            resp = graphql(GRAPHQL_QUERY, query_name, {
-                **defaults,
-                **kwargs,
+            r = Database.post_cache(GRAPHQL_URL, json={
+                "query": GRAPHQL_QUERY,
+                "operationName": operation_name,
+                "variables": {
+                    "query": query,
+                    "page": page,
+                    "perPage": MAX_PER_PAGE,
+                    **kwargs,
+                },
             })
+            r.raise_for_status()
+            resp = r.json()
 
             page_data = resp["data"]["Page"]
 
@@ -281,20 +292,18 @@ def anilist_command(query_name: str, **kwargs):
                 raise CatalogNotFound
 
             res = func(page_data, bot, ctx)
-            if len(res) == 0:
-                if ctx.update_type == UpdateType.inline_query:
-                    return None
-                else:
-                    raise CatalogCantGoDeeper
 
-            previous_offset = current_page - 1 if offset > 0 else -1
+            prev_offset = offset - count
+            next_offset = offset + count
+            if next_offset >= total:
+                next_offset = None
 
             return Catalog(
-                results=res,
-                max_count=last_page,
-                previous_offset=previous_offset,
-                current_index=current_page,
-                next_offset=current_page + 1
+                results=res[offset % MAX_PER_PAGE:],
+                max_count=total,
+                previous_offset=prev_offset,
+                current_index=offset + 1,
+                next_offset=next_offset
             )
 
         return handler
@@ -309,6 +318,7 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     res = []
 
     for item in media:
+        item["short_title"] = item["title"]["english"] or item["title"]["romaji"]
         item["title"] = get_media_title(item["title"])
         item["format"] = ctx.localize(MEDIA_FORMAT_STR.get(item["format"], item["format"]))
 
@@ -338,7 +348,8 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
             )]
         ])
 
-        res.append(CatalogKeyArticle(title=f"{item['title']} ({item['format']})",
+        res.append(CatalogKeyArticle(item_id=item["id"],
+                                     title=f"{item['short_title']} ({item['format']})",
                                      description=short_description,
                                      text=text,
                                      photo=photos,
@@ -355,7 +366,8 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     res = []
 
     for item in characters:
-        if len(item["name"]["alternative"]) > 0 and item["name"]["alternative"][0] != "":
+        item["name"]["alternative"] = list(filter(lambda s: len(s.strip()), item["name"]["alternative"]))
+        if len(item["name"]["alternative"]) > 0:
             item["alternative_names"] = "Also known as " + ", ".join(item["name"]["alternative"]) + "\n"
         else:
             item["alternative_names"] = ""
@@ -363,12 +375,11 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
         item["description"], short_description = format_media_description(item["description"], ctx)
 
         item["present_in"] = "\n".join(
-            ['<a href="{siteUrl}">{title}</a>'.format(**media, title=get_media_title(media['title'])) for media in
+            ['<a href="{siteUrl}">{title}</a>'.format(siteUrl=media['siteUrl'], title=get_media_title(media['title'])) for media in
              item["media"]["nodes"]])
 
         text = """<b>{name[full]}</b>
 {alternative_names}
-
 {description}
 
 <i>{present_in_title}:</i>
@@ -387,7 +398,8 @@ def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
             )]
         ])
 
-        res.append(CatalogKeyArticle(title=item["full_name"],
+        res.append(CatalogKeyArticle(item_id=item["id"],
+                                     title=item["name"]["full"],
                                      description=short_description,
                                      text=text,
                                      photo=photos,

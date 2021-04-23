@@ -57,9 +57,9 @@ class CatalogHandler(CommandHandler):
         try:
             res: octobot.Catalog = self.function(query, offset, 1, bot, context)
         except CatalogCantGoDeeper:
-            return context.reply("Can't go forward anymore")
+            return context.reply(context.localize("Can't go forward anymore"))
         except CatalogCantGoBackwards:
-            return context.reply("Can't go backwards anymore")
+            return context.reply(context.localize("Can't go backwards anymore"))
         if res is None:
             return
         reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
