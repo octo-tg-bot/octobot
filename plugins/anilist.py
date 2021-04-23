@@ -25,6 +25,7 @@ import textwrap
 from typing import Union
 
 import babel.dates
+import bleach
 import requests
 import telegram
 
@@ -156,10 +157,10 @@ def shorten(text: str, length: int):
 
 
 def cleanse_html(raw_html):
-    cleansed_text = re.sub("<.*?>", "", raw_html)
-    # not necessary?
-    # cleansed_text = cleansed_text.replace('&', '&amp;')
-    return cleansed_text
+    return bleach.clean(raw_html,
+                        tags=["b", "strong", "i", "em", "u", "ins", "s", "strike", "del", "a"],
+                        attributes={"a": ["href"]},
+                        strip=True)
 
 
 def cleanse_spoilers(raw_text: str, replacement_text: str):
