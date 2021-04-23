@@ -1,3 +1,5 @@
+from io import StringIO
+from contextlib import redirect_stdout
 import pygenstub
 import toml
 import logging
@@ -14,8 +16,8 @@ def create_vnode(setting_name, setting_value, generator, children=None):
     else:
         setting_type = setting_type.__name__
     if children is None:
-        children = generator.root.children[0]
-    children.add_variable(pygenstub.VariableNode(setting_name, setting_type))
+        children = next(filter(lambda x: type(x) == pygenstub.ClassNode, generator.root.children))
+    children.add_child(pygenstub.VariableNode(setting_name, setting_type))
     if isdict:
         node = pygenstub.ClassNode(setting_type, bases=("dotdict",))
         for key, value in setting_value.items():
@@ -27,12 +29,15 @@ def create_stub_for_settings():
     with open("settings.base.toml") as f:
         settings = toml.load(f)
     with open("settings.py") as f:
-        generator = pygenstub.StubGenerator(f.read(), True)
+        generator = pygenstub.StubGenerator(f.read(), generic=True)
         for setting_name in settings:
             print("Creating node for", setting_name)
             create_vnode(setting_name, settings[setting_name], generator)
-        generator.root.add_variable(pygenstub.VariableNode("Settings", "_Settings"))
-        stub = generator.generate_stub()
+        generator.root.add_child(pygenstub.VariableNode("Settings", "_Settings"))
+        out = StringIO()
+        with redirect_stdout(out):
+            generator.print_stub()
+        stub = out.getvalue()
 
     with open("settings.pyi", 'w') as f:
         print("Writing settings stub")
