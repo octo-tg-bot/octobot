@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-21 17:58+0700\n"
+"POT-Creation-Date: 2021-04-23 13:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -261,64 +261,68 @@ msgstr "ранобэ"
 msgid "one-shot manga"
 msgstr "ван-шот манга"
 
-#: plugins/anilist.py:203
+#: plugins/anilist.py:209
 msgid "No description provided."
 msgstr "Нет описания."
 
-#: plugins/anilist.py:207
+#: plugins/anilist.py:213
 msgid "(spoilers redacted)"
 msgstr "(спойлеры вырезаны)"
 
-#: plugins/anilist.py:224
+#: plugins/anilist.py:230
 msgid "status"
 msgstr "статус"
 
-#: plugins/anilist.py:227
+#: plugins/anilist.py:233
 msgid "{} episode"
 msgid_plural "{} episodes"
 msgstr[0] "{} эпизод"
 msgstr[1] "{} эпизода"
 msgstr[2] "{} эпизодов"
 
-#: plugins/anilist.py:231
+#: plugins/anilist.py:237
 msgid "{} volume"
 msgid_plural "{} volumes"
 msgstr[0] "{} том"
 msgstr[1] "{} тома"
 msgstr[2] "{} томов"
 
-#: plugins/anilist.py:233
+#: plugins/anilist.py:239
 msgid "{} chapter"
 msgid_plural "{} chapters"
 msgstr[0] "{} глава"
 msgstr[1] "{} главы"
 msgstr[2] "{} глав"
 
-#: plugins/anilist.py:237
+#: plugins/anilist.py:243
 msgid "rating"
 msgstr "оценка"
 
-#: plugins/anilist.py:242
+#: plugins/anilist.py:248
 msgid "first released on"
 msgstr "первый выпуск"
 
-#: plugins/anilist.py:247
+#: plugins/anilist.py:253
 msgid "last released on"
 msgstr "последний выпуск"
 
-#: plugins/anilist.py:314
+#: plugins/anilist.py:256
+msgid "genres"
+msgstr "жанры"
+
+#: plugins/anilist.py:323
 msgid "Search on AniList"
 msgstr "Поиск на AniList"
 
-#: plugins/anilist.py:347 plugins/anilist.py:397
+#: plugins/anilist.py:353 plugins/anilist.py:403
 msgid "View on AniList"
 msgstr "Открыть на AniList"
 
-#: plugins/anilist.py:362
+#: plugins/anilist.py:368
 msgid "Search for characters on AniList"
 msgstr "Поиск персонажей на AniList"
 
-#: plugins/anilist.py:387
+#: plugins/anilist.py:393
 msgid "Present in"
 msgstr "Встречается в"
 

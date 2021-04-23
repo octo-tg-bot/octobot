@@ -189,9 +189,15 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
     day = fuzzy_date["day"]
 
     if day is not None and month is not None and year is not None:
-        return babel.dates.format_date(date=datetime.date(year, month, day), locale=ctx.locale)
+        try:
+            return babel.dates.format_date(date=datetime.date(year, month, day), locale=ctx.locale)
+        except ValueError:
+            return f"{year}-{str(month).zfill(2)}-{str(day).zfill(2)}"
     elif month is not None and year is not None:
-        return f"{babel.dates.get_month_names(locale=ctx.locale)[month]} {year}"
+        try:
+            return f"{babel.dates.get_month_names(locale=ctx.locale)[month]} {year}"
+        except KeyError:
+            return f"{year}-{month}"
     elif year is not None:
         return str(year)
     else:
@@ -245,6 +251,9 @@ def get_media_metadata(media, ctx: Context):
         end_date_str = get_fuzzy_date_str(media["startDate"], ctx)
         if end_date_str is not None:
             metadata.append("<b>{}:</b> {}".format(ctx.localize("last released on"), end_date_str))
+
+    if media["genres"] is not None and len(media["genres"]) > 0:
+        metadata.append("<b>{}:</b> {}".format(ctx.localize("genres"), ", ".join(media["genres"])))
 
     return metadata
 
@@ -324,7 +333,6 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
 
         item["metadata"] = "\n".join(get_media_metadata(item, ctx))
         item["description"], short_description = format_media_description(item["description"], ctx)
-        item["genres"] = ", ".join(item["genres"])
 
         text = """<b>{title}</b>
 <i>{format}</i>
@@ -332,8 +340,6 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
 {metadata}
 
 {description}
-
-<i>{genres}</i>
 """.format(**item)
 
         photos = [
