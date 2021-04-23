@@ -18,13 +18,13 @@ class _Settings():
         settings_backup = self._settings.copy()
         with open(FOLDER + "/settings.base.toml") as f:
             base_settings = toml.load(f, dotdict)
-            self._settings = base_settings
+            self.update_settings(base_settings)
         try:
             with open(FOLDER + "/settings.toml", "r") as f:
                 settings_user = toml.load(f, dotdict)
                 diff = list(set(settings_user.keys()) - set(base_settings.keys()))
                 if len(diff) > 0:
-                    self._settings = settings_backup
+                    self.update_settings(settings_backup)
                     LOGGER.error("Invalid user settings! Restoring previous settings")
                     raise ValueError("User settings has unknown item(s) not defined in base TOML: %s." %
                                      diff)
@@ -46,6 +46,9 @@ class _Settings():
                     LOGGER.debug("Loaded settings key %s from environment", key)
         LOGGER.debug(self._settings)
         LOGGER.info("Settings reloaded")
+
+    def update_settings(settings: dict):
+        self._settings = settings
 
     def __getattr__(self, item:str):
         if item in self._settings:
