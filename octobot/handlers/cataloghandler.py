@@ -60,6 +60,8 @@ class CatalogHandler(CommandHandler):
             return context.reply("Can't go forward anymore")
         except CatalogCantGoBackwards:
             return context.reply("Can't go backwards anymore")
+        if res is None:
+            return
         reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.max_count, res.previous_offset,
