@@ -156,4 +156,6 @@ settings.toml
 preimport.py
 
 # Generated stuff
+tests/testdata
 public
+TEST-*.xml

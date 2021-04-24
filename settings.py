@@ -1,5 +1,6 @@
 import json
 import os
+from pprint import pformat
 
 import toml
 import logging
@@ -11,16 +12,17 @@ FOLDER = os.path.abspath(os.path.dirname(__file__))
 class _Settings():
     _settings: dict = {}
 
-    def __init__(self):
+    def __init__(self, settings_folder=FOLDER):
+        self.settings_folder = settings_folder
         self.reload_settings()
 
     def reload_settings(self) -> None:
         settings_backup = self._settings.copy()
-        with open(FOLDER + "/settings.base.toml") as f:
+        with open(self.settings_folder + "/settings.base.toml") as f:
             base_settings = toml.load(f, dotdict)
             self.update_settings(base_settings)
         try:
-            with open(FOLDER + "/settings.toml", "r") as f:
+            with open(self.settings_folder + "/settings.toml", "r") as f:
                 settings_user = toml.load(f, dotdict)
                 diff = list(set(settings_user.keys()) - set(base_settings.keys()))
                 if len(diff) > 0:
@@ -35,7 +37,6 @@ class _Settings():
         LOGGER.debug("Iterating over os.environ")
         for key in os.environ:
             key = key.lower()
-            LOGGER.debug(key)
             if key.startswith("ob_"):
                 try:
                     self._settings[key[3:]] = json.loads(os.environ[key])
@@ -43,8 +44,8 @@ class _Settings():
                     LOGGER.warning("The key %s has an invalid JSON value of '%s' (error: %s), loading just as plain string", key, os.environ[key], e)
                     self._settings[key[3:]] = os.environ[key]
                 else:
-                    LOGGER.debug("Loaded settings key %s from environment", key)
-        LOGGER.debug(self._settings)
+                    LOGGER.debug("Loaded settings key %s from environment", key[3:])
+        LOGGER.debug("Result settings: %s", pformat(self._settings))
         LOGGER.info("Settings reloaded")
 
     def update_settings(self, settings: dict):
@@ -65,7 +66,7 @@ class _Settings():
 
     def save_settings_to_disk(self) -> None:
         try:
-            with open(FOLDER + "/settings.toml", "w") as f:
+            with open(self.settings_folder + "/settings.toml", "w") as f:
                 toml.dump(self._settings, f)
         except FileNotFoundError:
             LOGGER.critical(

@@ -12,3 +12,6 @@ preimport.py
 /.idea*
 /utils*
 *__*__*
+# Generated
+public
+*.xml
