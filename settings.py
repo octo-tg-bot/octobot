@@ -47,7 +47,7 @@ class _Settings():
         LOGGER.debug(self._settings)
         LOGGER.info("Settings reloaded")
 
-    def update_settings(settings: dict):
+    def update_settings(self, settings: dict):
         self._settings = settings
 
     def __getattr__(self, item:str):
