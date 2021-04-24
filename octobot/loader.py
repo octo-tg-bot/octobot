@@ -1,5 +1,6 @@
 import base64
 import os
+import sys
 import threading
 from glob import glob
 import importlib
@@ -15,7 +16,7 @@ from octobot.utils import path_to_module, thread_local
 from settings import Settings
 
 logger = logging.getLogger("Loader")
-
+TEST_RUNNING = 'unittest' in sys.modules.keys()
 
 class OctoBot(telegram.Bot):
     """
@@ -31,12 +32,13 @@ class OctoBot(telegram.Bot):
     error_handlers = []
 
     def __init__(self, load_list, *args, **kwargs):
-        dry_run = os.environ.get("DRY_RUN", False)
+        dry_run = os.environ.get("DRY_RUN", False) or TEST_RUNNING
         if not dry_run:
             logger.info("Initializing PTB")
             super(OctoBot, self).__init__(*args, **kwargs)
             self.me = self.getMe()
-
+        if TEST_RUNNING:
+            self.me = telegram.User(is_bot=True, username="test_bot", id=4, first_name="Unittest")
         for plugin in glob("base_plugins/*.py"):
             logger.info("Loading base plugin %s", plugin)
             self.load_plugin(path_to_module(plugin))

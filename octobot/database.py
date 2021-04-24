@@ -1,8 +1,10 @@
 import json
 import logging
 import pickle
+import sys
 from functools import wraps
 
+import fakeredis
 import redis
 import requests
 
@@ -100,14 +102,17 @@ class _Database:
     def __init__(self):
         self.request_session = requests.Session()
         self.request_session.headers.update({"User-Agent": Settings.user_agent})
-        self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
-        try:
-            self.redis.ping()
-        except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
-            logger.error("Error: Redis is not available. That might break the bot in some places.")
-            self.redis = None
+        if 'unittest' not in sys.modules.keys():
+            self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
+            try:
+                self.redis.ping()
+            except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
+                logger.error("Error: Redis is not available. That might break the bot in some places.")
+                self.redis = fakeredis.FakeRedis()
+            else:
+                logger.info("Redis connection successful")
         else:
-            logger.info("Redis connection successful")
+            self.redis = fakeredis.FakeRedis()
 
     @http_cache("GET")
     def get_cache(self, *args, **request_kwargs) -> requests.Response:
