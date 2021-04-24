@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import pickle
 import sys
 from functools import wraps
@@ -102,7 +103,7 @@ class _Database:
     def __init__(self):
         self.request_session = requests.Session()
         self.request_session.headers.update({"User-Agent": Settings.user_agent})
-        if 'unittest' not in sys.modules.keys():
+        if os.environ.get("ob_testing", False):
             self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
             try:
                 self.redis.ping()

@@ -16,7 +16,7 @@ from octobot.utils import path_to_module, thread_local
 from settings import Settings
 
 logger = logging.getLogger("Loader")
-TEST_RUNNING = 'unittest' in sys.modules.keys()
+TEST_RUNNING = os.environ.get("ob_testing", False)
 
 class OctoBot(telegram.Bot):
     """

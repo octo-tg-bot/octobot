@@ -57,9 +57,8 @@ class _Settings():
         else:
             raise KeyError("Unknown settings entry: %s" % item)
 
-    def get(self, item: str):
-        if item in self._settings:
-            return self._settings[item]
+    def get(self, item: str, fallback=None):
+        return self._settings.get(item, fallback)
 
     def __setitem__(self, key: str, value):
         return self._settings.__setitem__(key, value)
