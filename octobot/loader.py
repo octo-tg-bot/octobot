@@ -200,7 +200,8 @@ class OctoBot(telegram.Bot):
                         if "bot was kicked" or "bot was blocked" in e.message:
                             return
                     except telegram.error.BadRequest as e:
-                        if e.message == "Cancelled by new editmessagemedia request":
+                        if e.message in ("Cancelled by new editmessagemedia request",
+                                         "Query is too old and response timeout expired or query id is invalid"):
                             return
                         elif e.message == "Have no rights to send a message":
                             chat = update.effective_chat
