@@ -10,7 +10,7 @@ def send_commands(bot: octobot.OctoBot):
                 if not (handler.hidden or handler.prefix != "/" or handler.service):
                     for command in handler.command:
                         command_list.append([command, handler.description])
-    if os.environ.get("DRY_RUN", False):
+    if os.environ.get("DRY_RUN", False) or bot.test_running:
         os.makedirs("public", exist_ok=True)
         with open("public/commands.json", "w") as f:
             json.dump(command_list, f)

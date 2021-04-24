@@ -30,10 +30,10 @@ class OctoBot(telegram.Bot):
     plugins = {}
     handlers = {}
     error_handlers = []
-
+    test_running = TEST_RUNNING
     def __init__(self, load_list, *args, **kwargs):
-        dry_run = os.environ.get("DRY_RUN", False) or TEST_RUNNING
-        if not dry_run:
+        dry_run = os.environ.get("DRY_RUN", False)
+        if not (dry_run or TEST_RUNNING):
             logger.info("Initializing PTB")
             super(OctoBot, self).__init__(*args, **kwargs)
             self.me = self.getMe()
@@ -43,11 +43,13 @@ class OctoBot(telegram.Bot):
             logger.info("Loading base plugin %s", plugin)
             self.load_plugin(path_to_module(plugin))
         if len(load_list) > 0:
+            logger.info("LoadList: %s", load_list)
             load_list_actual = []
             for plugin in load_list:
                 load_list_actual.append(path_to_module(plugin))
             self.load_plugins({"exclude": [], "load_order": load_list_actual})
         else:
+            logger.info("LoadList not specified, loading all")
             plugins = self.discover_plugins()
             self.load_plugins(plugins)
 
