@@ -28,6 +28,9 @@ jobs:
         pre-build-command: "python3 -m pip install --upgrade setuptools wheel -r requirements.txt"
         docs-folder: "docs/"
 
+    - name: Generate commandlist.json
+      run: py utils/dry_run.py
+
     # Create an artifact of the html output.
     - uses: actions/upload-artifact@v1
       with:
