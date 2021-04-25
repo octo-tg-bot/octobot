@@ -32,13 +32,14 @@ jobs:
       run: |
         python3 -m pip install -r requirements.txt
         python3 utils/dry_run.py
-        mv public/commands.json docs/_build/html/
+    - name: Copy generated documentation to public folder
+        cp docs/_build/html/ public -r
 
     # Create an artifact of the html output.
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
-        path: docs/_build/html/
+        path: public
 
     - name: Deploy to GitHub Pages
       if: ${{ github.event_name == 'push' }}
@@ -46,5 +47,5 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: docs/_build/html/ # The folder the action should deploy.
+        FOLDER: public # The folder the action should deploy.
         CLEAN: true # Automatically remove deleted files from the deploy branch
