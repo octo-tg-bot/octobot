@@ -29,7 +29,9 @@ jobs:
         docs-folder: "docs/"
 
     - name: Generate commandlist.json
-      run: python3 utils/dry_run.py
+      run: |
+        python3 -m pip install -r requirements.txt
+        python3 utils/dry_run.py
 
     # Create an artifact of the html output.
     - uses: actions/upload-artifact@v1
