@@ -1,7 +1,7 @@
 python-telegram-bot<14
 toml
 redis~=3.5.3
-Babel~=2.9.0
+Babel~=2.9.1
 jstyleson~=0.0.2
 pytz~=2021.1
 beautifulsoup4~=4.9.3
