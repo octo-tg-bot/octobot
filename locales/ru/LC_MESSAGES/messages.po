@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-23 13:17+0000\n"
+"POT-Creation-Date: 2021-05-02 19:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -49,7 +49,7 @@ msgstr "<a href=\"tg://user?id={admin_id}\">{admin}</a> отменил это д
 msgid "Invalid ID passed"
 msgstr "Неверный идентификатор!"
 
-#: octobot/permissions.py:79 plugins/admin.py:43
+#: octobot/permissions.py:99 plugins/admin.py:43
 msgid ""
 "Sorry, you can't execute this command cause you lack following "
 "permissions: {}"
@@ -197,132 +197,132 @@ msgstr "Выданные {name} предупреждения:"
 msgid "{name} has no warns!"
 msgstr "У {name} нет предупреждений"
 
-#: plugins/anilist.py:117 plugins/anilist.py:124
+#: plugins/anilist.py:118 plugins/anilist.py:125
 msgid "finished"
 msgstr "закончено"
 
-#: plugins/anilist.py:118
+#: plugins/anilist.py:119
 msgid "airing"
 msgstr "идёт вещание"
 
-#: plugins/anilist.py:119
+#: plugins/anilist.py:120
 msgid "not yet airing"
 msgstr "ещё не начато"
 
-#: plugins/anilist.py:120 plugins/anilist.py:127
+#: plugins/anilist.py:121 plugins/anilist.py:128
 msgid "cancelled"
 msgstr "отменено"
 
-#: plugins/anilist.py:125
+#: plugins/anilist.py:126
 msgid "releasing"
 msgstr "выпускается"
 
-#: plugins/anilist.py:126
+#: plugins/anilist.py:127
 msgid "not yet released"
 msgstr "ещё не начат выпуск"
 
-#: plugins/anilist.py:131
+#: plugins/anilist.py:132
 msgid "TV animation series"
 msgstr "анимационный сериал"
 
-#: plugins/anilist.py:132
+#: plugins/anilist.py:133
 msgid "TV short"
 msgstr "короткометражный фильм"
 
-#: plugins/anilist.py:133
+#: plugins/anilist.py:134
 msgid "anime movie"
 msgstr "аниме-фильм"
 
-#: plugins/anilist.py:134
+#: plugins/anilist.py:135
 msgid "anime special"
 msgstr "аниме-спешл"
 
-#: plugins/anilist.py:135
+#: plugins/anilist.py:136
 msgid "OVA"
 msgstr "OVA"
 
-#: plugins/anilist.py:136
+#: plugins/anilist.py:137
 msgid "ONA"
 msgstr "ONA"
 
-#: plugins/anilist.py:137
+#: plugins/anilist.py:138
 msgid "AMV"
 msgstr "AMV"
 
-#: plugins/anilist.py:138
+#: plugins/anilist.py:139
 msgid "manga series"
 msgstr "манга"
 
-#: plugins/anilist.py:139
+#: plugins/anilist.py:140
 msgid "light novel series"
 msgstr "ранобэ"
 
-#: plugins/anilist.py:140
+#: plugins/anilist.py:141
 msgid "one-shot manga"
 msgstr "ван-шот манга"
 
-#: plugins/anilist.py:209
+#: plugins/anilist.py:210
 msgid "No description provided."
 msgstr "Нет описания."
 
-#: plugins/anilist.py:213
+#: plugins/anilist.py:214
 msgid "(spoilers redacted)"
 msgstr "(спойлеры вырезаны)"
 
-#: plugins/anilist.py:230
+#: plugins/anilist.py:231
 msgid "status"
 msgstr "статус"
 
-#: plugins/anilist.py:233
+#: plugins/anilist.py:234
 msgid "{} episode"
 msgid_plural "{} episodes"
 msgstr[0] "{} эпизод"
 msgstr[1] "{} эпизода"
 msgstr[2] "{} эпизодов"
 
-#: plugins/anilist.py:237
+#: plugins/anilist.py:238
 msgid "{} volume"
 msgid_plural "{} volumes"
 msgstr[0] "{} том"
 msgstr[1] "{} тома"
 msgstr[2] "{} томов"
 
-#: plugins/anilist.py:239
+#: plugins/anilist.py:240
 msgid "{} chapter"
 msgid_plural "{} chapters"
 msgstr[0] "{} глава"
 msgstr[1] "{} главы"
 msgstr[2] "{} глав"
 
-#: plugins/anilist.py:243
+#: plugins/anilist.py:244
 msgid "rating"
 msgstr "оценка"
 
-#: plugins/anilist.py:248
+#: plugins/anilist.py:249
 msgid "first released on"
 msgstr "первый выпуск"
 
-#: plugins/anilist.py:253
+#: plugins/anilist.py:254
 msgid "last released on"
 msgstr "последний выпуск"
 
-#: plugins/anilist.py:256
+#: plugins/anilist.py:257
 msgid "genres"
 msgstr "жанры"
 
-#: plugins/anilist.py:323
+#: plugins/anilist.py:324
 msgid "Search on AniList"
 msgstr "Поиск на AniList"
 
-#: plugins/anilist.py:353 plugins/anilist.py:403
+#: plugins/anilist.py:354 plugins/anilist.py:404
 msgid "View on AniList"
 msgstr "Открыть на AniList"
 
-#: plugins/anilist.py:368
+#: plugins/anilist.py:369
 msgid "Search for characters on AniList"
 msgstr "Поиск персонажей на AniList"
 
-#: plugins/anilist.py:393
+#: plugins/anilist.py:394
 msgid "Present in"
 msgstr "Встречается в"
 
@@ -1015,7 +1015,45 @@ msgstr ""
 msgid "🐞 Failed to execute command due to unknown error."
 msgstr "🐞 Во время выполнения команды произошла непревиденная ошибка."
 
-#: octobot/permissions.py:121
+#: octobot/permissions.py:12
+msgid ""
+"bot owner. Who the fu - Who is - What - I should kick your fucking ass, "
+"who is this?"
+msgstr "администратор бота. Стоп... Что?.. Ах ты сволочь, да ты кто вообще такой?"
+
+#: octobot/permissions.py:14
+msgid "change chat info"
+msgstr "менять информацию о чате"
+
+#: octobot/permissions.py:15
+msgid "chat admin"
+msgstr "администратор чата"
+
+#: octobot/permissions.py:16
+msgid "delete messages"
+msgstr "удалять сообщения"
+
+#: octobot/permissions.py:17
+msgid "restrict members"
+msgstr "ограничивать участников чата"
+
+#: octobot/permissions.py:18
+msgid "pin messages"
+msgstr "закреплять сообщение"
+
+#: octobot/permissions.py:19
+msgid "promote members"
+msgstr "повышать участников чата"
+
+#: octobot/permissions.py:20
+msgid "manage chat"
+msgstr "управлять чатом"
+
+#: octobot/permissions.py:21
+msgid "manage voice chats"
+msgstr "управлять голосовыми чатами"
+
+#: octobot/permissions.py:141
 msgid ""
 "Sorry, you can't execute this command cause I lack following permissions:"
 " {}"
@@ -1035,21 +1073,21 @@ msgstr "Нет следующей страницы"
 msgid "Can't go backwards anymore"
 msgstr "Нет предыдущей страницы"
 
-#: octobot/handlers/cataloghandler.py:146 octobot/handlers/commandhandle.py:89
+#: octobot/handlers/cataloghandler.py:148 octobot/handlers/commandhandle.py:89
 msgid "Sorry, this command is unavailable. Please contact the bot administrator."
 msgstr "Данная команда не доступна. Свяжитесь с администратором бота."
 
-#: octobot/handlers/cataloghandler.py:150
+#: octobot/handlers/cataloghandler.py:152
 msgid "This command requires query. Specify what you want to find"
 msgstr "Данная команда требует запрос"
 
-#: octobot/handlers/cataloghandler.py:160
+#: octobot/handlers/cataloghandler.py:162
 msgid "Nothing found!"
 msgstr "Не найдено"
 
-#: octobot/handlers/cataloghandler.py:165
-msgid "➡️ Search using inline mode"
-msgstr "➡️ Искать через инлайн"
+#: octobot/handlers/cataloghandler.py:167
+msgid "➡️Search using inline mode"
+msgstr "➡️Искачть через инлайн"
 
 #: octobot/handlers/commandhandle.py:94
 msgid ""
@@ -1059,4 +1097,3 @@ msgstr ""
 "Недостаточно аргументов! Эта команда требует {args_amount} аргументов. "
 "Возможно стоит прочитать <a href=\"{help_url}\">документацию к этой "
 "команде</a>."
-

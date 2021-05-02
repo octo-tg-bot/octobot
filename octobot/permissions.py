@@ -1,11 +1,26 @@
+import logging
 import typing
 
+import octobot
 from octobot.database import Database
 import telegram
 import json
 
 from settings import Settings
 
+permissions_locale = {
+    "is_bot_owner": octobot.localizable("bot owner. Who the fu - Who is - What - I should kick your fucking ass, "
+                                        "who is this?"),
+    "can_change_info": octobot.localizable("change chat info"),
+    "is_admin": octobot.localizable("chat admin"),
+    "can_delete_messages": octobot.localizable("delete messages"),
+    "can_restrict_members": octobot.localizable("restrict members"),
+    "can_pin_messages": octobot.localizable("pin messages"),
+    "can_promote_members": octobot.localizable("promote members"),
+    "can_manage_chat": octobot.localizable("manage chat"),
+    "can_manage_voice_chats": octobot.localizable("manage voice chats")
+}
+logger = logging.getLogger("permissions")
 
 def create_db_entry_name(chat: typing.Union[telegram.Chat, int]):
     if isinstance(chat, telegram.Chat):
@@ -68,17 +83,22 @@ def permissions(*perms_args, **perms_kwargs):
     """
     perms = set(perms_kwargs.keys())
     perms.update(perms_args)
+    for permission in perms:
+        if permission not in permissions_locale:
+            logger.error("Unknown permission: %s", permission)
+            raise IndexError(f"Unknown permission: {permission}")
 
     def decorator(function):
         def wrapper(bot, context):
             if context.chat is not None:
                 res, missing_perms = check_perms(context.chat, context.user, perms.copy())
+                missing_perms_localized = [context.localize(permissions_locale[permission]) for permission in missing_perms]
                 if res:
                     function(bot, context)
                 else:
                     context.reply(context.localize(
                         "Sorry, you can't execute this command cause you lack following permissions: {}").format(
-                        ', '.join(missing_perms)))
+                        ', '.join(missing_perms_localized)))
 
         return wrapper
 
