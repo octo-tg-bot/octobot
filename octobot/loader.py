@@ -186,7 +186,7 @@ class OctoBot(telegram.Bot):
             logger.debug(f"handling priority level {priority}")
             try:
                 for handler in handlers:
-                    if handler.plugin.module.__name__.encode() in disabled_plugins:
+                    if handler.plugin.module.__name__.encode() in disabled_plugins or handler.plugin.state == PluginStates.disabled:
                         continue
                     try:
                         ctx._plugin = handler.plugin
