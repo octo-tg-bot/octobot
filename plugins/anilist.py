@@ -150,10 +150,25 @@ MAX_PER_PAGE = 50
 plugin = PluginInfo("AniList")
 
 
-def shorten(text: str, length: int):
+def shorten(text: str, length: int) -> str:
     if len(text) > length:
         return text[:length-3] + "..." # "…" is also 3 bytes and looks the same, but less supported
     return text
+
+
+def cut_html(html: str, length: int) -> str:
+    html = html[:length]
+    last_end = html.rfind(">")
+    last_start = html.rfind("<")
+    if last_end < last_start:
+        html = html[:last_start]
+    return html
+
+
+def shorten_html(html: str, length: int) -> str:
+    if len(html) > length:
+        return cut_html(html, length - 3) + "..."
+    return html
 
 
 def cleanse_html(raw_html):
@@ -206,14 +221,15 @@ def get_fuzzy_date_str(fuzzy_date, ctx: Context):
 
 
 def format_media_description(description: Union[str, None], ctx: Context):
+    print(repr(description))
     if description is None:
         description = ctx.localize("No description provided.")
     else:
+        description = shorten_html(description, 1024)
         description = cleanse_html(description)
         description = collapse_whitespace(description)
         description = cleanse_spoilers(description, ctx.localize("(spoilers redacted)"))
-        description = shorten(description, 1024)
-
+    
     return description, description[:70]
 
 
