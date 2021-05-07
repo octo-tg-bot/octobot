@@ -68,10 +68,12 @@ class CommandHandler(BaseHandler):
         else:
             prefix = self.prefix
         incmd = context.text
-        admin = octobot.check_permissions(chat=context.chat, user=context.user,
-                                          permissions_to_check={"is_admin"})[0] and context.chat.type == "supergroup"
-        rl_state = Database.redis.get(f"ratelimit_state:{context.chat.id}")
-        if Settings.ratelimit.enabled:
+        ratelimit_enabled = Settings.ratelimit.enabled and context.update_type == octobot.UpdateType.message
+        if ratelimit_enabled:
+            admin = octobot.check_permissions(chat=context.chat, user=context.user,
+                                              permissions_to_check={"is_admin"})[
+                        0] and context.chat.type == "supergroup"
+            rl_state = Database.redis.get(f"ratelimit_state:{context.chat.id}")
             if rl_state == b"user_abuse" and \
                     not admin:
                 return False
@@ -87,7 +89,7 @@ class CommandHandler(BaseHandler):
                 if state_only_command or state_word_swap or state_mention_command:
                     context.called_command = command_base
                     logger.info("%s called %s using %s", context.user.name, context.called_command, context.update_type)
-                    if Settings.ratelimit.enabled:
+                    if ratelimit_enabled:
                         if admin and Settings.ratelimit.adm_abuse_leave:
                             key = f"ratelimit_adm:{context.chat.id}"
                         else:
