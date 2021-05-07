@@ -71,3 +71,15 @@ no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/n
   # Default action
   # Supported values: kick, ban, nothing
   default_action = "kick"
+
+# Ratelimiting
+[ratelimit]
+  enabled = true
+  # How many messages before blocking
+  messages_threshold = 5
+  # Timeframe in seconds
+  messages_timeframe = 5
+  # Ban time in seconds
+  ban_time = 60
+  # Leave and block chat if the admins are abusing bot
+  adm_abuse_leave = true

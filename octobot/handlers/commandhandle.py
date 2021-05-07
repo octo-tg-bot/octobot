@@ -1,8 +1,11 @@
-import octobot
-from octobot import PluginStates
-from octobot.handlers import BaseHandler
-from typing import Union
 import logging
+from typing import Union
+
+import octobot
+from octobot import PluginStates, Database
+from octobot.handlers import BaseHandler
+from settings import Settings
+
 logger = logging.getLogger("commandhandle")
 
 
@@ -65,6 +68,13 @@ class CommandHandler(BaseHandler):
         else:
             prefix = self.prefix
         incmd = context.text
+        admin = octobot.check_permissions(chat=context.chat, user=context.user,
+                                          permissions_to_check={"is_admin"})[0] and context.chat.type == "supergroup"
+        rl_state = Database.redis.get(f"ratelimit_state:{context.chat.id}")
+        if Settings.ratelimit.enabled:
+            if rl_state == b"user_abuse" and \
+                    not admin:
+                return False
         if incmd.startswith(prefix):
             for command_base in self.command:
                 command = prefix + command_base
@@ -77,6 +87,13 @@ class CommandHandler(BaseHandler):
                 if state_only_command or state_word_swap or state_mention_command:
                     context.called_command = command_base
                     logger.info("%s called %s using %s", context.user.name, context.called_command, context.update_type)
+                    if Settings.ratelimit.enabled:
+                        if admin and Settings.ratelimit.adm_abuse_leave:
+                            key = f"ratelimit_adm:{context.chat.id}"
+                        else:
+                            key = f"ratelimit:{context.chat.id}"
+                        Database.redis.incr(key)
+                        Database.redis.expire(key, Settings.ratelimit.messages_timeframe)
                     return True
         return False
 

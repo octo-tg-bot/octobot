@@ -27,6 +27,7 @@ class _Settings:
     sentry: dict_sentry
     redis: dict_redis
     spamwatch: dict_spamwatch
+    ratelimit: dict_ratelimit
     def __init__(self, settings_folder: Any = ...) -> Any: ...
     def reload_settings(self) -> Any: ...
     def update_settings(self, settings: Any) -> Any: ...
@@ -55,3 +56,10 @@ class dict_spamwatch(dotdict):
     api_host: str
     token: str
     default_action: str
+
+class dict_ratelimit(dotdict):
+    enabled: bool
+    messages_threshold: int
+    messages_timeframe: int
+    ban_time: int
+    adm_abuse_leave: bool

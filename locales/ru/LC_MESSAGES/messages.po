@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-05-02 19:09+0300\n"
+"POT-Creation-Date: 2021-05-07 20:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -916,6 +916,24 @@ msgstr "Все плагины включены"
 msgid "{plugin_desc} (<code>{plugin_id}</code>) was enabled."
 msgstr "{plugin_desc} (<code>{plugin_id}</code>) включен."
 
+#: base_plugins/ratelimit_ctl.py:31
+msgid ""
+"This chat is permanently blocked in the bot due to command abuse.\n"
+"Please contact bot admin at {support_url} to get your chat unbanned."
+msgstr "Этот чат заблокирован на всегда в боте из-за злоупотребления командами\n"
+"Свяжитесь с администратором бота в {support_url} чтоб разблокировать ваш чат."
+
+#: base_plugins/ratelimit_ctl.py:48
+msgid ""
+"Users in this chat now temporarily not allowed to use bot commands.\n"
+"NOTE: This restriction doesn't apply to admins."
+msgstr "Пользователи в этом чате теперь временно не могут пользоваться командами бота.\n"
+"Это ограничение не распространяется на админов в чате"
+
+#: base_plugins/ratelimit_ctl.py:53
+msgid "You are now temporarily not allowed to use this bot."
+msgstr "Теперь вы временно не можете использовать бота"
+
 #: base_plugins/start_help.py:12
 msgid "Usual bot commands"
 msgstr "Стандартные команды"
@@ -1073,7 +1091,7 @@ msgstr "Нет следующей страницы"
 msgid "Can't go backwards anymore"
 msgstr "Нет предыдущей страницы"
 
-#: octobot/handlers/cataloghandler.py:148 octobot/handlers/commandhandle.py:89
+#: octobot/handlers/cataloghandler.py:148 octobot/handlers/commandhandle.py:106
 msgid "Sorry, this command is unavailable. Please contact the bot administrator."
 msgstr "Данная команда не доступна. Свяжитесь с администратором бота."
 
@@ -1089,7 +1107,7 @@ msgstr "Не найдено"
 msgid "➡️Search using inline mode"
 msgstr "➡️Искачть через инлайн"
 
-#: octobot/handlers/commandhandle.py:94
+#: octobot/handlers/commandhandle.py:111
 msgid ""
 "Not enough arguments! This command takes {args_amount} arguments. "
 "Consider reading <a href=\"{help_url}\">help for this command</a>"
@@ -1097,3 +1115,4 @@ msgstr ""
 "Недостаточно аргументов! Эта команда требует {args_amount} аргументов. "
 "Возможно стоит прочитать <a href=\"{help_url}\">документацию к этой "
 "команде</a>."
+

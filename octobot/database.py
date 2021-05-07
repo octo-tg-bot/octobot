@@ -103,7 +103,7 @@ class _Database:
     def __init__(self):
         self.request_session = requests.Session()
         self.request_session.headers.update({"User-Agent": Settings.user_agent})
-        if os.environ.get("ob_testing", False):
+        if not os.environ.get("ob_testing", False):
             self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
             try:
                 self.redis.ping()
@@ -113,6 +113,7 @@ class _Database:
             else:
                 logger.info("Redis connection successful")
         else:
+            logger.info("Testing environment - using fakeredis")
             self.redis = fakeredis.FakeRedis()
 
     @http_cache("GET")
