@@ -35,7 +35,7 @@ jobs:
         run: python -m xmlrunner discover tests
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
-        if: ${{ github.event_name == 'push' }}
+        if: (! startsWith(GITHUB_REF, 'refs/heads/dependabot/'))
         with:
           files: ./*.xml
   build:
