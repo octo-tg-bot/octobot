@@ -71,6 +71,23 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
                 context.edit(context.localize("Failed to execute command due to database problems. Please try later"))
     elif isinstance(e, LoaderCommand) or isinstance(e, CatalogBaseException):
         raise e
+    elif isinstance(e, telegram.error.Unauthorized):
+        if "bot was kicked" or "bot was blocked" in e.message:
+            return
+    elif isinstance(e, telegram.error.BadRequest) and e.message in ("Cancelled by new editmessagemedia request",
+                                                                    "Query is too old and response timeout expired or query id is invalid"):
+        return
+    elif isinstance(e, telegram.error.BadRequest) and e.message == "Have no rights to send a message":
+        chat = context.update.effective_chat
+        if chat is None:
+            # Shouldn't happen, but check just in case
+            raise e
+        logger.info("Chat %s probably restricted or kicked bot. Attempting to leave...", chat.id)
+        try:
+            chat.leave()
+        except telegram.error.TelegramError:
+            pass
+        return
     else:
         logger.error("Exception got thrown somewhere", exc_info=True)
         message = context.localize("🐞 Failed to execute command due to unknown error.")
