@@ -172,7 +172,7 @@ def sticker_add(bot, ctx, personal):
                                             emojis=emoji)
                 except BadRequest as e:
                     if str(e).lower() == "peer_id_invalid":
-                        return ctx.relpy(
+                        return ctx.reply(
                             ctx.localize(
                                 "Sorry, but I can't create group pack right now. Ask group creator to PM me and try again."),
                             failed=True)
