@@ -21,6 +21,7 @@
 
 import datetime
 import re
+import html
 import textwrap
 from typing import Union
 
@@ -225,6 +226,7 @@ def format_media_description(description: Union[str, None], ctx: Context):
     if description is None:
         description = ctx.localize("No description provided.")
     else:
+        description = html.unescape(description)
         description = shorten_html(description, 1024)
         description = cleanse_html(description)
         description = collapse_whitespace(description)
