@@ -46,7 +46,7 @@ query Media($query: String, $page: Int, $perPage: Int, $type: MediaType) {
       lastPage
       hasNextPage
     }
-    media(search: $query, type: $type) {
+    media(search: $query, type: $type, isAdult: false) {
       id
       type
       title {
