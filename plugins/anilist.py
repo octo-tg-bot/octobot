@@ -267,7 +267,7 @@ def get_media_metadata(media, ctx: Context):
             metadata.append("<b>{}:</b> {}".format(ctx.localize("first released on"), end_date_str))
 
     if media["endDate"] is not None:
-        end_date_str = get_fuzzy_date_str(media["startDate"], ctx)
+        end_date_str = get_fuzzy_date_str(media["endDate"], ctx)
         if end_date_str is not None:
             metadata.append("<b>{}:</b> {}".format(ctx.localize("last released on"), end_date_str))
 
