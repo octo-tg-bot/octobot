@@ -28,7 +28,7 @@ plugin = octobot.PluginInfo("About bot")
                         description=octobot.localizable("About bot"),
                         hidden=False)
 def about(bot, context):
-    about_string = context.localize("OctoBot4 based on commit <code>{ob_version}</code>\n" + \
+    about_string = context.localize("OctoBot version <code>{ob_version}</code>\n" + \
                                     "Python-Telegram-Bot version: <code>{ptb_version}</code>\n" + \
                                     '<a href="https://github.com/octo-tg-bot/">GitHub page</a>\n').format(
         ob_version=octobot.__version__,

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-05-07 20:28+0300\n"
+"POT-Creation-Date: 2021-07-02 12:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.0\n"
+"Generated-By: Babel 2.9.1\n"
 
 #: plugins/about.py:28
 msgid "About bot"
@@ -21,13 +21,12 @@ msgstr "О боте"
 
 #: plugins/about.py:31
 msgid ""
-"OctoBot4 based on commit <code>{ob_version}</code>\n"
+"OctoBot version <code>{ob_version}</code>\n"
 "Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
 "<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
-msgstr ""
-"OctoBot4 на основе: <code>{ob_version}</code>\n"
+msgstr "Версия OctoBot: <code>{ob_version}</code>\n"
 "Версия Python-Telegram-Bot: <code>{ptb_version}</code>\n"
-"<a href=\"https://github.com/octo-tg-bot/\">GitHub</a>"
+"<a href=\"https://github.com/octo-tg-bot/\">GitHub</a>\n"
 
 #: plugins/about.py:36
 msgid "🐳Running inside Docker"
@@ -197,132 +196,132 @@ msgstr "Выданные {name} предупреждения:"
 msgid "{name} has no warns!"
 msgstr "У {name} нет предупреждений"
 
-#: plugins/anilist.py:118 plugins/anilist.py:125
+#: plugins/anilist.py:119 plugins/anilist.py:126
 msgid "finished"
 msgstr "закончено"
 
-#: plugins/anilist.py:119
+#: plugins/anilist.py:120
 msgid "airing"
 msgstr "идёт вещание"
 
-#: plugins/anilist.py:120
+#: plugins/anilist.py:121
 msgid "not yet airing"
 msgstr "ещё не начато"
 
-#: plugins/anilist.py:121 plugins/anilist.py:128
+#: plugins/anilist.py:122 plugins/anilist.py:129
 msgid "cancelled"
 msgstr "отменено"
 
-#: plugins/anilist.py:126
+#: plugins/anilist.py:127
 msgid "releasing"
 msgstr "выпускается"
 
-#: plugins/anilist.py:127
+#: plugins/anilist.py:128
 msgid "not yet released"
 msgstr "ещё не начат выпуск"
 
-#: plugins/anilist.py:132
+#: plugins/anilist.py:133
 msgid "TV animation series"
 msgstr "анимационный сериал"
 
-#: plugins/anilist.py:133
+#: plugins/anilist.py:134
 msgid "TV short"
 msgstr "короткометражный фильм"
 
-#: plugins/anilist.py:134
+#: plugins/anilist.py:135
 msgid "anime movie"
 msgstr "аниме-фильм"
 
-#: plugins/anilist.py:135
+#: plugins/anilist.py:136
 msgid "anime special"
 msgstr "аниме-спешл"
 
-#: plugins/anilist.py:136
+#: plugins/anilist.py:137
 msgid "OVA"
 msgstr "OVA"
 
-#: plugins/anilist.py:137
+#: plugins/anilist.py:138
 msgid "ONA"
 msgstr "ONA"
 
-#: plugins/anilist.py:138
+#: plugins/anilist.py:139
 msgid "AMV"
 msgstr "AMV"
 
-#: plugins/anilist.py:139
+#: plugins/anilist.py:140
 msgid "manga series"
 msgstr "манга"
 
-#: plugins/anilist.py:140
+#: plugins/anilist.py:141
 msgid "light novel series"
 msgstr "ранобэ"
 
-#: plugins/anilist.py:141
+#: plugins/anilist.py:142
 msgid "one-shot manga"
 msgstr "ван-шот манга"
 
-#: plugins/anilist.py:210
+#: plugins/anilist.py:227
 msgid "No description provided."
 msgstr "Нет описания."
 
-#: plugins/anilist.py:214
+#: plugins/anilist.py:233
 msgid "(spoilers redacted)"
 msgstr "(спойлеры вырезаны)"
 
-#: plugins/anilist.py:231
+#: plugins/anilist.py:249
 msgid "status"
 msgstr "статус"
 
-#: plugins/anilist.py:234
+#: plugins/anilist.py:252
 msgid "{} episode"
 msgid_plural "{} episodes"
 msgstr[0] "{} эпизод"
 msgstr[1] "{} эпизода"
 msgstr[2] "{} эпизодов"
 
-#: plugins/anilist.py:238
+#: plugins/anilist.py:256
 msgid "{} volume"
 msgid_plural "{} volumes"
 msgstr[0] "{} том"
 msgstr[1] "{} тома"
 msgstr[2] "{} томов"
 
-#: plugins/anilist.py:240
+#: plugins/anilist.py:258
 msgid "{} chapter"
 msgid_plural "{} chapters"
 msgstr[0] "{} глава"
 msgstr[1] "{} главы"
 msgstr[2] "{} глав"
 
-#: plugins/anilist.py:244
+#: plugins/anilist.py:262
 msgid "rating"
 msgstr "оценка"
 
-#: plugins/anilist.py:249
+#: plugins/anilist.py:267
 msgid "first released on"
 msgstr "первый выпуск"
 
-#: plugins/anilist.py:254
+#: plugins/anilist.py:272
 msgid "last released on"
 msgstr "последний выпуск"
 
-#: plugins/anilist.py:257
+#: plugins/anilist.py:275
 msgid "genres"
 msgstr "жанры"
 
-#: plugins/anilist.py:324
+#: plugins/anilist.py:342
 msgid "Search on AniList"
 msgstr "Поиск на AniList"
 
-#: plugins/anilist.py:354 plugins/anilist.py:404
+#: plugins/anilist.py:372 plugins/anilist.py:422
 msgid "View on AniList"
 msgstr "Открыть на AniList"
 
-#: plugins/anilist.py:369
+#: plugins/anilist.py:387
 msgid "Search for characters on AniList"
 msgstr "Поиск персонажей на AniList"
 
-#: plugins/anilist.py:394
+#: plugins/anilist.py:412
 msgid "Present in"
 msgstr "Встречается в"
 
@@ -916,21 +915,25 @@ msgstr "Все плагины включены"
 msgid "{plugin_desc} (<code>{plugin_id}</code>) was enabled."
 msgstr "{plugin_desc} (<code>{plugin_id}</code>) включен."
 
-#: base_plugins/ratelimit_ctl.py:31
+#: base_plugins/ratelimit_ctl.py:33
 msgid ""
 "This chat is permanently blocked in the bot due to command abuse.\n"
 "Please contact bot admin at {support_url} to get your chat unbanned."
-msgstr "Этот чат заблокирован на всегда в боте из-за злоупотребления командами\n"
-"Свяжитесь с администратором бота в {support_url} чтоб разблокировать ваш чат."
+msgstr ""
+"Этот чат заблокирован на всегда в боте из-за злоупотребления командами\n"
+"Свяжитесь с администратором бота в {support_url} чтоб разблокировать ваш "
+"чат."
 
-#: base_plugins/ratelimit_ctl.py:48
+#: base_plugins/ratelimit_ctl.py:50
 msgid ""
 "Users in this chat now temporarily not allowed to use bot commands.\n"
 "NOTE: This restriction doesn't apply to admins."
-msgstr "Пользователи в этом чате теперь временно не могут пользоваться командами бота.\n"
+msgstr ""
+"Пользователи в этом чате теперь временно не могут пользоваться командами "
+"бота.\n"
 "Это ограничение не распространяется на админов в чате"
 
-#: base_plugins/ratelimit_ctl.py:53
+#: base_plugins/ratelimit_ctl.py:55
 msgid "You are now temporarily not allowed to use this bot."
 msgstr "Теперь вы временно не можете использовать бота"
 
@@ -1029,7 +1032,7 @@ msgstr ""
 "Произошла ошибка в выполнении команды из-за проблем с базой данных. "
 "Пожалуйста, попробуйте позже."
 
-#: octobot/exceptions.py:76
+#: octobot/exceptions.py:93
 msgid "🐞 Failed to execute command due to unknown error."
 msgstr "🐞 Во время выполнения команды произошла непревиденная ошибка."
 
@@ -1091,7 +1094,7 @@ msgstr "Нет следующей страницы"
 msgid "Can't go backwards anymore"
 msgstr "Нет предыдущей страницы"
 
-#: octobot/handlers/cataloghandler.py:148 octobot/handlers/commandhandle.py:106
+#: octobot/handlers/cataloghandler.py:148 octobot/handlers/commandhandle.py:108
 msgid "Sorry, this command is unavailable. Please contact the bot administrator."
 msgstr "Данная команда не доступна. Свяжитесь с администратором бота."
 
@@ -1107,7 +1110,7 @@ msgstr "Не найдено"
 msgid "➡️Search using inline mode"
 msgstr "➡️Искачть через инлайн"
 
-#: octobot/handlers/commandhandle.py:111
+#: octobot/handlers/commandhandle.py:113
 msgid ""
 "Not enough arguments! This command takes {args_amount} arguments. "
 "Consider reading <a href=\"{help_url}\">help for this command</a>"
@@ -1115,4 +1118,19 @@ msgstr ""
 "Недостаточно аргументов! Эта команда требует {args_amount} аргументов. "
 "Возможно стоит прочитать <a href=\"{help_url}\">документацию к этой "
 "команде</a>."
+
+#~ msgid ""
+#~ "OctoBot4 based on commit <code>{ob_version}</code>\n"
+#~ "Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
+#~ "<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
+#~ msgstr ""
+#~ "OctoBot4 на основе: <code>{ob_version}</code>\n"
+#~ "Версия Python-Telegram-Bot: <code>{ptb_version}</code>\n"
+#~ "<a href=\"https://github.com/octo-tg-bot/\">GitHub</a>"
+
+#~ msgid ""
+#~ "OctoBot4 version <code>{ob_version}</code>\n"
+#~ "Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
+#~ "<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
+#~ msgstr ""
 
