@@ -15,7 +15,13 @@ COPY --from=pip-install-env /workdir/locales /app/locales
 ENV PYTHONPATH=/packages
 WORKDIR /app
 COPY . .
-RUN git describe --dirty > .git-version
+ARG CI
+ARG DESCRIBE
+RUN if [ $CI = "true" ]; then \
+  echo $DESCRIBE > .git-version; \
+ else \
+  echo "Built outside CI, unknown ver" >  .git-version; \
+ fi
 ENV SENTRY_RELEASE=$GITHUB_SHA
 CMD python3 /app/main.py
 LABEL org.opencontainers.image.source https://github.com/octo-tg-bot/octobotv4
