@@ -107,7 +107,7 @@ def execute_command(func: typing.Callable, context: octobot.Context, success_mes
 @octobot.my_permissions(can_restrict_members=True)
 @octobot.supergroup_only
 def command_ban(bot: octobot.OctoBot, context: octobot.Context):
-    execute_command(bot.kick_chat_member, context,
+    execute_command(bot.ban_chat_member, context,
                     context.localize('🔨<a href="tg://user?id={admin_id}">{admin_name}</a> banned ' + \
                                      '<a href="tg://user?id={target}">{target_name}</a>'),
                     action=context.localize("ban"),
@@ -194,7 +194,7 @@ def warn(bot: octobot.OctoBot, context: octobot.Context):
                                       callback_data=f"warn_cancel:{target_id}:{context.chat.id}"))
     if user_warn_count >= max_warns:
         action_taken = context.localize("\n\n<i>User had reached maximum warnings in chat and was banned</i>")
-        bot.kick_chat_member(chat_id=context.chat.id, user_id=target_id)
+        bot.ban_chat_member(chat_id=context.chat.id, user_id=target_id)
         octobot.Database.redis.delete(user_warns_db_id)
         reply_markup = telegram.InlineKeyboardMarkup.from_button(telegram.InlineKeyboardButton(
             callback_data=f"ban_cancel:{target_id}:{context.chat.id}",

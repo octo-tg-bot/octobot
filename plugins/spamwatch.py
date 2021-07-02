@@ -16,7 +16,7 @@ def kick(bot: octobot.OctoBot, chat: telegram.Chat, user: telegram.User):
 
 
 def ban(bot: octobot.OctoBot, chat: telegram.Chat, user: telegram.User):
-    bot.kick_chat_member(chat.id, user.id)
+    bot.ban_chat_member(chat.id, user.id)
 
 
 VALID_ACTIONS = {
