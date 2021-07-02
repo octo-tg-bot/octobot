@@ -21,6 +21,7 @@
 
 import datetime
 import re
+import html
 import textwrap
 from typing import Union
 
@@ -45,7 +46,7 @@ query Media($query: String, $page: Int, $perPage: Int, $type: MediaType) {
       lastPage
       hasNextPage
     }
-    media(search: $query, type: $type) {
+    media(search: $query, type: $type, isAdult: false) {
       id
       type
       title {
@@ -225,6 +226,7 @@ def format_media_description(description: Union[str, None], ctx: Context):
     if description is None:
         description = ctx.localize("No description provided.")
     else:
+        description = html.unescape(description)
         description = shorten_html(description, 1024)
         description = cleanse_html(description)
         description = collapse_whitespace(description)
@@ -265,7 +267,7 @@ def get_media_metadata(media, ctx: Context):
             metadata.append("<b>{}:</b> {}".format(ctx.localize("first released on"), end_date_str))
 
     if media["endDate"] is not None:
-        end_date_str = get_fuzzy_date_str(media["startDate"], ctx)
+        end_date_str = get_fuzzy_date_str(media["endDate"], ctx)
         if end_date_str is not None:
             metadata.append("<b>{}:</b> {}".format(ctx.localize("last released on"), end_date_str))
 
