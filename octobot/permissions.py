@@ -49,9 +49,12 @@ def check_perms(chat: typing.Union[telegram.Chat, int], user: typing.Union[teleg
         return Settings.owner == user_id, permissions_to_check
     if not str(chat_id).startswith("-100"):
         return True, []
+    adm_list = None
     if Database.redis is not None and Database.redis.exists(db_entry) == 1:
-        adm_list = json.loads(Database.redis.get(db_entry).decode())
-    else:
+        db_res = Database.redis.get(db_entry)
+        if db_res is not None: # fix some weird bug that i have 0 idea how it happens
+            adm_list = json.loads(db_res.decode())
+    if adm_list is None:
         if bot is None:
             adm_list_t = chat.get_administrators()
         else:
