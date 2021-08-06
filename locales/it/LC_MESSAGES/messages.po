@@ -1,0 +1,1194 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version:  OctoBotV4\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-08-06 13:03+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: it\n"
+"Language-Team: it <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: plugins/about.py:28
+msgid "About bot"
+msgstr "Riguardo al bot"
+
+#: plugins/about.py:31
+msgid ""
+"OctoBot version <code>{ob_version}</code>\n"
+"Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
+"<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
+msgstr ""
+"OctoBot versione <code>{ob_version}</code>\n"
+"Python-Telegram-Bot versione: <code>{ptb_version}</code>\n"
+"<a href=\"https://github.com/octo-tg-bot/\">Pagina GitHub</a>\n"
+"\n"
+
+#: plugins/about.py:36
+msgid "🐳Running inside Docker"
+msgstr "🐳Avviare tramite Docker"
+
+#: plugins/about.py:36
+msgid "🖥️Running on normal system"
+msgstr "🖥️Avviare su un sistema normale"
+
+#: plugins/admin.py:11
+msgid "Admin commands"
+msgstr "Comandi da amministratore"
+
+#: plugins/admin.py:33
+msgid "This action was undone by <a href=\"tg://user?id={admin_id}\">{admin}</a>"
+msgstr ""
+"Questa azione è stata annullata da <a "
+"href=\"tg://user?id={admin_id}\">{admin}</a>"
+
+#: plugins/admin.py:40
+msgid "Invalid ID passed"
+msgstr "ID inserito non valido"
+
+#: octobot/permissions.py:99 plugins/admin.py:43
+msgid ""
+"Sorry, you can't execute this command cause you lack following "
+"permissions: {}"
+msgstr ""
+"Spiacente, non puoi eseguire questo comando a causa dei seguenti permessi"
+" mancanti: {}"
+
+#: plugins/admin.py:62
+msgid "I hadn't seen the person whose username is @{username}"
+msgstr "Non conosco nessuno con l'username @{username}"
+
+#: plugins/admin.py:68
+msgid ""
+"You hadn't specified the target!Reply to message of person you want to "
+"{action} or specify their ID or username"
+msgstr ""
+"Non hai specificato il destinatario!Rispondi al messaggio della persona "
+"che vuoi {action} o specifica il suo ID o username"
+
+#: plugins/admin.py:76
+msgid "I can't {action} administrators."
+msgstr "Non posso {action} gli amministratori."
+
+#: plugins/admin.py:83
+msgid ""
+"Can't {action} <a href=\"tg://user?id={target}\">{target_name}</a>.\n"
+"Error: <code>{error}</code>."
+msgstr ""
+"Non ho potuto {action} <a "
+"href=\"tg://user?id={target}\">{target_name}</a>.\n"
+"Errore: <code>{error}</code>."
+
+#: plugins/admin.py:94
+msgid "Cancel"
+msgstr "Annulla"
+
+#: plugins/admin.py:105
+msgid "Bans user in this chat"
+msgstr "Banna un utente nel gruppo"
+
+#: plugins/admin.py:111
+msgid ""
+"🔨<a href=\"tg://user?id={admin_id}\">{admin_name}</a> banned <a "
+"href=\"tg://user?id={target}\">{target_name}</a>"
+msgstr ""
+"🔨<a href=\"tg://user?id={admin_id}\">{admin_name}</a> ha bannato <a "
+"href=\"tg://user?id={target}\">{target_name}</a>"
+
+#: plugins/admin.py:113
+msgid "ban"
+msgstr "ban"
+
+#: plugins/admin.py:117
+msgid "Kicks user from chat"
+msgstr "Kicka un utente dal gruppo"
+
+#: plugins/admin.py:123
+msgid ""
+"👞<a href=\"tg://user?id={admin_id}\">{admin_name}</a> kicked <a "
+"href=\"tg://user?id={target}\">{target_name}</a>"
+msgstr ""
+"👞<a href=\"tg://user?id={admin_id}\">{admin_name}</a> ha kickato <a "
+"href=\"tg://user?id={target}\">{target_name}</a>"
+
+#: plugins/admin.py:125
+msgid "kick"
+msgstr "kick"
+
+#: plugins/admin.py:131
+msgid "Unbanned"
+msgstr "Sbannato"
+
+#: plugins/admin.py:141
+msgid "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> pinned message.\n"
+msgstr "📌<a href=\"tg://user?id={admin_id}\">{admin}</a> ha fissato un messaggio."
+
+#: plugins/admin.py:148
+msgid "Pins message in chat"
+msgstr "Fissa un messaggio nel gruppo"
+
+#: plugins/admin.py:156
+msgid "Pins message in chat with notification"
+msgstr "Fissa un messaggio nel gruppo (con notifica)"
+
+#: plugins/admin.py:168
+msgid "Gives user a warning"
+msgstr "Dà un warn a un utente"
+
+#: plugins/admin.py:176
+msgid "Reply to user to give them a warn"
+msgstr "Rispondi a un utente per dargli un warn"
+
+#: plugins/admin.py:180
+msgid "Can't warn administrator"
+msgstr "Non è possibile warnare un amministratore"
+
+#: plugins/admin.py:188
+msgid "Warn reason not specified"
+msgstr "Motivo del warn non specificato"
+
+#: plugins/admin.py:196
+msgid ""
+"\n"
+"\n"
+"<i>User had reached maximum warnings in chat and was banned</i>"
+msgstr ""
+"\n"
+"\n"
+"<i>L'utente ha ricevuto il numero massimo di warn nel gruppo ed è stato "
+"bannato</i>"
+
+#: plugins/admin.py:201
+msgid "Unban"
+msgstr "Sbanna"
+
+#: plugins/admin.py:203
+msgid ""
+"⚠️<a href=\"tg://user?id={admin_id}\">{admin}</a> warned <a "
+"href=\"tg://user?id={target_id}\">{target_name}</a> "
+"({warn_count}/{max_warns})\n"
+"Reason: <i>{reason}</i>"
+msgstr ""
+"⚠️<a href=\"tg://user?id={admin_id}\">{admin}</a> ha warnato <a "
+"href=\"tg://user?id={target_id}\">{target_name}</a> "
+"({warn_count}/{max_warns})\n"
+"Motivo: <i>{reason}</i>"
+
+#: plugins/admin.py:227
+msgid "Warn removed"
+msgstr "Warn rimosso"
+
+#: plugins/admin.py:230
+msgid "Lists all user warns or your warns"
+msgstr "Mostra tutti i warn di un utente o i tuoi warn"
+
+#: plugins/admin.py:251
+msgid "Failed to find username {username}"
+msgstr "Ricerca dell'username {username} fallita"
+
+#: plugins/admin.py:255
+msgid "Warns for {name}:"
+msgstr "Warn per {name}:"
+
+#: plugins/admin.py:258
+msgid "{name} has no warns!"
+msgstr "{name} non ha alcun warn!"
+
+#: plugins/anilist.py:119 plugins/anilist.py:126
+msgid "finished"
+msgstr "finito"
+
+#: plugins/anilist.py:120
+msgid "airing"
+msgstr "in onda"
+
+#: plugins/anilist.py:121
+msgid "not yet airing"
+msgstr "in arrivo"
+
+#: plugins/anilist.py:122 plugins/anilist.py:129
+msgid "cancelled"
+msgstr "cancellato"
+
+#: plugins/anilist.py:127
+msgid "releasing"
+msgstr "disponibile"
+
+#: plugins/anilist.py:128
+msgid "not yet released"
+msgstr "non ancora rilasciato"
+
+#: plugins/anilist.py:133
+msgid "TV animation series"
+msgstr "Serie TV animata"
+
+#: plugins/anilist.py:134
+msgid "TV short"
+msgstr "Cortometraggio TV"
+
+#: plugins/anilist.py:135
+msgid "anime movie"
+msgstr "Film anime"
+
+#: plugins/anilist.py:136
+msgid "anime special"
+msgstr "Speciale anime"
+
+#: plugins/anilist.py:137
+msgid "OVA"
+msgstr "OVA"
+
+#: plugins/anilist.py:138
+msgid "ONA"
+msgstr "ONA"
+
+#: plugins/anilist.py:139
+msgid "AMV"
+msgstr "AMV"
+
+#: plugins/anilist.py:140
+msgid "manga series"
+msgstr "serie manga"
+
+#: plugins/anilist.py:141
+msgid "light novel series"
+msgstr "serie light novel"
+
+#: plugins/anilist.py:142
+msgid "one-shot manga"
+msgstr "manga one-shot"
+
+#: plugins/anilist.py:227
+msgid "No description provided."
+msgstr "Non è stata provvista alcuna descrizione."
+
+#: plugins/anilist.py:233
+msgid "(spoilers redacted)"
+msgstr "(spoiler rimossi)"
+
+#: plugins/anilist.py:249
+msgid "status"
+msgstr "stato"
+
+#: plugins/anilist.py:252
+msgid "{} episode"
+msgid_plural "{} episodes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/anilist.py:256
+msgid "{} volume"
+msgid_plural "{} volumes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/anilist.py:258
+msgid "{} chapter"
+msgid_plural "{} chapters"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/anilist.py:262
+msgid "rating"
+msgstr "voto"
+
+#: plugins/anilist.py:267
+msgid "first released on"
+msgstr "data di rilascio"
+
+#: plugins/anilist.py:272
+msgid "last released on"
+msgstr "ultimo rilascio"
+
+#: plugins/anilist.py:275
+msgid "genres"
+msgstr "generi"
+
+#: plugins/anilist.py:342
+msgid "Search on AniList"
+msgstr "Cerca su AniList"
+
+#: plugins/anilist.py:372 plugins/anilist.py:422
+msgid "View on AniList"
+msgstr "Visualizza su AniList"
+
+#: plugins/anilist.py:387
+msgid "Search for characters on AniList"
+msgstr "Cerca un personaggio su AniList"
+
+#: plugins/anilist.py:412
+msgid "Present in"
+msgstr "Compare in"
+
+#: plugins/apex.py:27
+msgid "Apex Legends player stats"
+msgstr "Statistiche di gioco di Apex Legends"
+
+#: plugins/apex.py:32
+msgid "Kills"
+msgstr "Uccisioni"
+
+#: plugins/apex.py:33
+msgid "Damage"
+msgstr "Danno"
+
+#: plugins/apex.py:34
+msgid "Revives"
+msgstr "Respawn"
+
+#: plugins/apex.py:35
+msgid "Games player"
+msgstr "Partite giocate"
+
+#: plugins/apex.py:36
+msgid "Kill/Death ratio"
+msgstr "Ratio K/D"
+
+#: plugins/apex.py:55
+msgid "Can't find player {}"
+msgstr "Impossibile trovare il giocatore {}"
+
+#: plugins/apex.py:58
+msgid "Mozambiquehe.re API returned error: {}"
+msgstr "Mozambiquehe.re API ha dato errore: {}"
+
+#: plugins/apex.py:61
+msgid "Player <b>{username}</b>, level {level}"
+msgstr "Giocatore <b>{username}</b>, livello {level}"
+
+#: plugins/apex.py:64
+msgid "Rank {rankName} {rankDiv}"
+msgstr "Rango {rankName} {rankDiv}"
+
+#: plugins/apex.py:66
+msgid "Current legend: <b>{}</b>"
+msgstr "Leggenda attuale: <b>{}</b>"
+
+#: plugins/apex.py:75
+msgid "Player legends stats"
+msgstr "Statistiche di legends del giocatore"
+
+#: plugins/apex.py:93
+msgid "Apex Legends {username} stats"
+msgstr "Statistiche di Apex Legends di {username}"
+
+#: plugins/apex.py:94
+msgid ""
+"Level {level}, ranked level {ranked_level}\n"
+"Current legend:{current_legend}"
+msgstr ""
+"Livello {level}, livello del rango {ranked_level}\n"
+"Leggenda attuale:{current_legend}"
+
+#: plugins/apex.py:100
+msgid "Invalid username specified!"
+msgstr "Username specificato non valido!"
+
+#: plugins/apex.py:112
+msgid "Specify username to lookup"
+msgstr "Specifica l'username da cercare"
+
+#: plugins/apex.py:122
+msgid "Lookup Apex player on PC"
+msgstr "Cerca giocatore di Apex su PC"
+
+#: plugins/apex.py:123
+msgid "Lookup Apex player on PS4"
+msgstr "Cerca giocatore di Apex su PS4"
+
+#: plugins/apex.py:124
+msgid "Lookup Apex player on X1"
+msgstr "Cerca giocatore di Apex su XB1"
+
+#: plugins/apex.py:127
+msgid "Bloodhound"
+msgstr "Bloodhound"
+
+#: plugins/apex.py:128
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: plugins/apex.py:129
+msgid "Lifeline"
+msgstr "Lifeline"
+
+#: plugins/apex.py:130
+msgid "Pathfinder"
+msgstr "Pathfinder"
+
+#: plugins/apex.py:131
+msgid "Wraith"
+msgstr "Wraith"
+
+#: plugins/apex.py:132
+msgid "Bangalore"
+msgstr "Bangalore"
+
+#: plugins/apex.py:133
+msgid "Caustic"
+msgstr "Caustic"
+
+#: plugins/apex.py:134
+msgid "Mirage"
+msgstr "Mirage"
+
+#: plugins/apex.py:135
+msgid "Octane"
+msgstr "Octane"
+
+#: plugins/apex.py:136
+msgid "Wattson"
+msgstr "Wattson"
+
+#: plugins/apex.py:137
+msgid "Crypto"
+msgstr "Crypto"
+
+#: plugins/apex.py:138
+msgid "Revenant"
+msgstr "Revenant"
+
+#: plugins/apex.py:139
+msgid "Loba"
+msgstr "Loba"
+
+#: plugins/apex.py:140
+msgid "Rampart"
+msgstr "Rampart"
+
+#: plugins/apex.py:141
+msgid "Horizon"
+msgstr "Horizon"
+
+#: plugins/cash.py:33
+#, python-format
+msgid ""
+"\n"
+"%(in)s = %(out)s\n"
+"\n"
+"<a href=\"http://free.currencyconverterapi.com/\">Powered by Currency "
+"convert API</a>\n"
+msgstr ""
+"%(in)s = %(out)s\n"
+"\n"
+"<a href=\"http://free.currencyconverterapi.com/\">Fornito dalla Currency "
+"convert API</a>"
+
+#: plugins/cash.py:98
+msgid ""
+"Powered by The Free Currency Converter API\n"
+"Example usage:\n"
+"\n"
+"    User:\n"
+"    /cash 100 RUB USD\n"
+"\n"
+"    OctoBot:\n"
+"    100 RUB = 1.66 USD"
+msgstr ""
+"Fornito da The Free Currency Converter API\n"
+"Esempio di utilizzo:\n"
+"\n"
+"    User:\n"
+"    /cash 100 RUB USD\n"
+"\n"
+"    OctoBot:\n"
+"    100 RUB = 1.66 USD"
+
+#: plugins/cash.py:113
+msgid "Converts currency"
+msgstr "Converte valuta"
+
+#: plugins/cash.py:121
+msgid "{} is not a valid number"
+msgstr "{} non è un numero valido"
+
+#: plugins/cash.py:126
+msgid "Unknown currency specified"
+msgstr "La valuta specificata è sconosciuta"
+
+#: plugins/cash.py:128
+msgid "Currency API is unavailable right now, try later"
+msgstr "La Currency API non è disponibile al momento, riprova più tardi"
+
+#: plugins/gtl.py:10
+msgid "Google Translate"
+msgstr "Google Traduttore"
+
+#: plugins/gtl.py:18
+msgid ""
+"From <i>{source_language}</i> to <i>{target_language}</i>\n"
+"<code>{text}</code>"
+msgstr ""
+"Da <i>{source_language}</i> a <i>{target_language}</i>\n"
+"<code>{text}</code>"
+
+#: plugins/gtl.py:20
+msgid "Translates text using Google Translate"
+msgstr "Traduce del testo usando Google Traduttore"
+
+#: plugins/gtl.py:53
+msgid "No text to translate was specified/replied to!"
+msgstr "Non hai risposto a/specificato alcun messaggio da tradurre!"
+
+#: plugins/imgur.py:13
+msgid "Search for image on Imgur"
+msgstr "Cerca un'immagine su Imgur"
+
+#: plugins/imgur.py:41
+msgid "Description:"
+msgstr "Descrizione:"
+
+#: plugins/imgur.py:44
+msgid "Album with {count} images"
+msgstr "Album con {count} immagini"
+
+#: plugins/imgur.py:51
+msgid "View on Imgur"
+msgstr "Visualizza su Imgur"
+
+#: plugins/safebooru.py:34
+msgid ""
+"<b>Rating:</b> {rating}\n"
+"<b>Tags:</b> {tags_str}"
+msgstr ""
+"<b>Voto:</b> {rating}\n"
+"<b>Tag:</b> {tags_str}"
+
+#: plugins/safebooru.py:136
+msgid "View on safebooru"
+msgstr "Visualizza su safebooru"
+
+#: plugins/safebooru.py:143
+msgid "Source"
+msgstr "Fonte"
+
+#: plugins/sentry.py:39
+msgid "Event code is <code>{}</code>"
+msgstr "Il codice dell'evento è <code>{}</code>"
+
+#: plugins/sentry.py:41
+msgid "Provide feedback"
+msgstr "Fornisci feedback"
+
+#: plugins/sentry.py:49
+msgid "Click here to submit your feedback"
+msgstr "Clicca qui per fornire il tuo feedback"
+
+#: plugins/sentry.py:52
+msgid "Thanks you for your feedback! Feel free to delete this message"
+msgstr "Grazie per il tuo feedback! Ora puoi eliminare questo messaggio"
+
+#: plugins/sentry.py:57
+msgid "Invalid event ID"
+msgstr "ID evento non valido"
+
+#: plugins/sentry.py:58
+msgid "Did you accidentally deleted the feedback event ID?"
+msgstr "Hai eliminato l'evento ID del feedback per sbaglio?"
+
+#: plugins/sentry.py:59 plugins/sentry.py:65
+msgid "Feel free to delete this message"
+msgstr "Ora puoi eliminare questo messaggio"
+
+#: plugins/sentry.py:64
+msgid "You hadn't wrote the feedback."
+msgstr "Non hai scritto il feedback."
+
+#: plugins/spamwatch.py:24
+msgid "Users will be kicked from this chat if they are banned in SpamWatch"
+msgstr "Gli utenti saranno kickati da questo gruppo se sono bannati in SpamWatch"
+
+#: plugins/spamwatch.py:28
+msgid "Users will be banned from this chat if they are banned in SpamWatch"
+msgstr "Gli utenti saranno bannati da questo gruppo se sono bannati in SpamWatch"
+
+#: plugins/spamwatch.py:31
+msgid "SpamWatch plugin is disabled in this chat."
+msgstr "Il plugin di SpamWatch è disabilitato in questo gruppo."
+
+#: plugins/spamwatch.py:46
+msgid "Default"
+msgstr "Default"
+
+#: plugins/spamwatch.py:72
+msgid ""
+"{user} is banned in SpamWatch since {ban_date}. Reason: "
+"<code>{ban_reason}</code>"
+msgstr ""
+"{user} è bannato in SpamWatch dal {ban_date}. Motivo: "
+"<code>{ban_reason}</code>"
+
+#: plugins/spamwatch.py:73
+msgid "User"
+msgstr "Utente"
+
+#: plugins/spamwatch.py:89
+msgid "Action {action} set. "
+msgstr "Azione {action} impostata. "
+
+#: plugins/spamwatch.py:92
+msgid "is not a valid action."
+msgstr "non è un'azione valida."
+
+#: plugins/spamwatch.py:95
+msgid "You hadn't specified action to set!"
+msgstr "Non hai specificato l'azione da impostare!"
+
+#: plugins/spamwatch.py:97
+msgid "Available actions:"
+msgstr "Azioni possibili:"
+
+#: plugins/spamwatch.py:104
+msgid "Current action in this chat is"
+msgstr "L'azione impostata per questa chat è"
+
+#: plugins/stickers.py:33
+msgid "Stickers"
+msgstr "Sticker"
+
+#: plugins/stickers.py:112 plugins/stickers.py:141
+msgid "No image as photo/file provided."
+msgstr "Non è stata provvista alcuna immagine come foto/file."
+
+#: plugins/stickers.py:114 plugins/stickers.py:145
+msgid "Attempting to make image bombs, are we?"
+msgstr "Stai provando a fare delle immagini bomba, eh?"
+
+#: plugins/stickers.py:116 plugins/stickers.py:147
+msgid "This file doesn't look like image file"
+msgstr "Questo file non sembra essere un'immagine"
+
+#: plugins/stickers.py:118
+msgid "Preview:"
+msgstr "Anteprima:"
+
+#: plugins/stickers.py:143
+msgid "Failed to compress image after 8 tries"
+msgstr "Compressione dell'immagine fallita dopo 8 tentativi"
+
+#: plugins/stickers.py:164
+msgid "This pack has too much stickers already! Creating new pack..."
+msgstr "Questo pack ha troppi sticker al suo interno! Ne verrà creato uno nuovo..."
+
+#: plugins/stickers.py:176
+msgid ""
+"Sorry, but I can't create group pack right now. Ask group creator to PM "
+"me and try again."
+msgstr ""
+"Mi dispiace, non posso creare il pack del gruppo al momento. Chiedi al "
+"creatore del gruppo di mandarmi un messaggio diretto, e riprova."
+
+#: plugins/stickers.py:185
+msgid ""
+"It seems like I got timed out when creating sticker, that is Telegram-"
+"side error. Please try again."
+msgstr ""
+"Sembra che sia passato troppo tempo per la creazione dello sticker, ed è "
+"un errore di Telegram. Riprova per cortesia."
+
+#: plugins/stickers.py:189
+msgid "Adds sticker to group stickerpack"
+msgstr "Aggiunge uno sticker allo sticker pack del gruppo"
+
+#: plugins/stickers.py:196
+msgid "Adds sticker to personal stickerpack"
+msgstr "Aggiunge uno sticker al tuo sticker pack personale"
+
+#: plugins/stickers.py:201
+msgid "Removes sticker from group/user stickerpack"
+msgstr "Rimuove uno sticker dallo sticker pack dell'utente/gruppo"
+
+#: plugins/stickers.py:213
+msgid "You can't delete this chat stickers cause you are not an admin."
+msgstr ""
+"Non puoi eliminare gli sticker di questa chat perchè non sei un "
+"amministratore."
+
+#: plugins/stickers.py:215
+msgid "🚮Sticker deleted."
+msgstr "🚮Sticker eliminato."
+
+#: plugins/stickers.py:216
+msgid "You can't delete stickers in this stickerpack"
+msgstr "Non puoi eliminare gli sticker in questo sticker pack"
+
+#: plugins/stickers.py:217
+msgid "Please reply to sticker from group/user pack"
+msgstr "Per favore rispondi a uno sticker dello sticker pack dell'utente/gruppo"
+
+#: plugins/stickers_ban.py:15
+msgid "Bans stickerpack in chat"
+msgstr "Banna lo sticker pack nel gruppo"
+
+#: plugins/stickers_ban.py:22
+msgid ""
+"Reply to sticker from stickerpack which you want to ban or pass the pack "
+"name as argument"
+msgstr ""
+"Rispondi a uno sticker dallo sticker pack che vuoi bannare, o inserisci "
+"il nome del pack come argomento"
+
+#: plugins/stickers_ban.py:35
+msgid ""
+"Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> banned "
+"successfully"
+msgstr ""
+"Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> bannato"
+" con successo"
+
+#: plugins/stickers_ban.py:40
+msgid ""
+"Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
+"unbanned successfully"
+msgstr ""
+"Pack <a href=\"https://t.me/addstickers/{pack_id}\">{pack_id}</a> "
+"sbannato con successo"
+
+#: plugins/stickers_ban.py:45
+msgid "Lists packs that are banned in this chat"
+msgstr "Mostra i pack che sono bannati in questo gruppo"
+
+#: plugins/stickers_ban.py:52
+msgid "This stickerpacks are currently banned in <b>{chat_name}</b>:"
+msgstr "Gli sticker pack attualmente bannati in <b>{chat_name}</b> sono:"
+
+#: plugins/stickers_ban.py:59
+msgid "There are no stickerpacks that are banned in this chat"
+msgstr "Non ci sono sticker pack bannati in questo gruppo"
+
+#: plugins/test.py:120
+msgid "Hello, World!"
+msgstr "Ciao, Mondo!"
+
+#: plugins/test.py:122
+msgid "This is a test"
+msgstr "Questo è un test"
+
+#: plugins/urban.py:12
+msgid ""
+"Definition for <b>{word}</b> by <i>{author}</i>:\n"
+"\n"
+"{definition}\n"
+"\n"
+"Example(s):\n"
+"{example}"
+msgstr ""
+"Definizione di <b>{word}</b> fornita da <i>{author}</i>:\n"
+"\n"
+"{definition}\n"
+"\n"
+"Esempio(/i):\n"
+"{example}"
+
+#: plugins/urban.py:43
+msgid "Definition on Urban Dictionary"
+msgstr "Definizione su Urban Dictionary"
+
+#: plugins/urban.py:50
+msgid "Definition for {}"
+msgstr "Definizione di {}"
+
+#: plugins/word_swap.py:49
+msgid "Word Swapper"
+msgstr "Scambia Parole"
+
+#: plugins/word_swap.py:53
+msgid "Swaps word(s) in message"
+msgstr "Scambia le parole in un messaggio"
+
+#: plugins/word_swap.py:84
+msgid ""
+"Hi, {username}!\n"
+"Did you mean:\n"
+"{text}"
+msgstr ""
+"Ciao, {username}!\n"
+"Forse intendevi:\n"
+"{text}"
+
+#: plugins/word_swap.py:90
+msgid "Invalid regex!"
+msgstr "Regex non valido!"
+
+#: plugins/word_swap.py:92
+msgid "You should reply to message with text!"
+msgstr "Devi rispondere al messaggio con del testo!"
+
+#: base_plugins/cache_mgmt.py:3
+msgid "Admin cache utils"
+msgstr "Utilità per la cache degli amministratori"
+
+#: base_plugins/cache_mgmt.py:5
+msgid "Check group admins cache"
+msgstr "Controlla cache degli amministratori"
+
+#: base_plugins/cache_mgmt.py:10
+msgid "Cache database availability: {}"
+msgstr "Stato del database della cache: {}"
+
+#: base_plugins/cache_mgmt.py:12
+msgid "Time until current cache death: {}"
+msgstr "Tempo rimanente all'eliminazione della cache: {}"
+
+#: base_plugins/cache_mgmt.py:14
+msgid "To reset cache use /cache_reset command"
+msgstr "Per resettare la cache usa il comando /cache_reset"
+
+#: base_plugins/cache_mgmt.py:23
+msgid "Admin cache has been reset"
+msgstr "La cache degli amministratori è stata resettata"
+
+#: base_plugins/inline_nothing.py:10
+msgid ""
+"I can't understand what this inline button does. The keyboard here is "
+"probably outdated."
+msgstr ""
+"Non capisco cosa faccia questo bottone inline. La tastiera qui è "
+"probabilmente obsoleta "
+
+#: base_plugins/inline_nothing.py:15
+msgid "I am sorry Dave, I am afraid I cant do that."
+msgstr "Mi dispiace David, purtroppo non posso farlo."
+
+#: base_plugins/locale_ctl.py:40 base_plugins/locale_ctl.py:53
+msgid "Language \"{locale}\" set"
+msgstr "Lingua \"{locale}\" impostata"
+
+#: base_plugins/ping.py:28
+msgid "Ping"
+msgstr "Ping"
+
+#: base_plugins/ping.py:32
+msgid "Make sure bot is alive and get message delivery latency"
+msgstr "Assicurati che il bot funzioni e di ricevere il messaggio sulla latenza"
+
+#: base_plugins/ping.py:35
+#, python-format
+msgid "🏓 Pong! Reply latency: %.2fs"
+msgstr "🏓 Pong! Latenza della risposta: %.2fs"
+
+#: base_plugins/plugins_disable.py:36
+msgid "Plugin management"
+msgstr "Gestione dei plugin"
+
+#: base_plugins/plugins_disable.py:45
+msgid "Lists disabled plugins in this chat"
+msgstr "Mostra i plugin disabilitati in questo gruppo"
+
+#: base_plugins/plugins_disable.py:50
+msgid "No plugins are disabled in this chat"
+msgstr "Non ci sono plugin disabilitati in questo gruppo"
+
+#: base_plugins/plugins_disable.py:52
+msgid "Disabled plugins:"
+msgstr "Plugin disabilitati:"
+
+#: base_plugins/plugins_disable.py:63
+msgid ""
+"You hadn't specified plugin to disable/enable. Following plugins can be "
+"disabled:\n"
+msgstr ""
+"Non hai specificato alcun plugin da disabilitare/abilitare. I seguenti "
+"plugin possono essere disabilitati:\n"
+"\n"
+
+#: base_plugins/plugins_disable.py:74
+msgid "All disable-able plugins were disabled."
+msgstr "Sono stati disabilitati tutti i plugin che si potevano disabilitare."
+
+#: base_plugins/plugins_disable.py:77
+msgid "{plugin_desc} (<code>{plugin_id}</code>) was disabled."
+msgstr "{plugin_desc} (<code>{plugin_id}</code>) è stato disabilitato."
+
+#: base_plugins/plugins_disable.py:82 base_plugins/plugins_disable.py:100
+msgid "Unknown plugin: "
+msgstr "Plugin sconosciuto: "
+
+#: base_plugins/plugins_disable.py:92
+msgid "All disable-able plugins were enabled."
+msgstr "Sono stati abilitati tutti i plugin che si potevano disabilitare."
+
+#: base_plugins/plugins_disable.py:95
+msgid "{plugin_desc} (<code>{plugin_id}</code>) was enabled."
+msgstr "{plugin_desc} (<code>{plugin_id}</code>)  è stato abilitato."
+
+#: base_plugins/ratelimit_ctl.py:33
+msgid ""
+"This chat is permanently blocked in the bot due to command abuse.\n"
+"Please contact bot admin at {support_url} to get your chat unbanned."
+msgstr ""
+"Non è più possibile utilizzare il bot in questo gruppo dato l'abuso di "
+"comandi.\n"
+"Per favore contatta l'amministratore del bot su {support_url} per fare "
+"sbannare il gruppo."
+
+#: base_plugins/ratelimit_ctl.py:50
+msgid ""
+"Users in this chat now temporarily not allowed to use bot commands.\n"
+"NOTE: This restriction doesn't apply to admins."
+msgstr ""
+"Per il momento, li utenti in questa chat non potranno più usare i comandi"
+" del bot.\n"
+"NOTA: Questa limitazione non si applica agli amministratori."
+
+#: base_plugins/ratelimit_ctl.py:55
+msgid "You are now temporarily not allowed to use this bot."
+msgstr "Non ti è permesso usare questo bot per il momento."
+
+#: base_plugins/start_help.py:12
+msgid "Usual bot commands"
+msgstr "I soliti comandi del bot"
+
+#: base_plugins/start_help.py:18
+msgid "Command list"
+msgstr "Lista dei comandi"
+
+#: base_plugins/start_help.py:20
+msgid "Support chat"
+msgstr "Gruppo del supporto"
+
+#: base_plugins/start_help.py:22
+msgid ""
+"Hi! I am {bot.me.first_name}, a Telegram bot with features and bugs and "
+"blah blah, noone reads /start anyway."
+msgstr ""
+"Ciao! Sono {bot.me.first_name}, un bot di Telegram con feature e bug e "
+"bla bla, nessuno legge mai /start."
+
+#: base_plugins/start_help.py:68
+msgid "More…"
+msgstr "Altro…"
+
+#: base_plugins/start_help.py:84
+msgid "Help for"
+msgstr "Aiuto per"
+
+#: base_plugins/traceback_exc_handler.py:16
+msgid "Error description: <code>{error}</code>"
+msgstr "Descrizione errore: <code>{error}</code>"
+
+#: base_plugins/traceback_exc_handler.py:20
+msgid "On line {line} in <code>{fname}</code>"
+msgstr "Alla linea {line} in <code>{fname}</code>"
+
+#: base_plugins/user_id.py:7
+msgid "User ID"
+msgstr "ID Utente"
+
+#: base_plugins/user_id.py:11
+msgid "Check the user/group/message/inline_query IDs"
+msgstr "Controlla gli ID di utente/gruppo/messaggio/query in linea"
+
+#: base_plugins/user_id.py:22
+msgid "{} ID:<code>{}</code>"
+msgstr "{} ID: <code>{}</code>"
+
+#: base_plugins/user_id.py:22
+msgid "Your"
+msgstr "Il tuo"
+
+#: base_plugins/user_id.py:23
+msgid "Chat ID:<code>{}</code>"
+msgstr "ID Gruppo: <code>{}</code>"
+
+#: base_plugins/user_id.py:24
+msgid "Chat type is <code>{}</code>"
+msgstr "Il gruppo è di tipo <code>{}</code>"
+
+#: base_plugins/user_id.py:27
+msgid "ID of your message: <code>{}</code>"
+msgstr "ID del tuo messaggio: <code>{}</code>"
+
+#: base_plugins/user_id.py:30
+msgid "ID of replied message: <code>{}</code>"
+msgstr "ID del messaggio in risposta: <code>{}</code>"
+
+#: base_plugins/user_id.py:32
+msgid "ID of {} from replied message: {}"
+msgstr "ID di {} dal messaggio in risposta: {}"
+
+#: base_plugins/user_id.py:34
+msgid "Forward {} ID: {}"
+msgstr "Inoltro {} ID: {}"
+
+#: base_plugins/user_id.py:36
+msgid "Forwarded message ID in original chat: {}"
+msgstr "Inoltrato ID messaggio nella chat originale: {}"
+
+#: base_plugins/user_id.py:38
+msgid "Forwarded message original chat ({}) ID: {}"
+msgstr "Inoltrata la chat originale ({}) del messaggio con ID: {}"
+
+#: octobot/__init__.py:29
+msgid "This command can be used only in supergroups."
+msgstr "Questo comando può essere usato solo nei supergruppi."
+
+#: octobot/exceptions.py:69 octobot/exceptions.py:71
+msgid "Failed to execute command due to database problems. Please try later"
+msgstr ""
+"Esecuzione del comando fallita a causa di problemi nel database. Riprova "
+"più tardi per favore"
+
+#: octobot/exceptions.py:93
+msgid "🐞 Failed to execute command due to unknown error."
+msgstr "🐞 Esecuzione del comando fallita a causa di un errore sconosciuto."
+
+#: octobot/permissions.py:12
+msgid ""
+"bot owner. Who the fu - Who is - What - I should kick your fucking ass, "
+"who is this?"
+msgstr ""
+"proprietario del bot. Chi ca- Chi è - Cosa - Dovrei tirarti un calcio nel"
+" tuo fottuto culo, chi sei?"
+
+#: octobot/permissions.py:14
+msgid "change chat info"
+msgstr "cambia informazioni del gruppo"
+
+#: octobot/permissions.py:15
+msgid "chat admin"
+msgstr "amministratore del gruppo"
+
+#: octobot/permissions.py:16
+msgid "delete messages"
+msgstr "elimina messaggi"
+
+#: octobot/permissions.py:17
+msgid "restrict members"
+msgstr "limita utenti"
+
+#: octobot/permissions.py:18
+msgid "pin messages"
+msgstr "fissa messaggi"
+
+#: octobot/permissions.py:19
+msgid "promote members"
+msgstr "promuovi membri"
+
+#: octobot/permissions.py:20
+msgid "manage chat"
+msgstr "gestisci gruppo"
+
+#: octobot/permissions.py:21
+msgid "manage voice chats"
+msgstr "gestisci chat vocale"
+
+#: octobot/permissions.py:141
+msgid ""
+"Sorry, you can't execute this command cause I lack following permissions:"
+" {}"
+msgstr ""
+"Mi dispiace, non puoi eseguire questo comando perchè mi mancano i "
+"seguenti permessi: {}"
+
+#: octobot/classes/context.py:68
+msgid "Buttons are not available due to database error"
+msgstr "I pulsanti non sono disponibili a causa di un errore del database"
+
+#: octobot/handlers/cataloghandler.py:60
+msgid "Can't go forward anymore"
+msgstr "Non posso andare più avanti di così"
+
+#: octobot/handlers/cataloghandler.py:62
+msgid "Can't go backwards anymore"
+msgstr "Non posso andare più indietro di così"
+
+#: octobot/handlers/cataloghandler.py:148 octobot/handlers/commandhandle.py:108
+msgid "Sorry, this command is unavailable. Please contact the bot administrator."
+msgstr ""
+"Mi dispiace, questo comando non è disponibile. Per favore contatta "
+"l'amministratore del bot."
+
+#: octobot/handlers/cataloghandler.py:152
+msgid "This command requires query. Specify what you want to find"
+msgstr "Questo comando richiede un argomento. Specifica cosa vuoi cercare"
+
+#: octobot/handlers/cataloghandler.py:162
+msgid "Nothing found!"
+msgstr "Non ho trovato nulla!"
+
+#: octobot/handlers/cataloghandler.py:167
+msgid "➡️Search using inline mode"
+msgstr "➡️Cerca tramite la modalità inline"
+
+#: octobot/handlers/commandhandle.py:113
+msgid ""
+"Not enough arguments! This command takes {args_amount} arguments. "
+"Consider reading <a href=\"{help_url}\">help for this command</a>"
+msgstr ""
+"Argomenti mancanti! Questo comando richiede {args_amount} argomenti. "
+"Prova a leggere <a href=\"{help_url}\"> la guida all'utilizzo di questo "
+"comando</a>"
+
+#~ msgid ""
+#~ "<b>{title}</b>\n"
+#~ "<i>{metadata}</i>\n"
+#~ "<a href=\"{siteUrl}\">on anilist</a>\n"
+#~ "\n"
+#~ "{description}\n"
+#~ "\n"
+#~ "<i>{genres}</i>\n"
+#~ msgstr ""
+#~ "<b>{title}</b>\n"
+#~ "<i>{metadata}</i>\n"
+#~ "<a href=\"{siteUrl}\">su anilist</a>\n"
+#~ "\n"
+#~ "{description}\n"
+#~ "\n"
+#~ "<i>{genres}</i>"
+
+#~ msgid ""
+#~ "<b>{full_name}</b>\n"
+#~ "<i>{alternative_names}</i><a href=\"{siteUrl}\">on anilist</a>\n"
+#~ "\n"
+#~ "{description}\n"
+#~ "\n"
+#~ "<i>Present in:</i>\n"
+#~ "{present_in}\n"
+#~ msgstr ""
+#~ "<b>{full_name}</b>\n"
+#~ "<i>{alternative_names}</i><a href=\"{siteUrl}\">su anilist</a>\n"
+#~ "\n"
+#~ "{description}\n"
+#~ "\n"
+#~ "<i>Presente in:</i>\n"
+#~ "{present_in}\n"
+
+#~ msgid "no description"
+#~ msgstr "nessuna descrizione"
+
+#~ msgid "format"
+#~ msgstr "formato"
+
+#~ msgid "{} episodes"
+#~ msgstr "{} episodi"
+
+#~ msgid "{} volumes"
+#~ msgstr "{} volumi"
+
+#~ msgid "{} chapters"
+#~ msgstr "{} capitoli"
+
+#~ msgid "rating {:0.1f}/10"
+#~ msgstr "voto: {0.1f}/10"
+
+#~ msgid "Search anime on AniList"
+#~ msgstr "Cerca anime su AniList"
+
+#~ msgid "Search manga on AniList"
+#~ msgstr "Cerca manga su AniList"
+
+#~ msgid "Search for character on AniList"
+#~ msgstr "Cerca un personaggio su AniList"
+
+#~ msgid "legendsselectedLegendName"
+#~ msgstr "legendsselectedLegendName"
+
+#~ msgid "Array"
+#~ msgstr "Array"
+
