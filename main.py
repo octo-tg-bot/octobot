@@ -23,13 +23,13 @@ import logging
 logger = logging.getLogger("Bot")
 
 
-def update_loop(bot, queue, run_event):
+def update_loop(bot, queue):
     update_id = None
     bot.deleteWebhook()
-    while run_event.is_set():
+    while True:
         try:
             logger.debug("Fetching updates...")
-            for update in bot.getUpdates(update_id, timeout=15,
+            for update in bot.getUpdates(update_id, timeout=15 if Settings.production else 1,
                                          allowed_updates=["message", "edited_message",
                                                           "inline_query", "callback_query",
                                                           "chosen_inline_result"]):
@@ -40,10 +40,14 @@ def update_loop(bot, queue, run_event):
             time.sleep(1)
         except (telegram.error.RetryAfter) as e:
             time.sleep(e.retry_after + 1)
+        except KeyboardInterrupt:
+            logger.info("Update loop - stopping.")
+            break
 
 
-def update_handler(upd_queue: Queue, run_event: threading.Event):
-    while run_event.is_set():
+def update_handler(upd_queue: Queue, stop_event: threading.Event):
+    stop_running = False
+    while not stop_running:
         try:
             qupdate = upd_queue.get_nowait()
         except Empty:
@@ -54,7 +58,9 @@ def update_handler(upd_queue: Queue, run_event: threading.Event):
             try:
                 bot.handle_update(bot, update)
             except octobot.Halt:
-                run_event.clear()
+                stop_event.clear()
+        stop_running = stop_event.is_set()
+    logger.info("Stop event is set, exiting, exiting...")
 
 
 STATES_EMOJIS = {
@@ -80,13 +86,12 @@ def create_startup_msg(bot):
 def create_threads():
     threads = []
     queue = Queue()
-    run_event = threading.Event()
-    run_event.set()
+    stop_event = threading.Event()
     for i in range(Settings.threads):
-        thread = threading.Thread(target=update_handler, args=(queue, run_event))
+        thread = threading.Thread(target=update_handler, args=(queue, stop_event))
         threads.append(thread)
         thread.start()
-    return threads, queue, run_event
+    return threads, queue, stop_event
 
 
 def main():
@@ -100,20 +105,18 @@ def main():
     if Settings.telegram_base_file_url_force:
         logger.warning("Forcefully overriding base url")
         bot.base_file_url = Settings.telegram_base_file_url
-    threads, queue, run_event = create_threads()
+    threads, queue, stop_event = create_threads()
     logger.debug("API endpoint: %s", bot.base_url)
     logger.debug("API file endpoint: %s", bot.base_file_url)
     logger.info("Starting update loop.")
-    try:
-        update_loop(bot, queue, run_event)
-    except (KeyboardInterrupt, octobot.Halt):
-        logger.info("Stopping...")
-        run_event.clear()
-        for thread in threads:
-            logger.debug("Joining thread %s", thread)
-            thread.join()
-        logger.info("Bye!")
-        sys.exit()
+    update_loop(bot, queue)
+    logger.info("Stopping...")
+    stop_event.set()
+    for thread in threads:
+        logger.debug("Joining thread %s", thread)
+        thread.join()
+    logger.info("Bye!")
+    sys.exit()
 
 
 if __name__ == '__main__':
