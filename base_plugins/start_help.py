@@ -32,7 +32,7 @@ def start(bot: octobot.OctoBot, ctx: octobot.Context):
             update.message.text = data.decode()
         else:
             update.message.text = "/" + ctx.args[0]
-            logger.debug("proxying plaintext command", update.message.text)
+            logger.debug("proxying plaintext command %s", update.message.text)
         bot.handle_update(bot, update)
 
 

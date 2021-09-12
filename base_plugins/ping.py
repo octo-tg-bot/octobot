@@ -23,7 +23,7 @@ import datetime
 
 import pytz
 
-from octobot import CommandHandler, Context, OctoBot, PluginInfo, localizable
+from octobot import CommandHandler, Context, OctoBot, PluginInfo, localizable, MessageContext
 
 plugin_info = PluginInfo(localizable("Ping"))
 
@@ -31,5 +31,8 @@ plugin_info = PluginInfo(localizable("Ping"))
 @CommandHandler(command="ping",
                 description=localizable("Make sure bot is alive and get message delivery latency"))
 def ping(bot: OctoBot, ctx: Context):
-    time = (datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) - ctx.update.message.date).total_seconds()
-    ctx.reply(ctx.localize("🏓 Pong! Reply latency: %.2fs") % time)
+    if isinstance(ctx, MessageContext):
+        time = (datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) - ctx.update.message.date).total_seconds()
+        ctx.reply(ctx.localize("🏓 Pong! Reply latency: %.2fs") % time)
+    else:
+        ctx.reply(ctx.localize("🏓 Pong!"))

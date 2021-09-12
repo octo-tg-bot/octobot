@@ -18,7 +18,8 @@ class UpdateType(Enum):
     """Chosen inline result"""
 
 
-from octobot.classes.context import Context
+from octobot.classes.context import Context, CallbackContext, MessageContext, ChosenInlineResultContext, \
+    EditedMessageContext, InlineQueryContext
 from octobot.enums import PluginStates
 from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogPhoto
 
