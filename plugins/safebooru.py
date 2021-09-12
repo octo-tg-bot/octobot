@@ -29,8 +29,9 @@ import telegram
 
 import octobot
 from octobot import CatalogPhoto, CatalogKeyArticle, Catalog, CatalogNotFound, OctoBot, Context, \
-    localizable, PluginInfo, CatalogCantGoBackwards, CatalogKeyPhoto
+    localizable, PluginInfo, CatalogCantGoBackwards, CatalogKeyPhoto, CommandHandler
 from octobot.catalogs import CatalogHandler
+
 MSG_TEMPLATE = localizable("""<b>Rating:</b> {rating}
 <b>Tags:</b> {tags_str}""")
 
@@ -59,6 +60,25 @@ class SafebooruPost:
     preview_height: int
 
 
+@CommandHandler(command="sb_hires", description="Get hi-res image", hidden=True, inline_support=False, required_args=1)
+def get_hires_sb(bot: OctoBot, ctx: Context):
+    if ctx.args[0].isdigit():
+        image = octobot.Database.get_cache("https://safebooru.org/index.php",
+                                           params={
+                                               "page": "dapi",
+                                               "s": "post",
+                                               "q": "index",
+                                               "id": ctx.args[0],
+                                           },
+                                           headers=HEADERS)
+        api_q = bs4.BeautifulSoup(image.text, "html.parser").posts
+        total = int(api_q.attrs["count"])
+        if total == 0:
+            return ctx.reply("Invalid ID specified!")
+        img_link = api_q.find("post").attrs["file_url"]
+        return ctx.reply(text="<a href=\"https://safebooru.org/index.php?page=post&s=view&id={}\">Link to post</a>".format(ctx.args[0]), file_url=img_link, parse_mode='html')
+
+
 @CatalogHandler(command=["safebooru", "sb"], description="Search posts on safebooru")
 def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Context) -> Catalog:
     res = []
@@ -80,15 +100,15 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
         limit = MAX_RESULTS
     plugin.logger.debug("iter offset %s, page %s", iter_offset, page)
     image = octobot.Database.get_cache("https://safebooru.org/index.php",
-                         params={
-                             "page": "dapi",
-                             "s": "post",
-                             "q": "index",
-                             "tags": query,
-                             "limit": MAX_RESULTS,
-                             "pid": page
-                         },
-                         headers=HEADERS)
+                                       params={
+                                           "page": "dapi",
+                                           "s": "post",
+                                           "q": "index",
+                                           "tags": query,
+                                           "limit": MAX_RESULTS,
+                                           "pid": page
+                                       },
+                                       headers=HEADERS)
     api_q = bs4.BeautifulSoup(image.text, "html.parser").posts
     total = int(api_q.attrs["count"])
 
@@ -131,10 +151,16 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
                                width=item.preview_width,
                                height=item.preview_height)]
         reply_markup = [
-            [telegram.InlineKeyboardButton(
-                url="https://safebooru.org/index.php?page=post&s=view&id={}".format(item.id),
-                text=ctx.localize("View on safebooru")
-            )]
+            [
+                telegram.InlineKeyboardButton(
+                    url="https://safebooru.org/index.php?page=post&s=view&id={}".format(item.id),
+                    text=ctx.localize("Post")
+                ),
+                telegram.InlineKeyboardButton(
+                    url=bot.generate_startlink("/sb_hires " + item.id),
+                    text=ctx.localize("Hi-res")
+                ),
+            ]
         ]
 
         if item.source is not None:
@@ -161,3 +187,4 @@ def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Con
         next_offset=next_offset,
         photo_primary=True
     )
+

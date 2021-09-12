@@ -230,7 +230,7 @@ class Context:
 
     @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
-              title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False):
+              title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False, file_url=None):
         """
         Replies to a message/shows a popup in inline keyboard/sends out inline query result
 
@@ -238,6 +238,8 @@ class Context:
         :type text: :class:`str`
         :param photo_url: Photo URLs, with best quality descending to worst
         :type photo_url: :class:`list`, optional
+        :param file_url: File URL to send, message only
+        :type file_url: :class:`list`, optional
         :param reply_to_previous: If bot should reply to reply of trigger message, defaults to False. *We need to go deeper*
         :type reply_to_previous: :class:`bool`, optional
         :param reply_markup: Telegram reply markup
@@ -286,6 +288,13 @@ class Context:
                         text = html.escape(text)
                     text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
                     message = self.bot.send_photo(caption=text, photo=Settings.no_image, **kwargs)
+            elif file_url:
+                if "disable_web_page_preview" in kwargs: del kwargs["disable_web_page_preview"]
+                try:
+                    message = self.bot.send_document(caption=text, document=file_url, **kwargs)
+                except telegram.error.TelegramError:
+                    text = f'<b>Failed to send file. <a href="{photo_url[0]}">Link to file</a></b>\n\n' + text
+                    message = self.bot.send_message(text=text, **kwargs)
             else:
                 message = self.bot.send_message(text=text, **kwargs)
 
