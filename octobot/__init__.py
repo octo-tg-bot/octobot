@@ -23,7 +23,7 @@ def supergroup_only(function):
     """
 
     def wrapper(bot, context):
-        if context.update_type in [UpdateType.button_press, UpdateType.message] and context.chat.type == "supergroup":
+        if (isinstance(context, octobot.CallbackContext) or type(context) == octobot.MessageContext) and context.chat.type == "supergroup":
             function(bot, context)
         else:
             context.reply(context.localize("This command can be used only in supergroups."))

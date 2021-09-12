@@ -148,15 +148,13 @@ class CatalogHandler(CommandHandler):
                         context.localize("Sorry, this command is unavailable. Please contact the bot administrator."))
                     return
                 if (context.query == "" and self.query_required) and \
-                        context.update_type != octobot.UpdateType.button_press and chk_cmd:
+                        not isinstance(context, octobot.CallbackContext) and chk_cmd:
                     return context.reply(context.localize("This command requires query. Specify what you want to find"))
-                elif context.update_type in [octobot.UpdateType.message,
-                                             octobot.UpdateType.edited_message] and chk_cmd:
+                elif isinstance(context, octobot.MessageContext) and chk_cmd:
                     self.handle_command(bot, context)
-                elif context.update_type == octobot.UpdateType.inline_query and chk_cmd:
+                elif isinstance(context, octobot.InlineQueryContext) and chk_cmd:
                     self.handle_inline(bot, context)
-            elif context.update_type == octobot.UpdateType.button_press and context.text.split(":")[0] == self.command[
-                0]:
+            elif isinstance(context, octobot.CallbackContext) and context.text.split(":")[0] == self.command[0]:
                 self.handle_page(bot, context)
         except CatalogNotFound:
             context.reply(context.localize("Nothing found!"))
@@ -164,4 +162,5 @@ class CatalogHandler(CommandHandler):
             handle_exception(bot, context, e)
 
     def create_current_query_button(self, query, ctx):
-        return [telegram.InlineKeyboardButton(switch_inline_query_current_chat=f"{self.command[0]} {query}", text=ctx.localize("➡️Search using inline mode"))]
+        return [telegram.InlineKeyboardButton(switch_inline_query_current_chat=f"{self.command[0]} {query}",
+                                              text=ctx.localize("➡️Search using inline mode"))]

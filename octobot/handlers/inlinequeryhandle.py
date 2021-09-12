@@ -14,7 +14,7 @@ class InlineQueryHandler(BaseHandler):
     def handle_update(self, bot, context):
         if self.plugin.state == PluginStates.disabled:
             return
-        if context.update_type == octobot.UpdateType.inline_query:
+        if isinstance(context, octobot.InlineQueryContext):
             if context.text.startswith(self.prefix):
                 try:
                     self.function(bot, context)

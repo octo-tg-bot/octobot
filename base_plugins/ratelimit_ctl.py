@@ -21,7 +21,7 @@ def unban(bot, context):
 
 @octobot.MessageHandler(priority=-999)
 def handle_rl(bot, context):
-    if context.update_type != octobot.UpdateType.message:
+    if not isinstance(context, octobot.MessageContext):
         return
     state_key = f"ratelimit_state:{context.chat.id}"
     abuse_state = octobot.Database.redis.get(state_key)

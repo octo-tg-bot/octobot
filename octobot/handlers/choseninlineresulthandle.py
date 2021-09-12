@@ -14,7 +14,7 @@ class ChosenInlineResultHandler(BaseHandler):
     def handle_update(self, bot, context):
         if self.plugin.state == PluginStates.disabled:
             return
-        if context.update_type == octobot.UpdateType.chosen_inline_result:
+        if isinstance(context, octobot.ChosenInlineResultContext):
             if context.update.chosen_inline_result.result_id.startswith(self.prefix):
                 try:
                     self.function(bot, context)

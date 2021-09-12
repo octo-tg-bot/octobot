@@ -131,7 +131,7 @@ class Context:
     :vartype chat_db: :class:`octobot.database.RedisData`
     :var locale: User/Chat locale
     :vartype locale: :class:`babel.Locale`
-    :var update_type: Type of update
+    :var update_type: DEPRECATED: Type of update
     :vartype update_type: :class:`octobot.UpdateType`
     :var query: Command query
     :vartype query: :class:`str`
@@ -178,7 +178,6 @@ class Context:
         self.kbd_id = None
         if self.text is None:
             self.text = ''
-        logger.debug("update type for id %s is %s", self.update.update_id, self.update_type)
         self.query = " ".join(self.text.split(" ")[1:])
         try:
             self.args = shlex.split(self.query)

@@ -29,7 +29,7 @@ class AddContextDataToLoggingRecord(logging.Filter):
     def filter(self, record):
         ctx: "Context" = getattr(thread_local, "current_context", None)
         if ctx is not None:
-            record.update_type = ctx.update_type
+            record.update_type = type(ctx).__name__
             if ctx.chat:
                 record.chat_name = ctx.chat.title
             record.called_command = ctx.called_command

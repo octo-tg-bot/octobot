@@ -63,13 +63,7 @@ class Halt(LoaderCommand):
 
 def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
     logger.info("handling %s", e)
-    if isinstance(e, DatabaseNotAvailable):
-        if notify:
-            if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
-                context.reply(context.localize("Failed to execute command due to database problems. Please try later"))
-            elif context.update_type == octobot.UpdateType.button_press:
-                context.edit(context.localize("Failed to execute command due to database problems. Please try later"))
-    elif isinstance(e, LoaderCommand) or isinstance(e, CatalogBaseException):
+    if isinstance(e, LoaderCommand) or isinstance(e, CatalogBaseException):
         raise e
     elif isinstance(e, telegram.error.Unauthorized):
         if "bot was kicked" or "bot was blocked" in e.message:
@@ -111,9 +105,9 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
                 err_handlers_markup = telegram.InlineKeyboardMarkup(err_handlers_markup)
             message = "\n".join(err_handlers_msgs)
             logger.debug(message)
-            if context.update_type == octobot.UpdateType.message or context.update_type == octobot.UpdateType.inline_query:
+            if isinstance(context, octobot.MessageContext) or isinstance(context, octobot.InlineQueryContext):
                 context.reply(message, parse_mode="HTML", reply_markup=err_handlers_markup)
-            elif context.update_type == octobot.UpdateType.button_press:
+            elif isinstance(context, octobot.CallbackContext):
                 message = re.sub(r"<[^>]*>", '', message)
                 context.update.callback_query.answer(message, show_alert=True)
                 # context.edit(message)

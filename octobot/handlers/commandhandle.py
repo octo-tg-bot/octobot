@@ -61,14 +61,14 @@ class CommandHandler(BaseHandler):
             octobot.exceptions.handle_exception(bot, context, e)
 
     def check_command(self, bot, context):
-        if context.update_type == octobot.UpdateType.inline_query:
+        if isinstance(context, octobot.InlineQueryContext):
             if not self.inline_support:
                 return False
             prefix = ''
         else:
             prefix = self.prefix
         incmd = context.text
-        ratelimit_enabled = Settings.ratelimit.enabled and context.update_type == octobot.UpdateType.message
+        ratelimit_enabled = Settings.ratelimit.enabled and type(context) == octobot.MessageContext
         if ratelimit_enabled:
             admin = octobot.check_permissions(chat=context.chat, user=context.user,
                                               permissions_to_check={"is_admin"})[
@@ -88,7 +88,7 @@ class CommandHandler(BaseHandler):
                     command + "@" + bot.me.username)
                 if state_only_command or state_word_swap or state_mention_command:
                     context.called_command = command_base
-                    logger.info("%s called %s using %s", context.user.name, context.called_command, context.update_type)
+                    logger.info("%s called %s using, ctx type is %s", context.user.name, context.called_command, type(context))
                     if ratelimit_enabled:
                         if admin and Settings.ratelimit.adm_abuse_leave:
                             key = f"ratelimit_adm:{context.chat.id}"
@@ -100,7 +100,7 @@ class CommandHandler(BaseHandler):
         return False
 
     def handle_update(self, bot: "octobot.OctoBot", context: "octobot.Context"):
-        if context.update_type == octobot.UpdateType.button_press:
+        if isinstance(context, octobot.CallbackContext):
             return
         elif self.check_command(bot, context):
             if self.plugin.state == PluginStates.disabled:

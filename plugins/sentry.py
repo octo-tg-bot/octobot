@@ -28,7 +28,7 @@ class SentryHandler(octobot.ExceptionHandler):
             scope.set_context("update", context.update.to_dict())
             if isinstance(context._handler, octobot.CommandHandler):
                 scope.transaction = f"Command {context._handler.prefix}{context._handler.command[0]} " \
-                                    f"({context.update_type})"
+                                    f"({type(context)})"
             elif isinstance(context._handler, octobot.InlineButtonHandler):
                 scope.transaction = f"Inline button {context._handler.prefix}"
             else:
