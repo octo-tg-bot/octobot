@@ -19,6 +19,14 @@
             "program": "main.py",
             "args": ["plugins.test"],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "OctoBot: Filter test plugin",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "args": ["plugins.filter_test"],
+            "console": "integratedTerminal"
         }
     ]
 }

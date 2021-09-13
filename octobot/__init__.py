@@ -7,6 +7,7 @@ from octobot.exceptions import *
 from octobot.classes import *
 from octobot.handlers import CommandHandler, ExceptionHandler, MessageHandler, InlineButtonHandler, InlineQueryHandler, \
     ChosenInlineResultHandler
+from octobot.filters import ContextFilter, CommandFilter
 from octobot.loader import OctoBot
 from octobot.localization import localizable
 from octobot import catalogs
@@ -26,7 +27,8 @@ def supergroup_only(function):
         if (isinstance(context, octobot.CallbackContext) or type(context) == octobot.MessageContext) and context.chat.type == "supergroup":
             function(bot, context)
         else:
-            context.reply(context.localize("This command can be used only in supergroups."))
+            context.reply(context.localize(
+                "This command can be used only in supergroups."))
 
     return wrapper
 
