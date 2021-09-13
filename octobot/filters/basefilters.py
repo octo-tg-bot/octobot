@@ -1,7 +1,11 @@
 from ..handlers import BaseHandler
+import logging
+logger = logging.getLogger("basefilters")
 
 
 class BaseFilter(BaseHandler):
+    _filterWeight = 0
+    priority = 0
     allowed_types = ['filter', 'handler', 'function']
 
     def __call__(self, func):
@@ -44,11 +48,17 @@ class LogicalBaseFilter(BaseFilter):
         for filter in filters:
             if isinstance(filter, LogicalBaseFilter):
                 self.all_filters.append(filter)
-
             if isinstance(filter, type(self)):
                 self.filters += filter.filters
             else:
                 self.filters.append(filter)
+        for filter in self.filters:
+            if getattr(filter, "function", False) and callable(filter.function):
+                self.function = filter.function
+        logger.debug("sorting filters, before: %s", self.filters)
+        self.filters = sorted(
+            self.filters, key=lambda filter: filter._filterWeight, reverse=True)
+        logger.debug("sorting filters, after: %s", self.filters)
 
 
 class AndFilter(LogicalBaseFilter):

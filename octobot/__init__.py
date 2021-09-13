@@ -2,14 +2,14 @@ import os
 import subprocess
 
 from octobot.database import Database
+from octobot.localization import localizable
 from octobot.enums import PluginStates
 from octobot.exceptions import *
 from octobot.classes import *
 from octobot.handlers import CommandHandler, ExceptionHandler, MessageHandler, InlineButtonHandler, InlineQueryHandler, \
     ChosenInlineResultHandler
-from octobot.filters import ContextFilter, CommandFilter
+from octobot.filters import ContextFilter, CommandFilter, PermissionFilter
 from octobot.loader import OctoBot
-from octobot.localization import localizable
 from octobot import catalogs
 from octobot.permissions import permissions, my_permissions, reset_cache, not_admin
 from octobot.permissions import check_perms as check_permissions

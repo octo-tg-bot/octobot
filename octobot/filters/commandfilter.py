@@ -9,6 +9,8 @@ logger = logging.getLogger('commandfilter')
 
 
 class CommandFilter(BaseFilter):
+    _filterWeight = 10
+
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  long_description: str = "Additional info not specified by developer",
                  hidden=False, prefix="/", inline_support=True, service: bool = False, required_args: int = 0, *args,
@@ -77,7 +79,7 @@ class CommandFilter(BaseFilter):
         if isinstance(context, octobot.CallbackContext):
             return False
         elif self.check_command(bot, context):
-            if self.plugin.state == octobot.PluginStates.disabled:
+            if getattr(self.plugin, 'state', 'ok') == octobot.PluginStates.disabled:
                 context.reply(
                     context.localize("Sorry, this command is unavailable. Please contact the bot administrator."))
                 return False
