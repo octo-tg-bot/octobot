@@ -29,8 +29,9 @@ class LoaderCommand(Exception):
 class PassExceptionToDebugger(LoaderCommand):
     """
     Exception for raising exception from octobot itself, to pass it to debugger, for example.
-    :param exception: Exception to raise
-    :type exception: Exception
+
+    :param exception_to_pass: Exception to raise
+    :type exception_to_pass: Exception
     """
     def __init__(self, exception_to_pass):
         self.exception = exception_to_pass
