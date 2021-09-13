@@ -88,7 +88,7 @@ def create_threads():
     queue = Queue()
     stop_event = threading.Event()
     for i in range(Settings.threads):
-        thread = threading.Thread(target=update_handler, args=(queue, stop_event))
+        thread = threading.Thread(target=update_handler, args=(queue, stop_event), name=f"UpdateHandler{i}")
         threads.append(thread)
         thread.start()
     return threads, queue, stop_event
