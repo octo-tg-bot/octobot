@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-06 13:03+0300\n"
+"POT-Creation-Date: 2021-09-13 11:37+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Invalid ID passed"
 msgstr "ID inserito non valido"
 
-#: octobot/permissions.py:99 plugins/admin.py:43
+#: octobot/permissions.py:102 plugins/admin.py:43
 msgid ""
 "Sorry, you can't execute this command cause you lack following "
 "permissions: {}"
@@ -551,7 +551,7 @@ msgstr "Album con {count} immagini"
 msgid "View on Imgur"
 msgstr "Visualizza su Imgur"
 
-#: plugins/safebooru.py:34
+#: plugins/safebooru.py:35
 msgid ""
 "<b>Rating:</b> {rating}\n"
 "<b>Tags:</b> {tags_str}"
@@ -559,11 +559,15 @@ msgstr ""
 "<b>Voto:</b> {rating}\n"
 "<b>Tag:</b> {tags_str}"
 
-#: plugins/safebooru.py:136
-msgid "View on safebooru"
-msgstr "Visualizza su safebooru"
+#: plugins/safebooru.py:157
+msgid "Post"
+msgstr ""
 
-#: plugins/safebooru.py:143
+#: plugins/safebooru.py:161
+msgid "Hi-res"
+msgstr ""
+
+#: plugins/safebooru.py:169
 msgid "Source"
 msgstr "Fonte"
 
@@ -867,10 +871,14 @@ msgstr "Ping"
 msgid "Make sure bot is alive and get message delivery latency"
 msgstr "Assicurati che il bot funzioni e di ricevere il messaggio sulla latenza"
 
-#: base_plugins/ping.py:35
+#: base_plugins/ping.py:36
 #, python-format
 msgid "🏓 Pong! Reply latency: %.2fs"
 msgstr "🏓 Pong! Latenza della risposta: %.2fs"
+
+#: base_plugins/ping.py:38
+msgid "🏓 Pong!"
+msgstr ""
 
 #: base_plugins/plugins_disable.py:36
 msgid "Plugin management"
@@ -1028,15 +1036,13 @@ msgstr "Inoltrata la chat originale ({}) del messaggio con ID: {}"
 msgid "This command can be used only in supergroups."
 msgstr "Questo comando può essere usato solo nei supergruppi."
 
-#: octobot/exceptions.py:69 octobot/exceptions.py:71
-msgid "Failed to execute command due to database problems. Please try later"
-msgstr ""
-"Esecuzione del comando fallita a causa di problemi nel database. Riprova "
-"più tardi per favore"
-
-#: octobot/exceptions.py:93
+#: octobot/exceptions.py:99
 msgid "🐞 Failed to execute command due to unknown error."
 msgstr "🐞 Esecuzione del comando fallita a causa di un errore sconosciuto."
+
+#: octobot/exceptions.py:103
+msgid "Exception will be raised to trigger debugger."
+msgstr ""
 
 #: octobot/permissions.py:12
 msgid ""
@@ -1078,7 +1084,7 @@ msgstr "gestisci gruppo"
 msgid "manage voice chats"
 msgstr "gestisci chat vocale"
 
-#: octobot/permissions.py:141
+#: octobot/permissions.py:144
 msgid ""
 "Sorry, you can't execute this command cause I lack following permissions:"
 " {}"
@@ -1086,7 +1092,7 @@ msgstr ""
 "Mi dispiace, non puoi eseguire questo comando perchè mi mancano i "
 "seguenti permessi: {}"
 
-#: octobot/classes/context.py:68
+#: octobot/classes/context.py:69
 msgid "Buttons are not available due to database error"
 msgstr "I pulsanti non sono disponibili a causa di un errore del database"
 
@@ -1108,11 +1114,11 @@ msgstr ""
 msgid "This command requires query. Specify what you want to find"
 msgstr "Questo comando richiede un argomento. Specifica cosa vuoi cercare"
 
-#: octobot/handlers/cataloghandler.py:162
+#: octobot/handlers/cataloghandler.py:160
 msgid "Nothing found!"
 msgstr "Non ho trovato nulla!"
 
-#: octobot/handlers/cataloghandler.py:167
+#: octobot/handlers/cataloghandler.py:166
 msgid "➡️Search using inline mode"
 msgstr "➡️Cerca tramite la modalità inline"
 
@@ -1191,4 +1197,13 @@ msgstr ""
 
 #~ msgid "Array"
 #~ msgstr "Array"
+
+#~ msgid "View on safebooru"
+#~ msgstr "Visualizza su safebooru"
+
+#~ msgid "Failed to execute command due to database problems. Please try later"
+#~ msgstr ""
+#~ "Esecuzione del comando fallita a causa"
+#~ " di problemi nel database. Riprova "
+#~ "più tardi per favore"
 

@@ -1,6 +1,9 @@
 import octobot
+import octobot.localization
+import gettext
 import json
 import os
+
 
 def send_commands(bot: octobot.OctoBot):
     command_list = []
@@ -16,5 +19,18 @@ def send_commands(bot: octobot.OctoBot):
             json.dump(command_list, f)
     else:
         bot.set_my_commands(command_list)
+    for language in octobot.localization.AVAILABLE_LOCALES:
+        command_list_locale = []
+        gt = gettext.translation("messages", localedir="locales", languages=[
+                                 language], fallback=True)
+
+        for (command, command_desc) in command_list:
+            command_list_locale.append([command, gt.gettext(command_desc)])
+            inf.logger.debug("%s -> %s", command_desc,
+                             gt.gettext(command_desc))
+        language = language.split("-")[0]
+        inf.logger.info("Setting command list for language %s", language)
+        bot.set_my_commands(command_list_locale, language_code=language)
+
 
 inf = octobot.PluginInfo("Command list copier", after_load=send_commands)

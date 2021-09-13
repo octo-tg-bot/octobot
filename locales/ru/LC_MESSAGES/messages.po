@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OctoBotV4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-07-02 12:55+0300\n"
+"POT-Creation-Date: 2021-09-13 11:37+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -24,7 +24,8 @@ msgid ""
 "OctoBot version <code>{ob_version}</code>\n"
 "Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
 "<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
-msgstr "Версия OctoBot: <code>{ob_version}</code>\n"
+msgstr ""
+"Версия OctoBot: <code>{ob_version}</code>\n"
 "Версия Python-Telegram-Bot: <code>{ptb_version}</code>\n"
 "<a href=\"https://github.com/octo-tg-bot/\">GitHub</a>\n"
 
@@ -48,7 +49,7 @@ msgstr "<a href=\"tg://user?id={admin_id}\">{admin}</a> отменил это д
 msgid "Invalid ID passed"
 msgstr "Неверный идентификатор!"
 
-#: octobot/permissions.py:99 plugins/admin.py:43
+#: octobot/permissions.py:102 plugins/admin.py:43
 msgid ""
 "Sorry, you can't execute this command cause you lack following "
 "permissions: {}"
@@ -554,7 +555,7 @@ msgstr "Альбом ({count} картинок)"
 msgid "View on Imgur"
 msgstr "Посмотреть на Imgur"
 
-#: plugins/safebooru.py:34
+#: plugins/safebooru.py:35
 msgid ""
 "<b>Rating:</b> {rating}\n"
 "<b>Tags:</b> {tags_str}"
@@ -562,11 +563,15 @@ msgstr ""
 "<b>Рейтинг:</b> {rating}\n"
 "<b>Теги:</b> {tags_str}"
 
-#: plugins/safebooru.py:136
-msgid "View on safebooru"
-msgstr "Открыть на safebooru"
+#: plugins/safebooru.py:157
+msgid "Post"
+msgstr ""
 
-#: plugins/safebooru.py:143
+#: plugins/safebooru.py:161
+msgid "Hi-res"
+msgstr ""
+
+#: plugins/safebooru.py:169
 msgid "Source"
 msgstr "Сурс"
 
@@ -866,10 +871,14 @@ msgstr "Пинг"
 msgid "Make sure bot is alive and get message delivery latency"
 msgstr "Проверить доступность бота и узнать задержку доставки сообщений"
 
-#: base_plugins/ping.py:35
+#: base_plugins/ping.py:36
 #, python-format
 msgid "🏓 Pong! Reply latency: %.2fs"
 msgstr "🏓 Понг! Задержка: %.2fs"
+
+#: base_plugins/ping.py:38
+msgid "🏓 Pong!"
+msgstr ""
 
 #: base_plugins/plugins_disable.py:36
 msgid "Plugin management"
@@ -1026,15 +1035,13 @@ msgstr "ИД чата, откуда был совершен форвард ({}):
 msgid "This command can be used only in supergroups."
 msgstr "Эта команда доступна только в групповых чатах."
 
-#: octobot/exceptions.py:69 octobot/exceptions.py:71
-msgid "Failed to execute command due to database problems. Please try later"
-msgstr ""
-"Произошла ошибка в выполнении команды из-за проблем с базой данных. "
-"Пожалуйста, попробуйте позже."
-
-#: octobot/exceptions.py:93
+#: octobot/exceptions.py:99
 msgid "🐞 Failed to execute command due to unknown error."
 msgstr "🐞 Во время выполнения команды произошла непревиденная ошибка."
+
+#: octobot/exceptions.py:103
+msgid "Exception will be raised to trigger debugger."
+msgstr ""
 
 #: octobot/permissions.py:12
 msgid ""
@@ -1074,7 +1081,7 @@ msgstr "управлять чатом"
 msgid "manage voice chats"
 msgstr "управлять голосовыми чатами"
 
-#: octobot/permissions.py:141
+#: octobot/permissions.py:144
 msgid ""
 "Sorry, you can't execute this command cause I lack following permissions:"
 " {}"
@@ -1082,7 +1089,7 @@ msgstr ""
 "Извините, я не могу выполнить эту команду из-за отсутствия этих прав "
 "администратора: {}"
 
-#: octobot/classes/context.py:68
+#: octobot/classes/context.py:69
 msgid "Buttons are not available due to database error"
 msgstr "Кнопки не работают из-за ошибки базы данных"
 
@@ -1102,11 +1109,11 @@ msgstr "Данная команда не доступна. Свяжитесь с
 msgid "This command requires query. Specify what you want to find"
 msgstr "Данная команда требует запрос"
 
-#: octobot/handlers/cataloghandler.py:162
+#: octobot/handlers/cataloghandler.py:160
 msgid "Nothing found!"
 msgstr "Не найдено"
 
-#: octobot/handlers/cataloghandler.py:167
+#: octobot/handlers/cataloghandler.py:166
 msgid "➡️Search using inline mode"
 msgstr "➡️Искачть через инлайн"
 
@@ -1133,4 +1140,13 @@ msgstr ""
 #~ "Python-Telegram-Bot version: <code>{ptb_version}</code>\n"
 #~ "<a href=\"https://github.com/octo-tg-bot/\">GitHub page</a>\n"
 #~ msgstr ""
+
+#~ msgid "View on safebooru"
+#~ msgstr "Открыть на safebooru"
+
+#~ msgid "Failed to execute command due to database problems. Please try later"
+#~ msgstr ""
+#~ "Произошла ошибка в выполнении команды "
+#~ "из-за проблем с базой данных. "
+#~ "Пожалуйста, попробуйте позже."
 
