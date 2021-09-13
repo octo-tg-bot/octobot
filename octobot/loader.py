@@ -18,6 +18,7 @@ from settings import Settings
 logger = logging.getLogger("Loader")
 TEST_RUNNING = os.environ.get("ob_testing", False)
 
+
 class OctoBot(telegram.Bot):
     """
     Module loader class. Inherited from telegram.Bot
@@ -31,6 +32,7 @@ class OctoBot(telegram.Bot):
     handlers = {}
     error_handlers = []
     test_running = TEST_RUNNING
+
     def __init__(self, load_list, *args, **kwargs):
         dry_run = os.environ.get("DRY_RUN", False)
         if not (dry_run or TEST_RUNNING):
@@ -38,7 +40,8 @@ class OctoBot(telegram.Bot):
             super(OctoBot, self).__init__(*args, **kwargs)
             self.me = self.getMe()
         if TEST_RUNNING:
-            self.me = telegram.User(is_bot=True, username="test_bot", id=4, first_name="Unittest")
+            self.me = telegram.User(
+                is_bot=True, username="test_bot", id=4, first_name="Unittest")
         for plugin in glob("base_plugins/*.py"):
             logger.info("Loading base plugin %s", plugin)
             self.load_plugin(path_to_module(plugin))
@@ -88,7 +91,8 @@ class OctoBot(telegram.Bot):
                         for k, v in plugin.handler_kwargs[type(var).__name__].items():
                             setattr(var, k, v)
                     self.handlers[var.priority].append(var)
-        logger.info("Handlers update complete, priority levels: %s", self.handlers.keys())
+        logger.info("Handlers update complete, priority levels: %s",
+                    self.handlers.keys())
         logger.debug("Running post-load functions...")
         for plugin in self.plugins.values():
             func = plugin.after_load
@@ -174,13 +178,15 @@ class OctoBot(telegram.Bot):
             for var_name, var in vars(update).items():
                 if var is not None and not (var_name.startswith("effective") or var_name.startswith("_") or var_name.startswith("update")):
                     unknown_thing = var_name
-            logger.warning("Failed to determine update type: %s", unknown_thing, exc_info=True)
+            logger.warning("Failed to determine update type: %s",
+                           unknown_thing, exc_info=True)
             return
         except octobot.exceptions.StopHandling:
             return
         disabled_plugins = []
         if octobot.Database.redis is not None and update.effective_message is not None and update.effective_chat.type == "supergroup":
-            disabled_plugins = octobot.Database.redis.smembers(f"plugins_disabled{update.effective_chat.id}")
+            disabled_plugins = octobot.Database.redis.smembers(
+                f"plugins_disabled{update.effective_chat.id}")
         for priority in sorted(self.handlers.keys()):
             handlers = self.handlers[priority]
             logger.debug(f"handling priority level {priority}")
@@ -197,12 +203,15 @@ class OctoBot(telegram.Bot):
                     except octobot.exceptions.StopHandling as e:
                         raise
                     except octobot.exceptions.PassExceptionToDebugger as e:
-                        raise e.exception
+                        raise e
                     except Exception as e:
-                        logger.error("Handler threw an exception!", exc_info=True)
+                        logger.error(
+                            "Handler threw an exception!", exc_info=True)
                         handle_exception(self, ctx, e, notify=False)
             except octobot.exceptions.StopHandling:
                 break
+            except octobot.exceptions.PassExceptionToDebugger as e:
+                raise e.exception
         # if update.inline_query and not ctx.replied:
         #     update.inline_query.answer([], switch_pm_text=ctx.localize("Click here for command list"), switch_pm_parameter="help")
 

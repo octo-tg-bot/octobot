@@ -1,3 +1,5 @@
+from settings import Settings
+from octobot.utils import add_photo_to_text
 import gettext
 import html
 import logging
@@ -17,8 +19,6 @@ from octobot.classes import UpdateType
 from octobot import database
 
 Database = database.Database
-from octobot.utils import add_photo_to_text
-from settings import Settings
 
 logger = logging.getLogger("Context")
 
@@ -56,7 +56,8 @@ def cleanhtml(raw_html):
 def encode_callback_data(callback_data, keyboard_id):
     uuid_kbd = keyboard_id
     uuid = create_inline_button_id(uuid_kbd)
-    octobot.Database.redis.hset(generate_inline_entry(uuid_kbd), uuid, callback_data)
+    octobot.Database.redis.hset(
+        generate_inline_entry(uuid_kbd), uuid, callback_data)
     data = f"{uuid_kbd}:{uuid}"
     logger.debug(f"{callback_data} -> {data}")
     return data
@@ -74,6 +75,8 @@ def rebuild_inline_markup(reply_markup, context):
             kbd_id = create_keyboard_id()
             for row in reply_markup.inline_keyboard:
                 new_row = []
+                if not isinstance(row, list):
+                    row = [row]
                 for button in row:
                     if button.callback_data is not None:
                         new_row.append(telegram.InlineKeyboardButton(text=button.text,
@@ -83,7 +86,8 @@ def rebuild_inline_markup(reply_markup, context):
                     else:
                         new_row.append(button)
                 new_markup.append(new_row)
-            octobot.Database.redis.expire(generate_inline_entry(kbd_id), 60 * 60 * 24 * 7)
+            octobot.Database.redis.expire(
+                generate_inline_entry(kbd_id), 60 * 60 * 24 * 7)
             return telegram.InlineKeyboardMarkup(new_markup), kbd_id
     else:
         return reply_markup, None
@@ -94,7 +98,8 @@ def decode_inline(data):
     keyboard_data = "invalid:"
     if len(data) == 2 and Database.redis is not None:
         kbd_uuid, button_uuid = data
-        db_res = Database.redis.hget(generate_inline_entry(kbd_uuid), button_uuid)
+        db_res = Database.redis.hget(
+            generate_inline_entry(kbd_uuid), button_uuid)
         if db_res is not None:
             keyboard_data = db_res.decode()
     logger.debug(f"{data} -> {keyboard_data}")
@@ -155,7 +160,8 @@ class Context:
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         if Context == type(self):
-            raise RuntimeError("Calling Context class directly! Please use Context.create_context instead...")
+            raise RuntimeError(
+                "Calling Context class directly! Please use Context.create_context instead...")
         self.locale_str = "en"
         self.bot = bot
         self.update = update
@@ -278,7 +284,8 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        gt = gettext.translation("messages", localedir="locales", languages=[self.locale_str], fallback=True)
+        gt = gettext.translation("messages", localedir="locales", languages=[
+                                 self.locale_str], fallback=True)
 
         return gt.gettext(text)
 
@@ -295,7 +302,8 @@ class Context:
         :return: Localized string
         :rtype: :class:`str`
         """
-        gt = gettext.translation("messages", localedir="locales", languages=[self.locale_str], fallback=True)
+        gt = gettext.translation("messages", localedir="locales", languages=[
+                                 self.locale_str], fallback=True)
 
         return gt.ngettext(singular, plural, n)
 
@@ -315,7 +323,8 @@ class Context:
         elif update.chosen_inline_result:
             return ChosenInlineResultContext(update, bot, message)
         else:
-            raise octobot.exceptions.UnknownUpdate("Failed to determine update type for update %s", update.to_dict())
+            raise octobot.exceptions.UnknownUpdate(
+                "Failed to determine update type for update %s", update.to_dict())
 
 
 class InlineQueryContext(Context):
@@ -340,11 +349,12 @@ class InlineQueryContext(Context):
         result = telegram.InlineQueryResultArticle(self.update.inline_query.query,
                                                    title=title,
                                                    description=cleanhtml(text)[
-                                                               :500] if inline_description is None else inline_description,
+                                                       :500] if inline_description is None else inline_description,
                                                    input_message_content=inline_content,
                                                    reply_markup=reply_markup,
                                                    thumb_url=photo_url)
-        self.update.inline_query.answer([result], cache_time=(360 if Settings.production else 0))
+        self.update.inline_query.answer(
+            [result], cache_time=(360 if Settings.production else 0))
 
 
 class CallbackContext(Context):
@@ -376,7 +386,8 @@ class CallbackContext(Context):
             if self.update.callback_query.inline_message_id is not None:
                 kwargs["inline_message_id"] = self.update.callback_query.inline_message_id
             else:
-                logger.debug("chat instance %s", self.update.callback_query.chat_instance)
+                logger.debug("chat instance %s",
+                             self.update.callback_query.chat_instance)
                 kwargs["chat_id"] = self.update.callback_query.message.chat_id
                 kwargs["message_id"] = self.update.callback_query.message.message_id
             try:
@@ -385,7 +396,8 @@ class CallbackContext(Context):
                 if parse_mode.lower() != 'html':
                     text = html.escape(text)
                 text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
-                kwargs["media"] = InputMediaPhoto(media=Settings.no_image, caption=text, parse_mode=parse_mode)
+                kwargs["media"] = InputMediaPhoto(
+                    media=Settings.no_image, caption=text, parse_mode=parse_mode)
                 self.bot.edit_message_media(**kwargs)
         elif text is not None and not photo_primary:
             self.update.callback_query.edit_message_text(
@@ -399,7 +411,8 @@ class CallbackContext(Context):
             logger.debug("updating reply markup to %s", reply_markup)
             self.update.callback_query.edit_message_reply_markup(reply_markup)
         if octobot.Database is not None and self.kbd_id is not None:
-            logger.debug("Edit called OK, deleting inline keyboard data for %s", self.kbd_id)
+            logger.debug(
+                "Edit called OK, deleting inline keyboard data for %s", self.kbd_id)
             Database.redis.delete(generate_inline_entry(self.kbd_id))
             self.kbd_id = None
 
@@ -417,10 +430,13 @@ class MessageContext(Context):
         self._update_type = UpdateType.message
         is_reply = message is not None
         if octobot.Database.redis is not None and not is_reply:
-            octobot.Database.redis.set(octobot.utils.generate_edit_id(update.message), 0)
-            octobot.Database.redis.expire(octobot.utils.generate_edit_id(update.message), 30)
+            octobot.Database.redis.set(
+                octobot.utils.generate_edit_id(update.message), 0)
+            octobot.Database.redis.expire(
+                octobot.utils.generate_edit_id(update.message), 30)
         if message.reply_to_message:
-            self.reply_to_message = Context.create_context(update, bot, update.message.reply_to_message)
+            self.reply_to_message = Context.create_context(
+                update, bot, update.message.reply_to_message)
         super(MessageContext, self).__init__(update, bot, message)
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
@@ -439,17 +455,22 @@ class MessageContext(Context):
             del kwargs["reply_to_message_id"]
         if photo_url and photo_primary:
             try:
-                if "disable_web_page_preview" in kwargs: del kwargs["disable_web_page_preview"]
-                message = self.bot.send_photo(caption=text, photo=photo_url[0], **kwargs)
+                if "disable_web_page_preview" in kwargs:
+                    del kwargs["disable_web_page_preview"]
+                message = self.bot.send_photo(
+                    caption=text, photo=photo_url[0], **kwargs)
             except telegram.error.TelegramError:
                 if parse_mode.lower() != 'html':
                     text = html.escape(text)
                 text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
-                message = self.bot.send_photo(caption=text, photo=Settings.no_image, **kwargs)
+                message = self.bot.send_photo(
+                    caption=text, photo=Settings.no_image, **kwargs)
         elif file_url:
-            if "disable_web_page_preview" in kwargs: del kwargs["disable_web_page_preview"]
+            if "disable_web_page_preview" in kwargs:
+                del kwargs["disable_web_page_preview"]
             try:
-                message = self.bot.send_document(caption=text, document=file_url, **kwargs)
+                message = self.bot.send_document(
+                    caption=text, document=file_url, **kwargs)
             except telegram.error.TelegramError:
                 text = f'<b>Failed to send file. <a href="{photo_url[0]}">Link to file</a></b>\n\n' + text
                 message = self.bot.send_message(text=text, **kwargs)
@@ -457,8 +478,10 @@ class MessageContext(Context):
             message = self.bot.send_message(text=text, **kwargs)
 
         if octobot.Database.redis is not None and editable:
-            octobot.Database.redis.set(octobot.utils.generate_edit_id(self.update.message), message.message_id)
-            octobot.Database.redis.expire(octobot.utils.generate_edit_id(self.update.message), 30)
+            octobot.Database.redis.set(octobot.utils.generate_edit_id(
+                self.update.message), message.message_id)
+            octobot.Database.redis.expire(
+                octobot.utils.generate_edit_id(self.update.message), 30)
         self.edit_tgt = message.message_id
         return message
 
@@ -481,18 +504,22 @@ class EditedMessageContext(MessageContext):
         self.update = update
         self.update.message = self.update.edited_message
         if octobot.Database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
-            self.edit_tgt = int(octobot.Database.redis.get(octobot.utils.generate_edit_id(self.update.message)))
+            self.edit_tgt = int(octobot.Database.redis.get(
+                octobot.utils.generate_edit_id(self.update.message)))
             if self.edit_tgt == 0:
-                logger.debug("Not handling update %s cause invalid edit target", update.update_id)
+                logger.debug(
+                    "Not handling update %s cause invalid edit target", update.update_id)
                 raise octobot.StopHandling
-            octobot.Database.redis.delete(octobot.utils.generate_edit_id(self.update.message))
+            octobot.Database.redis.delete(
+                octobot.utils.generate_edit_id(self.update.message))
             self._update_type = UpdateType.edited_message
             if update.message.caption is not None:
                 self.text = update.message.caption
             else:
                 self.text = update.message.text
         else:
-            logger.debug("Not handling update %s cause not available in database", update.update_id)
+            logger.debug(
+                "Not handling update %s cause not available in database", update.update_id)
             raise octobot.StopHandling
         logger.debug("edit target = %s", self.edit_tgt)
         # super(EditedMessageContext, self).__init__(update, bot, message)
