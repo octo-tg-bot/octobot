@@ -58,7 +58,7 @@ def update_handler(upd_queue: Queue, stop_event: threading.Event):
             try:
                 bot.handle_update(bot, update)
             except octobot.Halt:
-                stop_event.clear()
+                stop_event.set()
         stop_running = stop_event.is_set()
     logger.info("Stop event is set, exiting, exiting...")
 
