@@ -196,6 +196,8 @@ class OctoBot(telegram.Bot):
                         raise e
                     except octobot.exceptions.StopHandling as e:
                         raise
+                    except octobot.exceptions.PassExceptionToDebugger as e:
+                        raise e.exception
                     except Exception as e:
                         logger.error("Handler threw an exception!", exc_info=True)
                         handle_exception(self, ctx, e, notify=False)

@@ -26,23 +26,24 @@ logger = logging.getLogger("Bot")
 def update_loop(bot, queue):
     update_id = None
     bot.deleteWebhook()
-    while True:
-        try:
-            logger.debug("Fetching updates...")
-            for update in bot.getUpdates(update_id, timeout=15 if Settings.production else 1,
-                                         allowed_updates=["message", "edited_message",
-                                                          "inline_query", "callback_query",
-                                                          "chosen_inline_result"]):
-                update_id = update.update_id + 1
-                logger.debug(update)
-                queue.put((bot, update))
-        except (telegram.error.TimedOut, telegram.error.NetworkError):
-            time.sleep(1)
-        except (telegram.error.RetryAfter) as e:
-            time.sleep(e.retry_after + 1)
-        except KeyboardInterrupt:
-            logger.info("Update loop - stopping.")
-            break
+    try:
+        while True:
+            try:
+                logger.debug("Fetching updates...")
+                for update in bot.getUpdates(update_id, timeout=15 if Settings.production else 1,
+                                            allowed_updates=["message", "edited_message",
+                                                            "inline_query", "callback_query",
+                                                            "chosen_inline_result"]):
+                    update_id = update.update_id + 1
+                    logger.debug(update)
+                    queue.put((bot, update))
+            except (telegram.error.TimedOut, telegram.error.NetworkError):
+                time.sleep(1)
+            except (telegram.error.RetryAfter) as e:
+                time.sleep(e.retry_after + 1)
+    except KeyboardInterrupt:
+        logger.info("Update loop - stopping.")
+        return
 
 
 def update_handler(upd_queue: Queue, stop_event: threading.Event):
