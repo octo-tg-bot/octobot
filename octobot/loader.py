@@ -129,6 +129,8 @@ class OctoBot(telegram.Bot):
             res = "skipped"
         except Exception as e:
             logger.error("Failed to load plugin %s", exc_info=True)
+            if octobot.exceptions.IS_DEBUG:
+                raise e
             plugin.state = PluginStates.error
             plugin.state_description = str(e)
             res = f"crashed, {e}"
