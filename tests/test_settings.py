@@ -1,7 +1,15 @@
 import toml
 import os, shutil
 import unittest
-import settings
+try:
+    import settings
+except ModuleNotFoundError:
+    import sys
+    import os
+
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(os.path.dirname(SCRIPT_DIR))
+    import settings
 import logging
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None

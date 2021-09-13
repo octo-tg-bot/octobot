@@ -7,8 +7,16 @@ os.environ["ob_production"] = 'false'
 os.environ["ob_testing"] = 'true'
 import unittest, unittest.mock
 import telegram
-import octobot
 
+try:
+    import octobot
+except ModuleNotFoundError:
+    import sys
+    import os
+
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(os.path.dirname(SCRIPT_DIR))
+    import octobot
 USER = telegram.User(is_bot=False, first_name="Unittest 'human'", id=1)
 CHAT = telegram.Chat(1, title=USER.name, type="private")
 
