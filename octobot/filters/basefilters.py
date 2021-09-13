@@ -35,19 +35,23 @@ class BaseFilter(BaseHandler):
         return NotFilter(self)
 
 
-class LogicalFilter(BaseFilter):
+class LogicalBaseFilter(BaseFilter):
     allowed_types = ["filter"]
 
     def __init__(self, *filters):
         self.filters = []
+        self.all_filters = []
         for filter in filters:
+            if isinstance(filter, LogicalBaseFilter):
+                self.all_filters.append(filter)
+
             if isinstance(filter, type(self)):
                 self.filters += filter.filters
             else:
                 self.filters.append(filter)
 
 
-class AndFilter(LogicalFilter):
+class AndFilter(LogicalBaseFilter):
     def validate(self, bot, context):
         for filter in self.filters:
             if not filter.validate(bot, context):
@@ -55,7 +59,7 @@ class AndFilter(LogicalFilter):
         return True
 
 
-class OrFilter(LogicalFilter):
+class OrFilter(LogicalBaseFilter):
     def validate(self, bot, context):
         for filter in self.filters:
             if filter.validate(bot, context):
@@ -63,7 +67,7 @@ class OrFilter(LogicalFilter):
         return False
 
 
-class NotFilter(LogicalFilter):
+class NotFilter(LogicalBaseFilter):
     def __init__(self, filter):
         if not isinstance(filter, BaseFilter):
             raise TypeError("NotFilter accepts only filters")
