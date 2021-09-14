@@ -26,13 +26,14 @@ def create_inline_buttons(command, query, current_index, max_results, previous_o
     return [
         telegram.InlineKeyboardButton(text=BUTTON_LEFT,
                                       callback_data=create_buttonstring(command, query, previous_offset)),
-        telegram.InlineKeyboardButton(text=f"{current_index}/{max_results}", callback_data="nothing:"),
+        telegram.InlineKeyboardButton(
+            text=f"{current_index}/{max_results}", callback_data="nothing:"),
         telegram.InlineKeyboardButton(text=BUTTON_RIGHT,
                                       callback_data=create_buttonstring(command, query, next_offset))
     ]
 
 
-class CatalogHandler(CommandHandler):
+class CatalogHandler(octobot.CommandFilter):
     """
     Catalog handler. Handles catalogs, surprisingly enough.
 
@@ -55,29 +56,34 @@ class CatalogHandler(CommandHandler):
         query = query.replace(r"\:", ":")
         offset = offset
         try:
-            res: octobot.Catalog = self.function(query, offset, 1, bot, context)
+            res: octobot.Catalog = self.function(
+                query, offset, 1, bot, context)
         except CatalogCantGoDeeper:
             return context.reply(context.localize("Can't go forward anymore"))
         except CatalogCantGoBackwards:
             return context.reply(context.localize("Can't go backwards anymore"))
         if res is None:
             return
-        reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
+        reply_markup = telegram.InlineKeyboardMarkup(
+            res[0].reply_markup.inline_keyboard.copy())
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.max_count, res.previous_offset,
                                   res.next_offset))
-        reply_markup.inline_keyboard.append(self.create_current_query_button(query, context))
+        reply_markup.inline_keyboard.append(
+            self.create_current_query_button(query, context))
         context.edit(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
                      reply_markup=reply_markup, photo_primary=res.photo_primary)
 
     def handle_command(self, bot, context: Context):
         query = context.query
         res: octobot.Catalog = self.function(query, 0, 1, bot, context)
-        reply_markup = telegram.InlineKeyboardMarkup(res[0].reply_markup.inline_keyboard.copy())
+        reply_markup = telegram.InlineKeyboardMarkup(
+            res[0].reply_markup.inline_keyboard.copy())
         reply_markup.inline_keyboard.append(
             create_inline_buttons(self.command, query, res.current_index, res.max_count, res.previous_offset,
                                   res.next_offset))
-        reply_markup.inline_keyboard.append(self.create_current_query_button(query, context))
+        reply_markup.inline_keyboard.append(
+            self.create_current_query_button(query, context))
 
         context.reply(res[0].text, parse_mode=res[0].parse_mode, photo_url=res[0].photo_msgmode,
                       reply_to_previous=False,
@@ -90,7 +96,8 @@ class CatalogHandler(CommandHandler):
         else:
             offset = 0
         try:
-            res: octobot.Catalog = self.function(query, offset, 50, bot, context)
+            res: octobot.Catalog = self.function(
+                query, offset, 50, bot, context)
         except CatalogCantGoDeeper:
             return
         if res is None:
@@ -99,7 +106,8 @@ class CatalogHandler(CommandHandler):
         for item in res:
             if item.reply_markup is None:
                 item.reply_markup = telegram.InlineKeyboardMarkup()
-            item.reply_markup.inline_keyboard.append(self.create_current_query_button(query, context))
+            item.reply_markup.inline_keyboard.append(
+                self.create_current_query_button(query, context))
             if item.photo is not None:
                 if item.parse_mode is None or item.parse_mode.lower() != "html":
                     item.parse_mode = 'html'
@@ -123,9 +131,11 @@ class CatalogHandler(CommandHandler):
                         parse_mode=item.parse_mode
                     )
                 if isinstance(item, octobot.CatalogKeyPhoto):
-                    inline_res.append(telegram.InlineQueryResultPhoto(**res_kwargs))
+                    inline_res.append(
+                        telegram.InlineQueryResultPhoto(**res_kwargs))
                 else:
-                    inline_res.append(telegram.InlineQueryResultArticle(**res_kwargs))
+                    inline_res.append(
+                        telegram.InlineQueryResultArticle(**res_kwargs))
             else:
                 inline_res.append(telegram.InlineQueryResultArticle(
                     item.item_id,
