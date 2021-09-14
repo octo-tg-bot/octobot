@@ -6,6 +6,7 @@ from glob import glob
 import importlib
 
 import telegram
+import telegram.ext
 
 import octobot.exceptions
 import octobot.handlers
@@ -19,14 +20,14 @@ logger = logging.getLogger("Loader")
 TEST_RUNNING = os.environ.get("ob_testing", False)
 
 
-class OctoBot(telegram.Bot):
+class OctoBot(telegram.ext.ExtBot):
     """
-    Module loader class. Inherited from telegram.Bot
+    Module loader class. Inherited from telegram.ext.ExtBot
 
     :param load_list: List of plugins to load in module syntax
     :type list:
-    :param \*args: Arguments to pass to telegram.Bot class
-    :param \*\*kwargs: Keyword arguments to pass to telegram.Bot class
+    :param \*args: Arguments to pass to telegram.ext.ExtBot class
+    :param \*\*kwargs: Keyword arguments to pass to telegram.ext.ExtBot class
     """
     plugins = {}
     handlers = {}
@@ -37,7 +38,7 @@ class OctoBot(telegram.Bot):
         dry_run = os.environ.get("DRY_RUN", False)
         if not (dry_run or TEST_RUNNING):
             logger.info("Initializing PTB")
-            super(OctoBot, self).__init__(*args, **kwargs)
+            super(OctoBot, self).__init__(arbitrary_callback_data=True, *args, **kwargs)
             self.me = self.getMe()
         if TEST_RUNNING:
             self.me = telegram.User(

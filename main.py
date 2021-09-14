@@ -59,6 +59,7 @@ def update_handler(upd_queue: Queue, stop_event: threading.Event):
         else:
             bot = qupdate[0]
             update: telegram.Update = qupdate[1]
+            bot.insert_callback_data(update)
             try:
                 bot.handle_update(bot, update)
             except octobot.Halt:

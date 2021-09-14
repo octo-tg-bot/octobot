@@ -23,87 +23,10 @@ Database = database.Database
 logger = logging.getLogger("Context")
 
 
-def generate_inline_entry(uuid):
-    return f"inline:{uuid}"
-
-
-def generate_id():
-    return uuid4().hex[:16]
-
-
-def create_keyboard_id():
-    key_exists = 1
-    while key_exists == 1:
-        uuid = str(generate_id())
-        key_exists = Database.redis.exists(generate_inline_entry(uuid))
-    return uuid
-
-
-def create_inline_button_id(kbd_id):
-    key_exists = 1
-    while key_exists == 1:
-        uuid = str(generate_id())
-        key_exists = Database.redis.hexists(kbd_id, uuid)
-    return uuid
-
-
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
     cleantext = re.sub(cleanr, '', raw_html)
     return html.unescape(cleantext)
-
-
-def encode_callback_data(callback_data, keyboard_id):
-    uuid_kbd = keyboard_id
-    uuid = create_inline_button_id(uuid_kbd)
-    octobot.Database.redis.hset(
-        generate_inline_entry(uuid_kbd), uuid, callback_data)
-    data = f"{uuid_kbd}:{uuid}"
-    logger.debug(f"{callback_data} -> {data}")
-    return data
-
-
-def rebuild_inline_markup(reply_markup, context):
-    if isinstance(reply_markup, telegram.InlineKeyboardMarkup):
-        if octobot.Database.redis is None:
-            return telegram.InlineKeyboardMarkup.from_button(
-                telegram.InlineKeyboardButton(text=context.localize("Buttons are not available due to database error"),
-                                              callback_data="nothing:")
-            ), None
-        else:
-            new_markup = []
-            kbd_id = create_keyboard_id()
-            for row in reply_markup.inline_keyboard:
-                new_row = []
-                if not isinstance(row, list):
-                    row = [row]
-                for button in row:
-                    if button.callback_data is not None:
-                        new_row.append(telegram.InlineKeyboardButton(text=button.text,
-                                                                     callback_data=encode_callback_data(
-                                                                         callback_data=button.callback_data,
-                                                                         keyboard_id=kbd_id)))
-                    else:
-                        new_row.append(button)
-                new_markup.append(new_row)
-            octobot.Database.redis.expire(
-                generate_inline_entry(kbd_id), 60 * 60 * 24 * 7)
-            return telegram.InlineKeyboardMarkup(new_markup), kbd_id
-    else:
-        return reply_markup, None
-
-
-def decode_inline(data):
-    data = data.split(":")
-    keyboard_data = "invalid:"
-    if len(data) == 2 and Database.redis is not None:
-        kbd_uuid, button_uuid = data
-        db_res = Database.redis.hget(
-            generate_inline_entry(kbd_uuid), button_uuid)
-        if db_res is not None:
-            keyboard_data = db_res.decode()
-    logger.debug(f"{data} -> {keyboard_data}")
-    return keyboard_data
 
 
 def pluginfo_kwargs(field_name):
@@ -181,7 +104,6 @@ class Context:
             self.chat_db = Database[self.user.id]
         if self.chat is not None:
             self.chat_db = Database[self.chat.id]
-        self.kbd_id = None
         if self.text is None:
             self.text = ''
         self.query = " ".join(self.text.split(" ")[1:])
@@ -229,7 +151,6 @@ class Context:
         :type inline_description: :class:`str`
         """
         self.replied = True
-        reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url and not photo_primary:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
@@ -264,15 +185,14 @@ class Context:
         :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
         :type parse_mode: :class:`str`, optional
         """
-        reply_markup, kbd_id = rebuild_inline_markup(reply_markup, self)
         if photo_url and not photo_primary:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
-        return self._edit(text, photo_url, reply_markup, parse_mode, photo_primary, kbd_id)
+        return self._edit(text, photo_url, reply_markup, parse_mode, photo_primary)
 
-    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False, kbd_id=None):
+    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         raise RuntimeError(f"Override _edit in {type(self)}!")
 
     def localize(self, text: str) -> str:
@@ -363,8 +283,8 @@ class CallbackContext(Context):
     """
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
-        self.kbd_id = update.callback_query.data.split(":")[0]
-        self.text = decode_inline(update.callback_query.data)
+        self.text = update.callback_query.data
+        logger.debug("text: %s" % self.text)
         self._update_type = UpdateType.button_press
         super(CallbackContext, self).__init__(update, bot, message)
 
@@ -374,7 +294,7 @@ class CallbackContext(Context):
                file_url=None):
         self.update.callback_query.answer(text)
 
-    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False, kbd_id=None):
+    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         kwargs = dict(parse_mode=parse_mode,
                       reply_markup=reply_markup)
         if photo_url is not None and photo_primary:
@@ -410,11 +330,6 @@ class CallbackContext(Context):
         elif reply_markup is not None:
             logger.debug("updating reply markup to %s", reply_markup)
             self.update.callback_query.edit_message_reply_markup(reply_markup)
-        if octobot.Database is not None and self.kbd_id is not None:
-            logger.debug(
-                "Edit called OK, deleting inline keyboard data for %s", self.kbd_id)
-            Database.redis.delete(generate_inline_entry(self.kbd_id))
-            self.kbd_id = None
 
 
 class MessageContext(Context):
@@ -485,7 +400,7 @@ class MessageContext(Context):
         self.edit_tgt = message.message_id
         return message
 
-    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False, kbd_id=None):
+    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         if self.edit_tgt is not None:
             if text is not None:
                 return self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
