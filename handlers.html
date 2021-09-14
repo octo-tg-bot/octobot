@@ -41,8 +41,8 @@
 <h2>CommandHandler<a class="headerlink" href="#commandhandler" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="octobot.CommandHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">CommandHandler</code><span class="sig-paren">(</span><em class="sig-param">command: Union[list, str], description: str = 'Command description not specified by developer', long_description: str = 'Additional info not specified by developer', hidden=False, prefix='/', inline_support=True, service: bool = False, required_args: int = 0, *args, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.CommandHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command handler. Handles commands in chat and commands in inline queries.</p>
+<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">CommandHandler</code><a class="headerlink" href="#octobot.CommandHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED, Use CommandFilter instead: Command handler. Handles commands in chat and commands in inline queries.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Prefix will not be checked in case of inline queries</p>
@@ -86,7 +86,7 @@
 <h2>MessageHandler<a class="headerlink" href="#messagehandler" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="octobot.MessageHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">MessageHandler</code><span class="sig-paren">(</span><em class="sig-param">priority=0</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.MessageHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">octobot.</code><code class="sig-name descname">MessageHandler</code><a class="headerlink" href="#octobot.MessageHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls function on every message. Simple enough.</p>
 </dd></dl>
 
