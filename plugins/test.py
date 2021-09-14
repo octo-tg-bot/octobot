@@ -10,27 +10,33 @@ info = octobot.PluginInfo("Test plugin")
 if Settings.production:
     raise octobot.DontLoadPlugin
 
+
 @CommandHandler(command="ptest", description="Permissions test")
 @octobot.permissions(can_restrict_members=True)
 @octobot.my_permissions(can_delete_messages=True)
 def test_perm(bot, context):
     context.reply("Hello world!",
                   reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(callback_data="test:", text="Change text")]
+                      [telegram.InlineKeyboardButton(
+                          callback_data="test:", text="Change text")]
                   ])
                   )
+
 
 @CommandHandler(command="exception", description="Test exception")
 def test_exception(*_):
     1/0
 
+
 @CommandHandler(command="inline_exc", description="Test exception in inline buttons")
 def test_inline_exception_c(bot, context):
     context.reply("Hello world! " + context.query,
                   reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(callback_data="inlineexc:", text="Exception")]
+                      [telegram.InlineKeyboardButton(
+                          callback_data="inlineexc:", text="Exception")]
                   ])
                   )
+
 
 @InlineButtonHandler("inlineexc")
 def test_inline_exception(*_):
@@ -41,7 +47,8 @@ def test_inline_exception(*_):
 def test(bot, context):
     context.reply("Hello world! " + context.query,
                   reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(callback_data="test:", text="Change text")]
+                      [telegram.InlineKeyboardButton(
+                          callback_data="test:", text="Change text")]
                   ])
                   )
 
@@ -50,13 +57,15 @@ def test(bot, context):
 def imgtest(bot, context):
     context.reply("Test!", photo_url="https://picsum.photos/seed/test/200/200",
                   reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(callback_data="imgtest:", text="Change image and text")]
+                      [telegram.InlineKeyboardButton(
+                          callback_data="imgtest:", text="Change image and text")]
                   ]))
 
 
 @InlineButtonHandler(prefix="imgtest:")
 def imgtest_button(bot, context):
-    context.edit("Test! Test!", photo_url="https://picsum.photos/seed/test2/200/200")
+    context.edit(
+        "Test! Test!", photo_url="https://picsum.photos/seed/test2/200/200")
     context.reply("Changed image!")
 
 
@@ -126,5 +135,3 @@ def hello_world(bot, ctx):
 def pmtest(bot, ctx: octobot.Context):
     ctx.reply("Check your PMs!")
     ctx.reply("Test", to_pm=True)
-
-

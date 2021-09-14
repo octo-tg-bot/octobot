@@ -6,9 +6,9 @@ from octobot.localization import localizable
 from octobot.enums import PluginStates
 from octobot.exceptions import *
 from octobot.classes import *
+from octobot.filters import ContextFilter, CommandFilter, PermissionFilter
 from octobot.handlers import CommandHandler, ExceptionHandler, MessageHandler, InlineButtonHandler, InlineQueryHandler, \
     ChosenInlineResultHandler
-from octobot.filters import ContextFilter, CommandFilter, PermissionFilter
 from octobot.loader import OctoBot
 from octobot import catalogs
 from octobot.permissions import permissions, my_permissions, reset_cache, not_admin

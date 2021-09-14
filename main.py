@@ -10,8 +10,11 @@ import octobot.enums
 try:
     import preimport
 except ModuleNotFoundError:
+    import warnings
     logging.basicConfig(
         level=logging.DEBUG)  # We need SOME logging probably
+    warnings.simplefilter('always', DeprecationWarning)
+    logging.captureWarnings(True)
 import sys
 import time
 
@@ -31,9 +34,9 @@ def update_loop(bot, queue):
             try:
                 logger.debug("Fetching updates...")
                 for update in bot.getUpdates(update_id, timeout=15 if Settings.production else 1,
-                                            allowed_updates=["message", "edited_message",
-                                                            "inline_query", "callback_query",
-                                                            "chosen_inline_result"]):
+                                             allowed_updates=["message", "edited_message",
+                                                              "inline_query", "callback_query",
+                                                              "chosen_inline_result"]):
                     update_id = update.update_id + 1
                     logger.debug(update)
                     queue.put((bot, update))
@@ -89,7 +92,8 @@ def create_threads():
     queue = Queue()
     stop_event = threading.Event()
     for i in range(Settings.threads):
-        thread = threading.Thread(target=update_handler, args=(queue, stop_event), name=f"UpdateHandler{i}")
+        thread = threading.Thread(target=update_handler, args=(
+            queue, stop_event), name=f"UpdateHandler{i}")
         threads.append(thread)
         thread.start()
     return threads, queue, stop_event
@@ -97,7 +101,8 @@ def create_threads():
 
 def main():
     if Settings.telegram_base_url != "https://api.telegram.org/bot":
-        r = requests.get(f"https://api.telegram.org/bot{Settings.telegram_token}/logOut")
+        r = requests.get(
+            f"https://api.telegram.org/bot{Settings.telegram_token}/logOut")
         logger.info("Using local bot API, logout result: %s", r.text)
     bot = octobot.OctoBot(sys.argv[1:], Settings.telegram_token, base_url=Settings.telegram_base_url,
                           base_file_url=Settings.telegram_base_file_url)

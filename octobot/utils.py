@@ -1,8 +1,10 @@
 import logging
 import threading
-
+import warnings
+import functools
 from octobot.classes.catalog import CatalogPhoto
 thread_local = threading.local()
+
 
 def add_photo_to_text(text, photo_url):
     if not isinstance(photo_url, list):
@@ -36,3 +38,14 @@ class AddContextDataToLoggingRecord(logging.Filter):
         else:
             record.context_not_available = True
         return True
+
+
+def deprecated(reason):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            warnings.warn(reason,
+                          DeprecationWarning, 2)
+            return func(*args, **kw)
+        return wrapper
+    return decorator

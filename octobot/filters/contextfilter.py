@@ -1,5 +1,5 @@
 from .basefilters import BaseFilter
-from octobot import Context
+from octobot.classes import Context
 
 
 class ContextFilter(BaseFilter):

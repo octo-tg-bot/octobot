@@ -9,7 +9,7 @@ def send_commands(bot: octobot.OctoBot):
     command_list = []
     for priority, priority_handlers in bot.handlers.items():
         for handler in priority_handlers:
-            if type(handler) in [octobot.CommandHandler, octobot.CommandFilter]:
+            if type(handler) in [octobot.CommandHandler.__wrapped__, octobot.CommandFilter]:
                 if not (handler.hidden or handler.prefix != "/" or handler.service):
                     for command in handler.command:
                         command_list.append([command, handler.description])
