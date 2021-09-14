@@ -26,7 +26,7 @@ class SentryHandler(octobot.ExceptionHandler):
         with sentry_sdk.configure_scope() as scope:
             scope.set_user(context.user.to_dict())
             scope.set_context("update", context.update.to_dict())
-            if isinstance(context._handler, octobot.CommandHandler):
+            if isinstance(context._handler, octobot.CommandHandler.__wrapper__):
                 scope.transaction = f"Command {context._handler.prefix}{context._handler.command[0]} " \
                                     f"({type(context)})"
             elif isinstance(context._handler, octobot.InlineButtonHandler):
@@ -36,7 +36,8 @@ class SentryHandler(octobot.ExceptionHandler):
             event_code = sentry_sdk.capture_exception(exception)
         if event_code is None:
             return
-        message = context.localize("Event code is <code>{}</code>").format(event_code)
+        message = context.localize(
+            "Event code is <code>{}</code>").format(event_code)
         return message, [telegram.InlineKeyboardButton(
             text=context.localize("Provide feedback"), switch_inline_query_current_chat=f"err_feedback {event_code} ")]
 
@@ -55,17 +56,22 @@ def feedback_handle_query(bot, ctx):
         answer = telegram.InlineQueryResultArticle(
             id="fail-feedback",
             title=ctx.localize("Invalid event ID"),
-            description=ctx.localize("Did you accidentally deleted the feedback event ID?"),
-            input_message_content=telegram.InputTextMessageContent(ctx.localize("Feel free to delete this message"))
+            description=ctx.localize(
+                "Did you accidentally deleted the feedback event ID?"),
+            input_message_content=telegram.InputTextMessageContent(
+                ctx.localize("Feel free to delete this message"))
         )
     else:
         answer = telegram.InlineQueryResultArticle(
             id="fail-feedback",
             title=ctx.localize("You hadn't wrote the feedback."),
-            input_message_content=telegram.InputTextMessageContent(ctx.localize("Feel free to delete this message"))
+            input_message_content=telegram.InputTextMessageContent(
+                ctx.localize("Feel free to delete this message"))
         )
     ctx.replied = True
-    ctx.update.inline_query.answer([answer], is_personal=True, cache_time=360 if Settings.production else 0)
+    ctx.update.inline_query.answer(
+        [answer], is_personal=True, cache_time=360 if Settings.production else 0)
+
 
 @octobot.ChosenInlineResultHandler("feedback")
 def feedback_handle_inresult(bot, ctx):
@@ -82,5 +88,6 @@ def feedback_handle_inresult(bot, ctx):
                           comments=feedback
                       ))
     plugin.logger.debug(r.text)
+
 
 traceback_handler = SentryHandler()

@@ -49,7 +49,7 @@ def help_command(query, idx, max_amount, bot: octobot.OctoBot, ctx: octobot.Cont
         raise catalogs.CatalogCantGoBackwards
     for handlers_prioritylist in list(bot.handlers.values()):
         for handler in handlers_prioritylist:
-            if isinstance(handler, octobot.CommandHandler) and not handler.hidden:
+            if isinstance(handler, octobot.CommandHandler.__wrapper__) and not handler.hidden:
                 handlers.append(handler)
     handlers = [handlers[x:x + max_amount] for x in range(0, len(handlers), max_amount)]
     handlers_msg = ""
@@ -79,7 +79,7 @@ def help_extra(bot, ctx: octobot.Context):
         cmd = ctx.query
         for handlers in bot.handlers.values():
             for handler in handlers:
-                if isinstance(handler, octobot.CommandHandler) and cmd in handler.command:
+                if isinstance(handler, octobot.CommandHandler.__wrapper__) and cmd in handler.command:
                     message = "{helpfor} {command}.\n{description}\n\n{long_description}".format(
                         helpfor=ctx.localize("Help for"),
                         command=handler.prefix + ctx.query,
