@@ -26,6 +26,7 @@ class LoaderCommand(Exception):
     """
     pass
 
+
 class PassExceptionToDebugger(LoaderCommand):
     """
     Exception for raising exception from octobot itself, to pass it to debugger, for example.
@@ -33,8 +34,10 @@ class PassExceptionToDebugger(LoaderCommand):
     :param exception_to_pass: Exception to raise
     :type exception_to_pass: Exception
     """
+
     def __init__(self, exception_to_pass):
         self.exception = exception_to_pass
+
 
 class StopHandling(LoaderCommand):
     """
@@ -88,7 +91,8 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
         if chat is None:
             # Shouldn't happen, but check just in case
             raise e
-        logger.info("Chat %s probably restricted or kicked bot. Attempting to leave...", chat.id)
+        logger.info(
+            "Chat %s probably restricted or kicked bot. Attempting to leave...", chat.id)
         try:
             chat.leave()
         except telegram.error.TelegramError:
@@ -96,11 +100,13 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
         return
     else:
         logger.error("Exception got thrown somewhere", exc_info=True)
-        message = context.localize("🐞 Failed to execute command due to unknown error.")
+        message = context.localize(
+            "🐞 Failed to execute command due to unknown error.")
         err_handlers_msgs = [message]
         err_handlers_markup = []
         if IS_DEBUG:
-            err_handlers_msgs.append(context.localize("Exception will be raised to trigger debugger."))
+            err_handlers_msgs.append(context.localize(
+                "Exception will be raised to trigger debugger."))
         for err_handler in bot.error_handlers:
             err_handler: ExceptionHandler
             values = err_handler.handle_exception(bot, context, e)
@@ -116,15 +122,17 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
             if len(err_handlers_markup) == 0:
                 err_handlers_markup = None
             else:
-                err_handlers_markup = telegram.InlineKeyboardMarkup(err_handlers_markup)
+                err_handlers_markup = telegram.InlineKeyboardMarkup(
+                    err_handlers_markup)
             message = "\n".join(err_handlers_msgs)
             logger.debug(message)
             if isinstance(context, octobot.MessageContext) or isinstance(context, octobot.InlineQueryContext):
-                context.reply(message, parse_mode="HTML", reply_markup=err_handlers_markup)
+                context.reply(message, parse_mode="HTML",
+                              reply_markup=err_handlers_markup)
             elif isinstance(context, octobot.CallbackContext):
                 message = re.sub(r"<[^>]*>", '', message)
-                context.update.callback_query.answer(message, show_alert=True)
+                context.update.callback_query.answer(
+                    message[0], show_alert=True)
                 # context.edit(message)
     if IS_DEBUG:
         raise PassExceptionToDebugger(e)
-

@@ -336,6 +336,8 @@ class CallbackContext(Context):
         elif reply_markup is not None:
             logger.debug("updating reply markup to %s", reply_markup)
             self.update.callback_query.edit_message_reply_markup(reply_markup)
+        logger.debug("Delete callback data result: %s",
+                     self.bot.callback_data_cache.drop_data(self.update.callback_query))
 
 
 class MessageContext(Context):
