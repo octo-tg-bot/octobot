@@ -1,8 +1,10 @@
 from octobot.enums import PluginStates
 from octobot.handlers import BaseHandler
 import octobot
+import octobot.utils
 
 
+@octobot.utils.deprecated("InlineButtonHandler is deprecated and will be removed in 4.1. Use octobot.Callback instead.")
 class InlineButtonHandler(BaseHandler):
     """
     Inline keyboard button click handler
@@ -13,7 +15,8 @@ class InlineButtonHandler(BaseHandler):
     """
 
     def __init__(self, prefix, *args, **kwargs):
-        super(InlineButtonHandler, self).__init__(*args, **kwargs)
+        super(type(self),
+              self).__init__(*args, **kwargs)
         self.prefix = prefix
 
     def handle_update(self, bot, context):
