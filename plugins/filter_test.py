@@ -1,4 +1,5 @@
 import octobot
+import telegram
 from settings import Settings
 info = octobot.PluginInfo("Filter test plugin")
 
@@ -8,7 +9,12 @@ if Settings.production:
 
 @octobot.CommandFilter("ftest")
 def commandfilter(bot, ctx):
-    ctx.reply("Command filter test")
+    def reply_inline(bot, ctx):
+        ctx.edit("Edited text!")
+        ctx.reply("OK!")
+    ctx.reply("Command filter test", reply_markup=telegram.InlineKeyboardMarkup.from_button(
+        telegram.InlineKeyboardButton("Test button", callback_data=octobot.Callback(reply_inline)))
+    )
 
 
 @octobot.CommandFilter("fptest")

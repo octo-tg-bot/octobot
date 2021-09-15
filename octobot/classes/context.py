@@ -7,15 +7,14 @@ import re
 import shlex
 import warnings
 from functools import wraps
-from uuid import uuid4
 
 import babel
 import telegram
+import telegram.ext
 from telegram import InputMediaPhoto
 
 import octobot
 import octobot.exceptions
-from octobot.classes import UpdateType
 from octobot import database
 
 Database = database.Database
@@ -34,7 +33,9 @@ def pluginfo_kwargs(field_name):
         @wraps(function)
         def call_func(self, *args, **kwargs):
             plugin = self._plugin
-            kw = getattr(plugin, field_name).copy()
+            kw = {}
+            if plugin != "unknown":
+                kw = getattr(plugin, field_name).copy()
             kw.update(kwargs)
             return function(self, *args, **kw)
 
@@ -254,7 +255,7 @@ class InlineQueryContext(Context):
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         self.text = update.inline_query.query
-        self._update_type = UpdateType.inline_query
+        self._update_type = octobot.UpdateType.inline_query
         super(InlineQueryContext, self).__init__(update, bot, message)
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
@@ -283,9 +284,14 @@ class CallbackContext(Context):
     """
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
-        self.text = update.callback_query.data
+        self.callback_data = update.callback_query.data
+        self.text = ''
+        if isinstance(self.callback_data, str):
+            self.text = update.callback_query.data
+        elif isinstance(self.callback_data, telegram.ext.InvalidCallbackData):
+            self.callback_data = octobot.InvalidCallback
         logger.debug("text: %s" % self.text)
-        self._update_type = UpdateType.button_press
+        self._update_type = octobot.UpdateType.button_press
         super(CallbackContext, self).__init__(update, bot, message)
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
@@ -342,7 +348,7 @@ class MessageContext(Context):
             self.text = message.caption
         else:
             self.text = message.text
-        self._update_type = UpdateType.message
+        self._update_type = octobot.UpdateType.message
         is_reply = message is not None
         if octobot.Database.redis is not None and not is_reply:
             octobot.Database.redis.set(
@@ -427,7 +433,7 @@ class EditedMessageContext(MessageContext):
                 raise octobot.StopHandling
             octobot.Database.redis.delete(
                 octobot.utils.generate_edit_id(self.update.message))
-            self._update_type = UpdateType.edited_message
+            self._update_type = octobot.UpdateType.edited_message
             if update.message.caption is not None:
                 self.text = update.message.caption
             else:
@@ -453,6 +459,6 @@ class ChosenInlineResultContext(Context):
     """
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
-        self._update_type = UpdateType.chosen_inline_result
+        self._update_type = octobot.UpdateType.chosen_inline_result
         self.text = update.chosen_inline_result.query
         super(ChosenInlineResultContext, self).__init__(update, bot, message)

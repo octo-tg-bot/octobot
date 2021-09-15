@@ -38,7 +38,8 @@ class OctoBot(telegram.ext.ExtBot):
         dry_run = os.environ.get("DRY_RUN", False)
         if not (dry_run or TEST_RUNNING):
             logger.info("Initializing PTB")
-            super(OctoBot, self).__init__(arbitrary_callback_data=True, *args, **kwargs)
+            super(OctoBot, self).__init__(
+                arbitrary_callback_data=True, *args, **kwargs)
             self.me = self.getMe()
         if TEST_RUNNING:
             self.me = telegram.User(
@@ -190,6 +191,8 @@ class OctoBot(telegram.ext.ExtBot):
         if octobot.Database.redis is not None and update.effective_message is not None and update.effective_chat.type == "supergroup":
             disabled_plugins = octobot.Database.redis.smembers(
                 f"plugins_disabled{update.effective_chat.id}")
+        if isinstance(ctx, octobot.CallbackContext) and isinstance(ctx.callback_data, octobot.Callback):
+            return ctx.callback_data.execute(bot, ctx)
         for priority in sorted(self.handlers.keys()):
             handlers = self.handlers[priority]
             logger.debug(f"handling priority level {priority}")

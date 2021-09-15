@@ -1,3 +1,8 @@
+from octobot.classes.callback import Callback, EmptyCallback, InvalidCallback, PopupCallback
+from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogPhoto
+from octobot.enums import PluginStates
+from octobot.classes.context import Context, CallbackContext, MessageContext, ChosenInlineResultContext, \
+    EditedMessageContext, InlineQueryContext
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
@@ -16,12 +21,6 @@ class UpdateType(Enum):
     """Edited message"""
     chosen_inline_result = 4
     """Chosen inline result"""
-
-
-from octobot.classes.context import Context, CallbackContext, MessageContext, ChosenInlineResultContext, \
-    EditedMessageContext, InlineQueryContext
-from octobot.enums import PluginStates
-from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogPhoto
 
 
 @dataclass

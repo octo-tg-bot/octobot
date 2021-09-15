@@ -33,10 +33,10 @@ def update_loop(bot, queue):
         while True:
             try:
                 logger.debug("Fetching updates...")
-                for update in bot.getUpdates(update_id, timeout=15 if Settings.production else 1,
-                                             allowed_updates=["message", "edited_message",
-                                                              "inline_query", "callback_query",
-                                                              "chosen_inline_result"]):
+                for update in bot.get_updates(update_id, timeout=15 if Settings.production else 1,
+                                              allowed_updates=["message", "edited_message",
+                                                               "inline_query", "callback_query",
+                                                               "chosen_inline_result"]):
                     update_id = update.update_id + 1
                     logger.debug(update)
                     queue.put((bot, update))
@@ -59,7 +59,6 @@ def update_handler(upd_queue: Queue, stop_event: threading.Event):
         else:
             bot = qupdate[0]
             update: telegram.Update = qupdate[1]
-            bot.insert_callback_data(update)
             try:
                 bot.handle_update(bot, update)
             except octobot.Halt:
