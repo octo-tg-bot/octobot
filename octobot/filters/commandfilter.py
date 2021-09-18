@@ -93,3 +93,8 @@ class CommandFilter(BaseFilter):
                     help_url=bot.generate_startlink(f"/helpextra {self.command[0]}")),
                     parse_mode="HTML")
                 return False
+
+    @property
+    def commandlist(self):
+        for command in self.command:
+            yield self.prefix + command
