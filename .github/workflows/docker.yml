@@ -11,11 +11,11 @@ on:
     branches:
       - master
     paths:
-      - '**.py'
-      - 'requirements*.txt'
-      - '.github/workflows/docker.yml'
-      - 'Dockerfile'
-      - '**.po'
+      - "**.py"
+      - "requirements*.txt"
+      - ".github/workflows/docker.yml"
+      - "Dockerfile"
+      - "**.po"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
       - name: Run tests
-        run: python -m xmlrunner discover tests
+        run: pytest tests/ --junitxml=pytest_rep.xml
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: >
@@ -107,9 +107,9 @@ jobs:
       - name: Sentry Release
         uses: getsentry/action-release@v1.0.0
         env:
-            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: prod
 
