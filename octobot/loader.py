@@ -17,7 +17,7 @@ from octobot.utils import path_to_module, thread_local
 from settings import Settings
 
 logger = logging.getLogger("Loader")
-TEST_RUNNING = os.environ.get("ob_testing", False)
+TEST_RUNNING = "pytest" in sys.modules
 
 
 class OctoBot(telegram.ext.ExtBot):

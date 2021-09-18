@@ -9,6 +9,7 @@ LOGGER = logging.getLogger("Settings")
 
 FOLDER = os.path.abspath(os.path.dirname(__file__))
 
+
 class _Settings():
     _settings: dict = {}
 
@@ -24,10 +25,12 @@ class _Settings():
         try:
             with open(self.settings_folder + "/settings.toml", "r") as f:
                 settings_user = toml.load(f, dotdict)
-                diff = list(set(settings_user.keys()) - set(base_settings.keys()))
+                diff = list(set(settings_user.keys()) -
+                            set(base_settings.keys()))
                 if len(diff) > 0:
                     self.update_settings(settings_backup)
-                    LOGGER.error("Invalid user settings! Restoring previous settings")
+                    LOGGER.error(
+                        "Invalid user settings! Restoring previous settings")
                     raise ValueError("User settings has unknown item(s) not defined in base TOML: %s." %
                                      diff)
                 self._settings.update(settings_user)
@@ -41,17 +44,19 @@ class _Settings():
                 try:
                     self._settings[key[3:]] = json.loads(os.environ[key])
                 except json.JSONDecodeError as e:
-                    LOGGER.warning("The key %s has an invalid JSON value of '%s' (error: %s), loading just as plain string", key, os.environ[key], e)
+                    LOGGER.warning(
+                        "The key %s has an invalid JSON value of '%s' (error: %s), loading just as plain string", key, os.environ[key], e)
                     self._settings[key[3:]] = os.environ[key]
                 else:
-                    LOGGER.debug("Loaded settings key %s from environment", key[3:])
+                    LOGGER.debug(
+                        "Loaded settings key %s from environment", key[3:])
         LOGGER.debug("Result settings: %s", pformat(self._settings))
         LOGGER.info("Settings reloaded")
 
     def update_settings(self, settings: dict):
         self._settings = settings
 
-    def __getattr__(self, item:str):
+    def __getattr__(self, item: str):
         if item in self._settings:
             return self._settings[item]
         else:
