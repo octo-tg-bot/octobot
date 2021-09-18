@@ -3,6 +3,7 @@ import threading
 import warnings
 import functools
 from octobot.classes.catalog import CatalogPhoto
+import types
 thread_local = threading.local()
 
 
@@ -42,10 +43,20 @@ class AddContextDataToLoggingRecord(logging.Filter):
 
 def deprecated(reason):
     def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kw):
-            warnings.warn(reason,
-                          DeprecationWarning, 2)
-            return func(*args, **kw)
-        return wrapper
+        if isinstance(func, types.FunctionType):
+            @functools.wraps(func)
+            def wrapper(*args, **kw):
+                warnings.warn(reason,
+                              DeprecationWarning, 2)
+                return func(*args, **kw)
+            return wrapper
+        else:
+            og_init = func.__init__
+
+            def new_init(*args, **kwargs):
+                warnings.warn(reason,
+                              DeprecationWarning, 2)
+                og_init(*args, **kwargs)
+            func.__init__ = new_init
+            return func
     return decorator

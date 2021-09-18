@@ -11,13 +11,15 @@ logger = logging.getLogger("StartHelp")
 
 info = octobot.PluginInfo(octobot.localizable("Usual bot commands"))
 
+
 @octobot.CommandHandler("start", description="Bot generic description and stuff", inline_support=False)
 def start(bot: octobot.OctoBot, ctx: octobot.Context):
     if ctx.query == "":
         kbd = telegram.InlineKeyboardMarkup([
             [telegram.InlineKeyboardButton(ctx.localize("Command list"),
                                            url=f"https://t.me/{bot.me.username}?start=help")],
-            [telegram.InlineKeyboardButton(ctx.localize("Support chat"), url=Settings.support_url)]
+            [telegram.InlineKeyboardButton(ctx.localize(
+                "Support chat"), url=Settings.support_url)]
         ])
         ctx.reply(ctx.localize(
             "Hi! I am {bot.me.first_name}, a Telegram bot with features and bugs and blah blah, noone reads /start anyway.").format(
@@ -49,9 +51,10 @@ def help_command(query, idx, max_amount, bot: octobot.OctoBot, ctx: octobot.Cont
         raise catalogs.CatalogCantGoBackwards
     for handlers_prioritylist in list(bot.handlers.values()):
         for handler in handlers_prioritylist:
-            if isinstance(handler, octobot.CommandHandler.__wrapped__) and not handler.hidden:
+            if isinstance(handler, octobot.CommandHandler) and not handler.hidden:
                 handlers.append(handler)
-    handlers = [handlers[x:x + max_amount] for x in range(0, len(handlers), max_amount)]
+    handlers = [handlers[x:x + max_amount]
+                for x in range(0, len(handlers), max_amount)]
     handlers_msg = ""
     if len(handlers) - 1 < idx:
         raise catalogs.CatalogCantGoDeeper
@@ -64,7 +67,8 @@ def help_command(query, idx, max_amount, bot: octobot.OctoBot, ctx: octobot.Cont
             commands=", ".join(handler.commandlist),
             description=html.escape(ctx.localize(handler.description)),
             bot=bot,
-            command=base64.urlsafe_b64encode(("/helpextra " + handler.command[0]).encode()).decode(),
+            command=base64.urlsafe_b64encode(
+                ("/helpextra " + handler.command[0]).encode()).decode(),
             learnmore=ctx.localize("More…")
         )
     catalog = catalogs.Catalog(results=[catalogs.CatalogKeyArticle(handlers_msg, parse_mode="HTML")],
@@ -79,7 +83,7 @@ def help_extra(bot, ctx: octobot.Context):
         cmd = ctx.query
         for handlers in bot.handlers.values():
             for handler in handlers:
-                if isinstance(handler, octobot.CommandHandler.__wrapped__) and cmd in handler.command:
+                if isinstance(handler, octobot.CommandHandler) and cmd in handler.command:
                     message = "{helpfor} {command}.\n{description}\n\n{long_description}".format(
                         helpfor=ctx.localize("Help for"),
                         command=handler.prefix + ctx.query,
