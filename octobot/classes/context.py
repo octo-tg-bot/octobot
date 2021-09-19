@@ -372,7 +372,7 @@ class MessageContext(Context):
             target_msg: telegram.Message = self.update.message
         kwargs = dict(chat_id=target_msg.chat_id, parse_mode=parse_mode,
                       reply_markup=reply_markup, disable_web_page_preview=no_preview,
-                      reply_to_message_id=target_msg.message_id)
+                      reply_to_message_id=target_msg.message_id, allow_sending_without_reply=True)
         if to_pm:
             kwargs["chat_id"] = self.user.id
             del kwargs["reply_to_message_id"]
