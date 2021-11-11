@@ -6,7 +6,7 @@ import threading
 from queue import Queue, Empty
 
 import octobot.enums
-
+import fakeredis
 try:
     import preimport
 except ModuleNotFoundError:
@@ -84,6 +84,8 @@ def create_startup_msg(bot):
         msg += f"\n{STATES_EMOJIS[plugin['state']]} {plugin['name']}"
         if plugin['state'] != octobot.enums.PluginStates.loaded:
             msg += f" - {plugin.state_description}"
+    if isinstance(octobot.Database.redis, fakeredis.FakeRedis):
+        msg += "\n⚠️System health warning: Redis not available - using FakeRedis."
     return msg
 
 
