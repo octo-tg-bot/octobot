@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v2
       - name: Install dependencies
         run: |
-          python -m pip install Babel python-telegram-bot
+          python -m pip install Babel python-telegram-bot requests
       - name: Generate latest locales
         run: sh utils/update_locale_data.cmd
       - name: Upload latest locale terms and delete outdated to POEditor
