@@ -38,18 +38,20 @@ class _Settings():
             LOGGER.critical(
                 "Failed to find settings.toml!")
         LOGGER.debug("Iterating over os.environ")
-        for key in os.environ:
+        for key, value in os.environ.items():
             key = key.lower()
             if key.startswith("ob_"):
+                key = key[3:]
                 try:
-                    self._settings[key[3:]] = json.loads(os.environ[key])
+                    self._settings[key] = json.loads(value)
                 except json.JSONDecodeError as e:
                     LOGGER.warning(
-                        "The key %s has an invalid JSON value of '%s' (error: %s), loading just as plain string", key, os.environ[key], e)
-                    self._settings[key[3:]] = os.environ[key]
+                        "The key %s has an invalid JSON value of '%s' (error: %s), "
+                        "loading just as plain string", key, value, e)
+                    self._settings[key] = value
                 else:
                     LOGGER.debug(
-                        "Loaded settings key %s from environment", key[3:])
+                        "Loaded settings key %s from environment", key)
         LOGGER.debug("Result settings: %s", pformat(self._settings))
         LOGGER.info("Settings reloaded")
 
