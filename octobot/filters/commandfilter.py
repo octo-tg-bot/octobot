@@ -13,7 +13,7 @@ class CommandFilter(BaseFilter):
 
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  long_description: str = "Additional info not specified by developer",
-                 hidden=False, prefix="/", inline_support=True, service: bool = False, required_args: int = 0, *args,
+                 hidden=False, prefix="/", inline_support=True, service: bool = False, required_args: int = 0, suggestion=None, *args,
                  **kwargs):
         super(CommandFilter, self).__init__(*args, **kwargs)
         if isinstance(command, str):
@@ -26,6 +26,7 @@ class CommandFilter(BaseFilter):
         self.prefix = prefix
         self.service = service
         self.required_args = required_args
+        self.suggestion = suggestion
         if inline_support is not True:
             warnings.warn("inline_support argument is left over in CommandFilter "
                           "only for backwards compatibility and will be removed in future. "

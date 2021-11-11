@@ -7,11 +7,13 @@ import octobot
 from octobot import catalogs
 import textwrap
 import re
+
+from octobot.dataclass import Suggestion
 apiurl = "http://api.urbandictionary.com/v0/define"
 
-DEF_BASELINE = octobot.localizable("Definition for <b>{word}</b> by <i>{author}</i>:\n" + \
-                                   "\n{definition}\n" + \
-                                   "\nExample(s):\n" + \
+DEF_BASELINE = octobot.localizable("Definition for <b>{word}</b> by <i>{author}</i>:\n" +
+                                   "\n{definition}\n" +
+                                   "\nExample(s):\n" +
                                    "{example}"
                                    )
 
@@ -20,13 +22,12 @@ def add_links(text: str, bot: octobot.OctoBot) -> str:
     matches = re.findall(r"\[.*?\]", text)
     for match in matches:
         query = match[1:-1]
-        text = text.replace(match, f'<a href="{bot.generate_startlink("/ud " + query)}">{query}</a>')
+        text = text.replace(
+            match, f'<a href="{bot.generate_startlink("/ud " + query)}">{query}</a>')
     return text
 
 
-
-
-@catalogs.CatalogHandler(["urban", "ud"], description="Urban dictionary search")
+@catalogs.CatalogHandler(["urban", "ud"], description="Urban dictionary search", suggestion=Suggestion(icon="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UD_logo-01.svg/512px-UD_logo-01.svg.png", title="Urban dictionary", example_command="ud ud"))
 def urban_query(query, index, max_amount, bot: octobot.OctoBot, ctx: octobot.Context):
     index = int(index)
     if index == -1:
@@ -42,14 +43,18 @@ def urban_query(query, index, max_amount, bot: octobot.OctoBot, ctx: octobot.Con
         base = ctx.localize(DEF_BASELINE)
         text_link = ctx.localize("Definition on Urban Dictionary")
         for definition in definitions[index:max_amount + index]:
-            desc_inline = textwrap.shorten(definition["definition"], width=100, placeholder="...")
-            definition["definition"] = add_links(html.escape(definition["definition"]), bot)
-            definition["example"] = add_links(html  .escape(definition["example"]), bot)
+            desc_inline = textwrap.shorten(
+                definition["definition"], width=100, placeholder="...")
+            definition["definition"] = add_links(
+                html.escape(definition["definition"]), bot)
+            definition["example"] = add_links(
+                html  .escape(definition["example"]), bot)
             definition["word"] = html.escape(definition["word"])
             definition["author"] = html.escape(definition["author"])
             res.append(catalogs.CatalogKeyArticle(title=ctx.localize("Definition for {}").format(definition["word"]),
                                                   description=desc_inline,
-                                                  text=base.format(escape=html.escape, **definition),
+                                                  text=base.format(
+                                                      escape=html.escape, **definition),
                                                   parse_mode="html",
                                                   reply_markup=telegram.InlineKeyboardMarkup([[
                                                       telegram.InlineKeyboardButton(url=definition["permalink"],

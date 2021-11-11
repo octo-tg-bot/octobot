@@ -7,6 +7,7 @@ import re
 import shlex
 import warnings
 from functools import wraps
+import time
 
 import babel
 import telegram
@@ -267,7 +268,7 @@ class InlineQueryContext(Context):
             parse_mode=parse_mode,
             disable_web_page_preview=no_preview
         )
-        result = telegram.InlineQueryResultArticle(self.update.inline_query.query,
+        result = telegram.InlineQueryResultArticle(self.update.inline_query.query + str(time.time()),
                                                    title=title,
                                                    description=cleanhtml(text)[
                                                        :500] if inline_description is None else inline_description,

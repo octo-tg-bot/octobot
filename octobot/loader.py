@@ -207,7 +207,7 @@ class OctoBot(telegram.ext.ExtBot):
                     except octobot.exceptions.Halt as e:
                         raise e
                     except octobot.exceptions.StopHandling as e:
-                        raise
+                        raise e
                     except octobot.exceptions.PassExceptionToDebugger as e:
                         raise e
                     except Exception as e:

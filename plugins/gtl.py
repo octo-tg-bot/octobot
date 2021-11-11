@@ -5,9 +5,11 @@ import googletrans
 from cachetools import cached, TTLCache
 
 import octobot
+from octobot.dataclass import Suggestion
 import octobot.localization
 
 inf = octobot.PluginInfo(octobot.localizable("Google Translate"))
+
 
 @cached(cache=TTLCache(maxsize=1, ttl=90))
 def get_translator():
@@ -15,9 +17,11 @@ def get_translator():
     return googletrans.Translator()
 
 
-TRANSLATION_TEMPLATE = octobot.localizable("From <i>{source_language}</i> to <i>{target_language}</i>\n<code>{text}</code>")
+TRANSLATION_TEMPLATE = octobot.localizable(
+    "From <i>{source_language}</i> to <i>{target_language}</i>\n<code>{text}</code>")
 
-@octobot.CommandHandler(["tl", "translate"], description=octobot.localizable("Translates text using Google Translate"))
+
+@octobot.CommandHandler(["tl", "translate"], description=octobot.localizable("Translates text using Google Translate"), suggestion=Suggestion(None, "Google Translate", "tl en-ru hello"))
 def gtl(bot: octobot.OctoBot, context: octobot.Context):
     translator = get_translator()
     if context.update.message is not None and context.reply_to_message is not None:
@@ -51,10 +55,13 @@ def gtl(bot: octobot.OctoBot, context: octobot.Context):
     inf.logger.debug("dest lang %s", destination_language)
     if text is None or len(text) == 0:
         return context.reply(context.localize("No text to translate was specified/replied to!"))
-    translation = translator.translate(text, dest=destination_language, src=source_language)
+    translation = translator.translate(
+        text, dest=destination_language, src=source_language)
     base_l = context.locale
-    src = base_l.languages.get(translation.src.replace("_", "-").split("-")[0].lower(), translation.src)
-    dest = base_l.languages.get(destination_language.replace("_", "-").split("-")[0].lower(), destination_language)
+    src = base_l.languages.get(translation.src.replace(
+        "_", "-").split("-")[0].lower(), translation.src)
+    dest = base_l.languages.get(destination_language.replace(
+        "_", "-").split("-")[0].lower(), destination_language)
     return context.reply(context.localize(TRANSLATION_TEMPLATE).format(
         source_language=src,
         target_language=dest,

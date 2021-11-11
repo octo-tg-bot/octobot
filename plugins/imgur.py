@@ -3,6 +3,7 @@ import html
 import telegram
 
 import octobot
+from octobot.dataclass import Suggestion
 from settings import Settings
 plugin = octobot.PluginInfo("Imgur")
 if Settings.imgur_clientid == "":
@@ -10,7 +11,8 @@ if Settings.imgur_clientid == "":
     plugin.state_description = "Imgur client ID is not set"
 logger = plugin.logger
 
-@octobot.catalogs.CatalogHandler("imgur", description=octobot.localizable("Search for image on Imgur"))
+
+@octobot.catalogs.CatalogHandler("imgur", description=octobot.localizable("Search for image on Imgur"), suggestion=Suggestion(icon="https://s.imgur.com/images/favicon-152.png", title="Imgur", example_command="imgur cat"))
 def imgur_search(query, index, max_count, bot: octobot.OctoBot, context: octobot.Context):
     index = int(index)
     page = index // 60
@@ -31,9 +33,11 @@ def imgur_search(query, index, max_count, bot: octobot.OctoBot, context: octobot
             photo = [octobot.CatalogPhoto(url=item["images"][0]["link"], width=item["images"][0]["width"],
                                           height=item["images"][0]["height"])]
         elif "gifv" in item:
-            photo = [octobot.CatalogPhoto(url=item["gifv"], width=item["width"], height=item["height"])]
+            photo = [octobot.CatalogPhoto(
+                url=item["gifv"], width=item["width"], height=item["height"])]
         elif "link" in item:
-            photo = [octobot.CatalogPhoto(url=item["link"], width=item["width"], height=item["height"])]
+            photo = [octobot.CatalogPhoto(
+                url=item["link"], width=item["width"], height=item["height"])]
         else:
             raise ValueError(f"Cant find image: {item}")
         text = [f'<b>{html.escape(item["title"])}</b>']
@@ -41,14 +45,16 @@ def imgur_search(query, index, max_count, bot: octobot.OctoBot, context: octobot
             text.append(context.localize("Description:"))
             text.append(f"<i>{html.escape(item['description'])}</i>")
         if "images_count" in item and item["images_count"] > 1:
-            text.append(context.localize("Album with {count} images").format(count=item["images_count"]))
+            text.append(context.localize("Album with {count} images").format(
+                count=item["images_count"]))
         res.append(octobot.CatalogKeyPhoto(item_id=item["id"],
                                            photo=photo,
                                            title=item["title"],
                                            text="\n".join(text),
                                            parse_mode="HTML",
                                            reply_markup=telegram.InlineKeyboardMarkup.from_button(telegram.InlineKeyboardButton(
-                                               text=context.localize("View on Imgur"),
+                                               text=context.localize(
+                                                   "View on Imgur"),
                                                url=item["link"]
                                            )))
                    )

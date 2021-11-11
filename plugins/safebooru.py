@@ -21,6 +21,7 @@
 import base64
 import html
 from dataclasses import dataclass
+from typing import List
 from urllib.parse import urlparse
 
 import bs4
@@ -31,6 +32,7 @@ import octobot
 from octobot import CatalogPhoto, CatalogKeyArticle, Catalog, CatalogNotFound, OctoBot, Context, \
     localizable, PluginInfo, CatalogCantGoBackwards, CatalogKeyPhoto, CommandHandler
 from octobot.catalogs import CatalogHandler
+from octobot.dataclass import Suggestion
 
 MSG_TEMPLATE = localizable("""<b>Rating:</b> {rating}
 <b>Tags:</b> {tags_str}""")
@@ -46,7 +48,7 @@ plugin = PluginInfo("Safebooru")
 class SafebooruPost:
     id: int
     rating: int
-    tags: [str]
+    tags: List[str]
     tags_str: str
     source: str
     file_url: str
@@ -79,7 +81,7 @@ def get_hires_sb(bot: OctoBot, ctx: Context):
         return ctx.reply(text="<a href=\"https://safebooru.org/index.php?page=post&s=view&id={}\">Link to post</a>".format(ctx.args[0]), file_url=img_link, parse_mode='html')
 
 
-@CatalogHandler(command=["safebooru", "sb"], description="Search posts on safebooru")
+@CatalogHandler(command=["safebooru", "sb"], description="Search posts on safebooru", suggestion=Suggestion(None, "Safebooru", "sb aegis_(persona)"))
 def safebooru_search(query: str, offset: str, limit: int, bot: OctoBot, ctx: Context) -> Catalog:
     res = []
 

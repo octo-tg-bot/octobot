@@ -128,6 +128,7 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
             logger.debug(message)
             if isinstance(context, octobot.MessageContext) or isinstance(context, octobot.InlineQueryContext):
                 context.reply(message, parse_mode="HTML",
+                              title=context.localize("Error occured"),
                               reply_markup=err_handlers_markup)
             elif isinstance(context, octobot.CallbackContext):
                 message = re.sub(r"<[^>]*>", '', message)

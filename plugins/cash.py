@@ -24,6 +24,7 @@ import re
 
 import requests
 from babel.numbers import format_currency, format_decimal, get_currency_name
+from octobot.dataclass import Suggestion
 
 from settings import Settings
 
@@ -40,12 +41,14 @@ if Settings.currency_converter_apikey == "":
     plugin.state = octobot.PluginStates.disabled
     plugin.state_description = "API Key is not set. Get it @ https://free.currencyconverterapi.com/"
 
+
 def get_currency_data():
     r = octobot.Database.get_cache("https://free.currconv.com/api/v7/currencies", params={
         "apiKey": Settings.currency_converter_apikey
     })
     if not r.ok:
-        LOGGER.warning("Failed to get currency list, conversion using symbols won't work")
+        LOGGER.warning(
+            "Failed to get currency list, conversion using symbols won't work")
         return {}, {}
     data, aliases = r.json()["results"], dict()
     for currency_name, currency_inf in data.items():
@@ -60,7 +63,8 @@ CURRENCY_DATA, CURRENCY_ALIASES = get_currency_data()
 
 def number_conv(amount):
     amount = str(amount).lower()
-    power = 10 ** (amount.count("k") * 3 + amount.count("m") * 6 + amount.count("b") * 9)
+    power = 10 ** (amount.count("k") * 3 + amount.count("m")
+                   * 6 + amount.count("b") * 9)
     amount = re.sub("[kmb]", "", amount)
     return float(amount) * power
 
@@ -112,7 +116,8 @@ def get_currency_id(currency: str):
 @octobot.CommandHandler(command=["cash", "currency", "stonks"],
                         description=octobot.localizable("Converts currency"),
                         long_description=long_desc,
-                        required_args=3)
+                        required_args=3,
+                        suggestion=Suggestion("https://i.kym-cdn.com/photos/images/newsfeed/001/499/826/2f0.png", octobot.localizable("Currency conversion"), "cash 200 rub usd"))
 def currency(bot, context):
     try:
         try:

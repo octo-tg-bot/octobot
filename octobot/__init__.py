@@ -14,6 +14,7 @@ from octobot import catalogs
 from octobot.permissions import permissions, my_permissions, reset_cache, not_admin
 from octobot.permissions import check_perms as check_permissions
 from octobot.permissions import create_db_entry_name as _perm_db_entry
+from octobot.dataclass import Suggestion
 
 is_docker = os.path.exists("/.dockerenv")
 
