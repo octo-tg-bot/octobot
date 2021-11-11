@@ -4,7 +4,7 @@ RUN apk add --no-cache python3 py3-pip gcc python3-dev zlib-dev libwebp-dev jpeg
 RUN apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing poetry
 RUN python3 -m venv /venv
 COPY pyproject.toml poetry.lock ./
-RUN --mount=type=cache,id=poetry-cache,target=/poetry-cache poetry config cache-dir /poetry-cache && \
+RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip \
     poetry export -f requirements.txt --without-hashes | /venv/bin/pip install -r /dev/stdin
 ENV PYTHONPATH=/packages
 WORKDIR /workdir
