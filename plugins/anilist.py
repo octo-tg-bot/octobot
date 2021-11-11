@@ -33,6 +33,7 @@ import telegram
 from octobot import Catalog, CatalogKeyArticle, OctoBot, Context, CatalogPhoto, CatalogNotFound, localizable, \
     PluginInfo, CatalogCantGoBackwards, CatalogCantGoDeeper, UpdateType, Database
 from octobot.catalogs import CatalogHandler
+from octobot.dataclass import Suggestion
 
 GRAPHQL_URL = "https://graphql.anilist.co"
 
@@ -339,7 +340,7 @@ def anilist_command(operation_name: str, **kwargs):
     return wrapper
 
 
-@CatalogHandler(command="anilist", description=localizable("Search on AniList"))
+@CatalogHandler(command="anilist", description=localizable("Search on AniList"), suggestion=Suggestion("https://anilist.co/img/icons/apple-touch-icon.png", "Anilist", "anilist persona 3 the movie"))
 @anilist_command("Media")
 def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     media = page["media"]
@@ -384,7 +385,7 @@ def anilist(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     return res
 
 
-@CatalogHandler(command="character", description=localizable("Search for characters on AniList"))
+@CatalogHandler(command="character", description=localizable("Search for characters on AniList"), suggestion=Suggestion("https://anilist.co/img/icons/apple-touch-icon.png", "Anilist", "character aegis"))
 @anilist_command("Character")
 def character(page: dict, bot: OctoBot, ctx: Context) -> [CatalogKeyArticle]:
     characters = page["characters"]
