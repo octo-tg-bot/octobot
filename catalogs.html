@@ -39,16 +39,16 @@
 <h2>Implementing catalog<a class="headerlink" href="#implementing-catalog" title="Permalink to this headline">¶</a></h2>
 <p>For <code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogHandler</span></code> to work with your function, your function must accept five arguments:</p>
 <ol class="arabic simple">
-<li><p>Query (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)</p></li>
-<li><p>Index, from which iteration should start in your function (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)</p></li>
-<li><p>Recommended amount of items to return. Notice that in inline mode you can’t have more than 50 results at a time (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
-<li><p>Bot (<a class="reference internal" href="octobot.html#octobot.OctoBot" title="octobot.OctoBot"><code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.OctoBot</span></code></a>)</p></li>
-<li><p>Context (<a class="reference internal" href="context.html#octobot.Context" title="octobot.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Context</span></code></a>)</p></li>
+<li><p>Query (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)</p></li>
+<li><p>Index, from which iteration should start in your function (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)</p></li>
+<li><p>Recommended amount of items to return. Notice that in inline mode you can’t have more than 50 results at a time (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
+<li><p>Bot (<code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.OctoBot</span></code>)</p></li>
+<li><p>Context (<code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Context</span></code>)</p></li>
 </ol>
 <p>In return, function should return <code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Catalog</span></code>, with following arguments:</p>
 <ol class="arabic simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogKeyArticle</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogKeyPhoto</span></code> items</p></li>
-<li><p>Amount of items that your function has (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogKeyArticle</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogKeyPhoto</span></code> items</p></li>
+<li><p>Amount of items that your function has (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
 </ol>
 <p>Example handler:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CATALOG_MAX</span> <span class="o">=</span> <span class="mi">50</span>
@@ -78,109 +78,8 @@
 </div>
 <div class="section" id="classes-documentation">
 <h2>Classes documentation<a class="headerlink" href="#classes-documentation" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="octobot.catalogs.CatalogHandler">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.catalogs.</code><code class="sig-name descname">CatalogHandler</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.catalogs.CatalogHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Catalog handler. Handles catalogs, surprisingly enough.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Prefix will not be checked in case of inline queries</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command to handle</p></li>
-<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Command description</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>,</em><em>optional</em>) – Command prefix, defaults to <cite>/</cite></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-octobot.classes.catalog"></span><dl class="class">
-<dt id="octobot.classes.catalog.Catalog">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.classes.catalog.</code><code class="sig-name descname">Catalog</code><span class="sig-paren">(</span><em class="sig-param">results: Union[List[octobot.classes.catalog.CatalogKeyPhoto], List[octobot.classes.catalog.CatalogKeyArticle]], current_index: int, next_offset: Union[str, int], previous_offset: Union[str, int], max_count: Union[str, int] = '?', photo_primary: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.classes.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base catalog class</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#octobot.classes.catalog.CatalogKeyPhoto" title="octobot.classes.catalog.CatalogKeyPhoto"><code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogKeyPhoto</span></code></a> or <a class="reference internal" href="#octobot.classes.catalog.CatalogKeyArticle" title="octobot.classes.catalog.CatalogKeyArticle"><code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogKeyArticle</span></code></a>) – Results found by function</p></li>
-<li><p><strong>max_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Total amount of results function can return</p></li>
-<li><p><strong>current_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Current index</p></li>
-<li><p><strong>next_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Next offset</p></li>
-<li><p><strong>previous_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Previous offset</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="octobot.classes.catalog.CatalogKeyArticle">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.classes.catalog.</code><code class="sig-name descname">CatalogKeyArticle</code><span class="sig-paren">(</span><em class="sig-param">text: str, photo: Union[List[octobot.classes.catalog.CatalogPhoto], octobot.classes.catalog.CatalogPhoto] = None, parse_mode: str = None, title: str = None, description: str = None, item_id: str = None, reply_markup: telegram.inline.inlinekeyboardmarkup.InlineKeyboardMarkup = None</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.classes.catalog.CatalogKeyArticle" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – Text to include in result</p></li>
-<li><p><strong>photo</strong> (<a class="reference internal" href="#octobot.classes.catalog.CatalogPhoto" title="octobot.classes.catalog.CatalogPhoto"><code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogPhoto</span></code></a> or class:<cite>list</cite> of <a class="reference internal" href="#octobot.classes.catalog.CatalogPhoto" title="octobot.classes.catalog.CatalogPhoto"><code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogPhoto</span></code></a>, optional) – Photo to include in text as preview and in inline mode as icon for result</p></li>
-<li><p><strong>parse_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Parse mode of messages. Become ‘html’ if <cite>photo</cite> is passed.</p></li>
-<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Item title for inline mode, defaults to first line of text</p></li>
-<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Description for inline mode, defaults to first 100 symbols of text</p></li>
-<li><p><strong>reply_markup</strong> (<a class="reference external" href="https://python-telegram-bot.readthedocs.io/en/stable/telegram.inlinekeyboardmarkup.html#telegram.InlineKeyboardMarkup" title="(in python-telegram-bot v13.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">telegram.InlineKeyboardMarkup</span></code></a>) – Inline keyboard that will appear in message</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="octobot.classes.catalog.CatalogKeyPhoto">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.classes.catalog.</code><code class="sig-name descname">CatalogKeyPhoto</code><span class="sig-paren">(</span><em class="sig-param">text: str, photo: Union[List[octobot.classes.catalog.CatalogPhoto], octobot.classes.catalog.CatalogPhoto] = None, parse_mode: str = None, title: str = None, description: str = None, item_id: str = None, reply_markup: telegram.inline.inlinekeyboardmarkup.InlineKeyboardMarkup = None</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.classes.catalog.CatalogKeyPhoto" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – Text to include in result</p></li>
-<li><p><strong>photo</strong> (<a class="reference internal" href="#octobot.classes.catalog.CatalogPhoto" title="octobot.classes.catalog.CatalogPhoto"><code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogPhoto</span></code></a> or class:<cite>list</cite> of <a class="reference internal" href="#octobot.classes.catalog.CatalogPhoto" title="octobot.classes.catalog.CatalogPhoto"><code class="xref py py-class docutils literal notranslate"><span class="pre">CatalogPhoto</span></code></a>, optional) – Photo to include in text as preview and in inline mode</p></li>
-<li><p><strong>parse_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Parse mode of messages. Become ‘html’ if <cite>photo</cite> is passed.</p></li>
-<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Item title for inline mode, defaults to first line of text</p></li>
-<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Description for inline mode, defaults to first 100 symbols of text</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="octobot.classes.catalog.CatalogPhoto">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.classes.catalog.</code><code class="sig-name descname">CatalogPhoto</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">width: int = 100</em>, <em class="sig-param">height: int = 100</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.classes.catalog.CatalogPhoto" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – URL to photo</p></li>
-<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Photo width.</p></li>
-<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Photo height.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 <div class="section" id="exceptions">
 <h3>Exceptions:<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt id="octobot.catalogs.CatalogCantGoDeeper">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.catalogs.</code><code class="sig-name descname">CatalogCantGoDeeper</code><a class="headerlink" href="#octobot.catalogs.CatalogCantGoDeeper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raise this exception is maximum number of results is reached</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="octobot.catalogs.CatalogCantGoBackwards">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.catalogs.</code><code class="sig-name descname">CatalogCantGoBackwards</code><a class="headerlink" href="#octobot.catalogs.CatalogCantGoBackwards" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raise this exception if it’s impossible to go backwards</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="octobot.catalogs.CatalogNotFound">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.catalogs.</code><code class="sig-name descname">CatalogNotFound</code><a class="headerlink" href="#octobot.catalogs.CatalogNotFound" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raise this exception if no results were found</p>
-</dd></dl>
-
 </div>
 </div>
 </div>

@@ -36,7 +36,7 @@
 <h1>Key-value database<a class="headerlink" href="#key-value-database" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="accessing-through-the-context-class">
 <h2>Accessing through the Context class<a class="headerlink" href="#accessing-through-the-context-class" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="context.html#octobot.Context" title="octobot.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Context</span></code></a> provides quick “shortcut” to per-user (<code class="xref py py-obj docutils literal notranslate"><span class="pre">octobot.Context.user_db</span></code>) and
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">octobot.Context</span></code> provides quick “shortcut” to per-user (<code class="xref py py-obj docutils literal notranslate"><span class="pre">octobot.Context.user_db</span></code>) and
 per-chat (<code class="xref py py-obj docutils literal notranslate"><span class="pre">octobot.Context.chat_db</span></code>) databases</p>
 </div>
 <div class="section" id="accessing-manually">
@@ -51,58 +51,6 @@ per-chat (<code class="xref py py-obj docutils literal notranslate"><span class=
 </div>
 <div class="section" id="key-value-database-classes">
 <h3>Key-value database classes<a class="headerlink" href="#key-value-database-classes" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt id="octobot.database.RedisData">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.database.</code><code class="sig-name descname">RedisData</code><span class="sig-paren">(</span><em class="sig-param">redis_db</em>, <em class="sig-param">chat_id</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.database.RedisData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Redis chat/user data class. Can be accessed like dictionary.</p>
-<dl class="method">
-<dt id="octobot.database.RedisData.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">default=None</em>, <em class="sig-param">dont_decode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.database.RedisData.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets key from database. If database cant be accessed or key cant be found, will return value of <cite>default</cite> param</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Key to lookup</p></li>
-<li><p><strong>default</strong> – “Default” value</p></li>
-<li><p><strong>dont_decode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If value should be decoded from bytes or not. Defaults to False</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The lookup results.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="octobot.database.RedisData.set">
-<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#octobot.database.RedisData.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets key to value</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Key to set</p></li>
-<li><p><strong>value</strong> (<em>any</em>) – Value</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><code class="xref py py-exc docutils literal notranslate"><span class="pre">octobot.exceptions.DatabaseNotAvailable</span></code> if database is not accessible</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="octobot.database._Database">
-<em class="property">class </em><code class="sig-prename descclassname">octobot.database.</code><code class="sig-name descname">_Database</code><a class="headerlink" href="#octobot.database._Database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base database class.</p>
-<p>Usage:
-Database[chat_id] to get <a class="reference internal" href="#octobot.database.RedisData" title="octobot.database.RedisData"><code class="xref py py-class docutils literal notranslate"><span class="pre">RedisData</span></code></a> for chat_id</p>
-</dd></dl>
-
 </div>
 </div>
 </div>
