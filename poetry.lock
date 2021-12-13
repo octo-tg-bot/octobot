@@ -588,7 +588,7 @@ requests = ">=2.20"
 
 [[package]]
 name = "sphinx"
-version = "4.2.0"
+version = "4.3.1"
 description = "Python documentation generator"
 category = "dev"
 optional = false
@@ -752,7 +752,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "cf1e8672226e6085e262ee2099bfcf4ba74c4fca0926081e3e848006845b3828"
+content-hash = "9e7c803f879715bff8a60643df75feb98a5e0dcfffecde1654412a5d98a29d4d"
 
 [metadata.files]
 alabaster = [
@@ -1072,8 +1072,8 @@ spamwatch = [
     {file = "spamwatch-0.3.0.tar.gz", hash = "sha256:d981e9adc64e49edb7f1d918f0943bc6ec97aa0952f3781f63089bd26365ee7e"},
 ]
 sphinx = [
-    {file = "Sphinx-4.2.0-py3-none-any.whl", hash = "sha256:98a535c62a4fcfcc362528592f69b26f7caec587d32cd55688db580be0287ae0"},
-    {file = "Sphinx-4.2.0.tar.gz", hash = "sha256:94078db9184491e15bce0a56d9186e0aec95f16ac20b12d00e06d4e36f1058a6"},
+    {file = "Sphinx-4.3.1-py3-none-any.whl", hash = "sha256:048dac56039a5713f47a554589dc98a442b39226a2b9ed7f82797fcb2fe9253f"},
+    {file = "Sphinx-4.3.1.tar.gz", hash = "sha256:32a5b3e9a1b176cc25ed048557d4d3d01af635e6b76c5bc7a43b0a34447fbd45"},
 ]
 sphinxcontrib-applehelp = [
     {file = "sphinxcontrib-applehelp-1.0.2.tar.gz", hash = "sha256:a072735ec80e7675e3f432fcae8610ecf509c5f1869d17e2eecff44389cdbc58"},
