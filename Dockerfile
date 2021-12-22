@@ -5,7 +5,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 RUN python3 -m venv /venv
 COPY pyproject.toml poetry.lock ./
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip \
-    poetry export -f requirements.txt --without-hashes | /venv/bin/pip install -r /dev/stdin
+    /root/.local/bin/poetry export -f requirements.txt --without-hashes | /venv/bin/pip install -r /dev/stdin
 ENV PYTHONPATH=/packages
 WORKDIR /workdir
 COPY locales locales
