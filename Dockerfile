@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.0-experimental
 FROM alpine:3 AS venv-create
-RUN apk add --no-cache python3 py3-pip gcc python3-dev zlib-dev libwebp-dev jpeg-dev git musl-dev curl
+RUN apk add --no-cache python3 py3-pip gcc python3-dev zlib-dev libwebp-dev jpeg-dev git musl-dev curl libffi-dev python3-dev
 RUN curl -sSL https://install.python-poetry.org | python3 -
 RUN python3 -m venv /venv
 COPY pyproject.toml poetry.lock ./
