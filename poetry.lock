@@ -443,7 +443,7 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 name = "python-telegram-bot"
-version = "13.10"
+version = "13.11"
 description = "We have made you a wrapper you can't refuse"
 category = "main"
 optional = false
@@ -778,7 +778,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "b6d5fc2b86dc6c7e982d483c9fb262ec1e0b3ed2ac44ccbf6244dc578ddc8e26"
+content-hash = "0557ac32f6f611298cb8258fefe79f2c7226fbcaca252c21040791163c14add9"
 
 [metadata.files]
 alabaster = [
@@ -1041,8 +1041,8 @@ pytest = [
     {file = "pytest-6.2.5.tar.gz", hash = "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89"},
 ]
 python-telegram-bot = [
-    {file = "python-telegram-bot-13.10.tar.gz", hash = "sha256:d2c555431821f4ace0c1b7ce12af41999f01b793b275dee131f1034d08c01e3e"},
-    {file = "python_telegram_bot-13.10-py3-none-any.whl", hash = "sha256:833f39110f5d019b39a6c6fcbabd6ea1627eaaa0a26e618c0be099568672d791"},
+    {file = "python-telegram-bot-13.11.tar.gz", hash = "sha256:baeff704baa2ac3dc17a944c02da888228ad258e89be2e5bcbd13a8a5102d573"},
+    {file = "python_telegram_bot-13.11-py3-none-any.whl", hash = "sha256:534f5bb0ff4ca34c9252e97e0b3bcdab81d97be0eb4821682a361cb426c00e55"},
 ]
 pytz = [
     {file = "pytz-2021.3-py2.py3-none-any.whl", hash = "sha256:3672058bc3453457b622aab7a1c3bfd5ab0bdae451512f6cf25f64ed37f5b87c"},
