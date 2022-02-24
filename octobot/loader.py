@@ -7,6 +7,7 @@ import importlib
 
 import telegram
 import telegram.ext
+import telegram.error
 
 import octobot.exceptions
 import octobot.handlers
@@ -210,6 +211,8 @@ class OctoBot(telegram.ext.ExtBot):
                         raise e
                     except octobot.exceptions.PassExceptionToDebugger as e:
                         raise e
+                    except telegram.error.TimedOut:
+                        pass
                     except Exception as e:
                         logger.error(
                             "Handler threw an exception!", exc_info=True)
