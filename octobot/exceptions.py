@@ -98,6 +98,8 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
         except telegram.error.TelegramError:
             pass
         return
+    elif isinstance(e, telegram.error.TimedOut):
+        return
     else:
         logger.error("Exception got thrown somewhere", exc_info=True)
         message = context.localize(
