@@ -194,21 +194,20 @@ test = ["pytest", "emoji", "setuptools"]
 
 [[package]]
 name = "fakeredis"
-version = "1.7.5"
+version = "1.7.6.1"
 description = "Fake implementation of redis API for testing purposes."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-packaging = "*"
 redis = "<=4.3.1"
-six = ">=1.12"
-sortedcontainers = "*"
+six = ">=1.16.0,<2.0.0"
+sortedcontainers = ">=2.4.0,<3.0.0"
 
 [package.extras]
-aioredis = ["aioredis"]
-lua = ["lupa"]
+aioredis = ["aioredis (>=2.0.1,<3.0.0)"]
+lua = ["lupa (>=1.13,<2.0)"]
 
 [[package]]
 name = "googletrans"
@@ -804,7 +803,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "eee4782d14827b21e57fe5155c828972cd823a63a470c3408b64c9577afa73cd"
+content-hash = "637d21dd4de29cd597a4534829c8acfa337cbad7bbe8feaf6564fc4d476e3b9b"
 
 [metadata.files]
 alabaster = [
@@ -876,8 +875,8 @@ emoji-country-flag = [
     {file = "emoji_country_flag-1.3.0-py2.py3-none-any.whl", hash = "sha256:5de298f7454cb6b838bebf7b001523e53c06b7d08de2fe38ab14770a91ea314c"},
 ]
 fakeredis = [
-    {file = "fakeredis-1.7.5-py3-none-any.whl", hash = "sha256:c4ca2be686e7e7637756ccc7dcad8472a5e4866b065431107d7a4b7a250d4e6f"},
-    {file = "fakeredis-1.7.5.tar.gz", hash = "sha256:49375c630981dd4045d9a92e2709fcd4476c91f927e0228493eefa625e705133"},
+    {file = "fakeredis-1.7.6.1-py3-none-any.whl", hash = "sha256:2bc92cece6535961a465991d01841888e0fe2b742ca49aa97ce247b04c9a0ecc"},
+    {file = "fakeredis-1.7.6.1.tar.gz", hash = "sha256:e71ca849167052f42f5469a764def9ef35ccffd04773d30b017a7adcc12940c1"},
 ]
 googletrans = [
     {file = "googletrans-4.0.0rc1.tar.gz", hash = "sha256:74df47b092e2d566522019d149e3f1d75732570ad76eaf8e14aebeffc126c372"},
