@@ -7,7 +7,7 @@ license = "MIT"
 classifiers = ["Private :: Do Not Upload"]
 [tool.poetry.dependencies]
 python = "^3.10"
-python-telegram-bot = "~=13.11"
+python-telegram-bot = "~=13.12"
 toml = "^0.10.2"
 redis = "~=4.3.1"
 Babel = "~=2.10.1"
