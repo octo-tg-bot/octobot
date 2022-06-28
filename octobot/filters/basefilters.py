@@ -22,11 +22,11 @@ class BaseFilter(BaseHandler):
             raise TypeError(
                 f"{func} is unsupported, this handler supports {self.allowed_types}")
 
-    def validate(self, bot, context):
+    async def validate(self, bot, context):
         raise RuntimeError(f"{type(self)}.validate isn't overridden!")
 
     async def handle_update(self, bot, context):
-        if self.validate(bot, context):
+        if await self.validate(bot, context):
             await self.function(bot, context)
 
     def __and__(self, other):
@@ -62,7 +62,7 @@ class LogicalBaseFilter(BaseFilter):
 
 
 class AndFilter(LogicalBaseFilter):
-    def validate(self, bot, context):
+    async def validate(self, bot, context):
         for filter in self.filters:
             if not filter.validate(bot, context):
                 return False
@@ -70,7 +70,7 @@ class AndFilter(LogicalBaseFilter):
 
 
 class OrFilter(LogicalBaseFilter):
-    def validate(self, bot, context):
+    async def validate(self, bot, context):
         for filter in self.filters:
             if filter.validate(bot, context):
                 return True
@@ -83,5 +83,5 @@ class NotFilter(LogicalBaseFilter):
             raise TypeError("NotFilter accepts only filters")
         self.filter = filter
 
-    def validate(self, bot, context):
+    async def validate(self, bot, context):
         return not self.filter.validate(bot, context)

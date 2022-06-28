@@ -150,7 +150,7 @@ class CatalogHandler(octobot.filters.CommandFilter):
 
     async def handle_update(self, bot, context):
         try:
-            chk_cmd = self.check_command(bot, context)
+            chk_cmd = await self.check_command(bot, context)
             if chk_cmd:
                 if self.plugin.state == octobot.PluginStates.disabled:
                     context.reply(

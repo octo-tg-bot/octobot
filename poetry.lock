@@ -43,21 +43,6 @@ redis = ["redis (>=4.2)"]
 docs = ["furo (>=2022.1.2)", "linkify-it-py (>=1.0.1,<2.0.0)", "myst-parser (>=0.15.1,<0.16.0)", "sphinx (>=4.0.2,<5.0.0)", "sphinx-automodapi (>=0.14)", "sphinx-autodoc-typehints (>=1.11,<2.0)", "sphinx-copybutton (>=0.3,<0.4)", "sphinx-inline-tabs (>=2022.1.2b11,<2023.0.0)", "sphinxcontrib-apidoc (>=0.3,<0.4)"]
 
 [[package]]
-name = "aioredis"
-version = "2.0.1"
-description = "asyncio (PEP 3156) Redis support"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-async-timeout = "*"
-typing-extensions = "*"
-
-[package.extras]
-hiredis = ["hiredis (>=1.0)"]
-
-[[package]]
 name = "aiosignal"
 version = "1.2.0"
 description = "aiosignal: a list of registered asynchronous callbacks"
@@ -712,7 +697,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "785800249aac3c56248ced6122d9742d530be6e5cb76c0f6368f24769aaabd17"
+content-hash = "d372f622e9e790b76d7ce9cb3a32125cc1a18ba578fb508ff24639e506e5babe"
 
 [metadata.files]
 aiohttp = [
@@ -792,10 +777,6 @@ aiohttp = [
 aiohttp-client-cache = [
     {file = "aiohttp-client-cache-0.7.1.tar.gz", hash = "sha256:5252f1426426bf3e094a6916eb3a5f3e502ee43b371dcd8886136f595cb67c78"},
     {file = "aiohttp_client_cache-0.7.1-py3-none-any.whl", hash = "sha256:c07604ace90e130e336669aacac673218d421537a456d4d741c05af1bde67184"},
-]
-aioredis = [
-    {file = "aioredis-2.0.1-py3-none-any.whl", hash = "sha256:9ac0d0b3b485d293b8ca1987e6de8658d7dafcca1cddfcd1d506cae8cdebfdd6"},
-    {file = "aioredis-2.0.1.tar.gz", hash = "sha256:eaa51aaf993f2d71f54b70527c440437ba65340588afeb786cd87c55c89cd98e"},
 ]
 aiosignal = [
     {file = "aiosignal-1.2.0-py3-none-any.whl", hash = "sha256:26e62109036cd181df6e6ad646f91f0dcfd05fe16d0cb924138ff2ab75d64e3a"},

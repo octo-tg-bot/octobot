@@ -26,7 +26,7 @@ class CommandFilter(BaseFilter):
         self.required_args = required_args
         self.suggestion = suggestion
 
-    def check_command(self, bot, context):
+    async def check_command(self, bot, context):
         if isinstance(context, octobot.InlineQueryContext):
             prefix = ''
         else:
@@ -35,10 +35,10 @@ class CommandFilter(BaseFilter):
         ratelimit_enabled = octobot.settings.ratelimit.enabled and type(
             context) == octobot.MessageContext
         if ratelimit_enabled:
-            admin = check_permissions(chat=context.chat, user=context.user,
-                                      permissions_to_check={"is_admin"})[
+            admin = (await check_permissions(chat=context.chat, user=context.user,
+                                             permissions_to_check={"is_admin"}) )[
                 0] and context.chat.type == "supergroup"
-            rl_state = octobot.database.redis.get(
+            rl_state = await octobot.database.redis.get(
                 f"ratelimit_state:{context.chat.id}")
             if rl_state == b"user_abuse" and \
                     not admin:
@@ -61,16 +61,16 @@ class CommandFilter(BaseFilter):
                             key = f"ratelimit_adm:{context.chat.id}"
                         else:
                             key = f"ratelimit:{context.chat.id}"
-                        octobot.database.redis.incr(key)
-                        octobot.database.redis.expire(
+                        await octobot.database.redis.incr(key)
+                        await octobot.database.redis.expire(
                             key, octobot.settings.ratelimit.messages_timeframe)
                     return True
         return False
 
-    def validate(self, bot: "octobot.OctoBot", context: "octobot.Context"):
+    async def validate(self, bot: "octobot.OctoBot", context: "octobot.Context"):
         if isinstance(context, octobot.CallbackContext):
             return False
-        elif self.check_command(bot, context):
+        elif await self.check_command(bot, context):
             if getattr(self.plugin, 'state', 'ok') == octobot.PluginStates.disabled:
                 context.reply(
                     context.localize("Sorry, this command is unavailable. Please contact the bot administrator."))

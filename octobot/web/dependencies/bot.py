@@ -13,6 +13,7 @@ bot = None
 async def get_bot() -> ob.OctoBot:
     global bot
     if bot is None:
+        await ob.database.finish_boot()
         if ob.settings.telegram_base_url != "https://api.telegram.org/bot":
             with ClientSession() as session:
                 r = session.get(

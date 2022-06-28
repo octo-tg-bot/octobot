@@ -2,7 +2,7 @@ from .basefilters import BaseFilter
 import logging
 import typing
 import telegram
-from octobot import database, localizable
+from octobot import database, settings, localizable
 
 
 permissions_locale = {
@@ -30,8 +30,8 @@ def reset_cache(chat: typing.Union[telegram.Chat, int]):
     return database.redis.delete(create_db_entry_name(chat))
 
 
-def check_permissions(chat: typing.Union[telegram.Chat, int], user: typing.Union[telegram.User, int],
-                permissions_to_check: set, bot=None):
+async def check_permissions(chat: typing.Union[telegram.Chat, int], user: typing.Union[telegram.User, int],
+                            permissions_to_check: set, bot=None):
     db_entry = create_db_entry_name(chat)
 
     if isinstance(user, telegram.User):
@@ -43,27 +43,25 @@ def check_permissions(chat: typing.Union[telegram.Chat, int], user: typing.Union
     else:
         chat_id = chat
     if "is_bot_owner" in permissions_to_check:
-        if Settings.owner == user_id:
+        if settings.owner == user_id:
             permissions_to_check.remove("is_bot_owner")
-        return Settings.owner == user_id, permissions_to_check
+        return settings.owner == user_id, permissions_to_check
     if not str(chat_id).startswith("-100"):
         return True, []
     adm_list = None
-    if database.redis is not None and database.redis.exists(db_entry) == 1:
-        db_res = database.redis.get(db_entry)
-        if db_res is not None:  # fix some weird bug that i have 0 idea how it happens
-            adm_list = json.loads(db_res.decode())
+    if database.redis is not None and await database.redis.exists(db_entry) == 1:
+        adm_list = await database.redis.get(db_entry)
     if adm_list is None:
         if bot is None:
-            adm_list_t = chat.get_administrators()
+            adm_list_t = await chat.get_administrators()
         else:
-            adm_list_t = bot.get_chat_administrators(chat_id=chat_id)
+            adm_list_t = await bot.get_chat_administrators(chat_id=chat_id)
         adm_list = []
         for admin in adm_list_t:
             adm_list.append(admin.to_dict())
         if database.redis is not None:
-            database.redis.set(db_entry, json.dumps(adm_list))
-            database.redis.expire(db_entry, 240)
+            await database.redis.set(db_entry, adm_list)
+            await database.redis.expire(db_entry, 240)
     for member in adm_list:
         if int(member["user"]["id"]) == int(user_id):
             if member["status"] == "creator":
@@ -91,43 +89,43 @@ class PermissionFilter(BaseFilter):
         if isinstance(permissions, str):
             self.permissions = [permissions]
 
-    def validate(self, bot, context):
+    async def validate(self, bot, context):
         if context.chat is None:
             return False
         if self.who == "bot":
-            res, missing_perms = check_permissions(
+            res, missing_perms = await check_permissions(
                 context.chat, bot.me, self.permissions.copy())
             missing_perms_localized = [context.localize(
                 permissions_locale[permission]) for permission in missing_perms]
             if res:
                 return True
             elif "is_admin" not in missing_perms:
-                context.reply(context.localize(
+                await context.reply(context.localize(
                     "Sorry, you can't execute this command cause I lack following permissions: {}").format(
                     ', '.join(missing_perms_localized)))
             return False
         elif self.who == "caller":
-            res, missing_perms = check_permissions(
+            res, missing_perms = await check_permissions(
                 context.chat, context.user, self.permissions.copy())
             missing_perms_localized = [context.localize(
                 permissions_locale[permission]) for permission in missing_perms]
             if res:
                 return True
             else:
-                context.reply(context.localize(
+                await context.reply(context.localize(
                     "Sorry, you can't execute this command cause you lack following permissions: {}").format(
                     ', '.join(missing_perms_localized)))
             return False
         elif self.who == "replied_user":
             if context.update.message.reply_to_message is not None:
-                res, missing_perms = check_permissions(
+                res, missing_perms = await check_permissions(
                     context.chat, context.update.message.reply_to_message.from_user, self.permissions.copy())
                 perms_localized = [context.localize(
                     permissions_locale[permission]) for permission in self.permissions]
                 if not res:
                     return True
                 else:
-                    context.reply(context.localize(
+                    await context.reply(context.localize(
                         "Sorry, you can't execute this command cause this user has following permissions: {}").format(
                         ', '.join(perms_localized)))
                     return False

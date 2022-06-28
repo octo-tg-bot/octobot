@@ -190,7 +190,7 @@ class OctoBot(telegram.ext.ExtBot):
         disabled_plugins = []
         async with ctx.chat_db, ctx.user_db:
             if octobot.database.redis is not None and isinstance(context, MessageContext) and context.chat.type == "supergroup":
-                disabled_plugins = octobot.database.redis.smembers(
+                disabled_plugins = await octobot.database.redis.smembers(
                     f"plugins_disabled{context.chat.id}")
             if isinstance(ctx, octobot.CallbackContext) and isinstance(ctx.callback_data, octobot.Callback):
                 return ctx.callback_data.execute(bot, ctx)

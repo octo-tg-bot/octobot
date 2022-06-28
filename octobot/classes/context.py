@@ -310,12 +310,6 @@ class MessageContext(Context):
             self.text = message.caption
         else:
             self.text = message.text
-        is_reply = message is not None
-        if octobot.database.redis is not None and not is_reply:
-            octobot.database.redis.set(
-                octobot.utils.generate_edit_id(update.message), 0)
-            octobot.database.redis.expire(
-                octobot.utils.generate_edit_id(update.message), 30)
         if message.reply_to_message:
             self.reply_to_message = MessageContext(
                 update, bot, update.message.reply_to_message)
@@ -360,9 +354,9 @@ class MessageContext(Context):
             message = await self.bot.send_message(text=text, **kwargs)
 
         if octobot.database.redis is not None and editable:
-            octobot.database.redis.set(octobot.utils.generate_edit_id(
+            await octobot.database.redis.set(octobot.utils.generate_edit_id(
                 self.update.message), message.message_id)
-            octobot.database.redis.expire(
+            await octobot.database.redis.expire(
                 octobot.utils.generate_edit_id(self.update.message), 30)
         self.edit_tgt = message.message_id
         return message
@@ -385,24 +379,6 @@ class EditedMessageContext(MessageContext):
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         self.update = update
         self.update.message = self.update.edited_message
-        if octobot.database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
-            self.edit_tgt = int(octobot.database.redis.get(
-                octobot.utils.generate_edit_id(self.update.message)))
-            if self.edit_tgt == 0:
-                logger.debug(
-                    "Not handling update %s cause invalid edit target", update.update_id)
-                raise octobot.StopHandling
-            octobot.database.redis.delete(
-                octobot.utils.generate_edit_id(self.update.message))
-            if update.message.caption is not None:
-                self.text = update.message.caption
-            else:
-                self.text = update.message.text
-        else:
-            logger.debug(
-                "Not handling update %s cause not available in database", update.update_id)
-            raise octobot.StopHandling
-        logger.debug("edit target = %s", self.edit_tgt)
         # super(EditedMessageContext, self).__init__(update, bot, message)
         Context.__init__(self, update, bot, message)
 
@@ -410,6 +386,24 @@ class EditedMessageContext(MessageContext):
                      no_preview=False,
                      title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
                      file_url=None):
+        if await octobot.database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
+            self.edit_tgt = await octobot.database.redis.get(
+                octobot.utils.generate_edit_id(self.update.message))
+            if self.edit_tgt is None:
+                logger.debug(
+                    "Not handling update %s cause invalid edit target", self.update.update_id)
+                raise octobot.StopHandling
+            await octobot.database.redis.delete(
+                octobot.utils.generate_edit_id(self.update.message))
+            if self.update.message.caption is not None:
+                self.text = self.update.message.caption
+            else:
+                self.text = self.update.message.text
+        else:
+            logger.debug(
+                "Not handling update %s cause not available in database", self.update.update_id)
+            raise octobot.StopHandling
+        logger.debug("edit target = %s", self.edit_tgt)
         return self.edit(text=text, photo_url=photo_url, reply_markup=reply_markup, parse_mode=parse_mode)
 
 

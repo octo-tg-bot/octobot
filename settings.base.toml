@@ -48,6 +48,8 @@ disallowed_chat_reason = "I am sorry, I can't work in this chat cause it is not 
 # Fallback image when bot failed to send image
 no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/no_image.png"
 
+# Redis connection string
+redis_url = "redis://localhost:6379/0"
 
 [webhook]
   # Use ngrok for webhook.
@@ -74,12 +76,6 @@ no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/n
   organization_slug = ''
   # Sentry project slug
   project_slug = ''
-
-# Redis information
-[redis]
-  host = "localhost"
-  port = 6379
-  db = 0
 
 # Spamwatch settings
 [spamwatch]

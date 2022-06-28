@@ -9,5 +9,5 @@ class ContextFilter(BaseFilter):
         self.contextType = contextType
         super(ContextFilter, self).__init__(*args, **kwargs)
 
-    def validate(self, bot, context):
+    async def validate(self, bot, context):
         return type(context) == self.contextType

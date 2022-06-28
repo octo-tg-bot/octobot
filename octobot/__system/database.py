@@ -1,9 +1,12 @@
 import json
 import logging
 import os
+from aiohttp import ClientSession
+from aiohttp_client_cache import CachedSession, RedisBackend
 
 import fakeredis.aioredis
-import aioredis as redis
+import redis.asyncio as redispy
+from .settings import settings
 
 logger = logging.getLogger("Redis")
 
@@ -54,20 +57,7 @@ class RedisData(dict):
     __aexit__ = flush
 
 
-def request_create_id(request_type, request_args, request_kwargs):
-    return f"request_cache:{request_type}:{json.dumps(request_args)}:{json.dumps(request_kwargs)}"
-
-
-def http_cache(rtype):
-    def decorator(_):
-        def cache(*args, **request_kwargs):
-            self = args[0]
-            return self.cache_requests(request_type=rtype, request_args=args[1:],
-                                       request_kwargs=request_kwargs)
-
-        return cache
-
-    return decorator
+req_kw = {"headers": {'User-Agent': settings.user_agent}}
 
 
 class Database:
@@ -77,23 +67,33 @@ class Database:
     Usage:
     `async with database[chat_id] as chat_db:` to get :class:`RedisData` for chat_id
     """
-    redis: redis.Redis
+    booted = False
 
-    def __init__(self, Settings):
+    def __init__(self):
+        self.requests = ClientSession(**req_kw)
+        self.redis = fakeredis.aioredis.FakeRedis()
+
+    async def finish_boot(self):
+        assert not self.booted
         if not os.environ.get("ob_testing", False):
-            self.redis = redis.Redis(
-                host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"], decode_responses=True)
+            redis = redispy.from_url(
+                settings.redis_url, decode_responses=True)
             try:
-                self.redis.ping()
+                await redis.ping()
             except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
                 logger.error(
                     "Error: Redis is not available. That might break the bot in some places.")
-                self.redis = fakeredis.aioredis.FakeRedis()
             else:
+                self.redis = redis
+                self.requests = CachedSession(
+                    cache=RedisBackend(address=settings.redis_url), **req_kw)
                 logger.info("Redis connection successful")
         else:
             logger.info("Testing environment - using fakeredis")
-            self.redis = fakeredis.aioredis.FakeRedis()
+
+    @property
+    def r(self):
+        return self.requests
 
     def __getitem__(self, item):
         item = int(item)

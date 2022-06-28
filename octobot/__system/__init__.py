@@ -1,4 +1,3 @@
-from .settings import Settings
+from .settings import settings
 from .database import Database
-settings = Settings()
-database = Database(settings)
+database = Database()
