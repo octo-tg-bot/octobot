@@ -73,7 +73,9 @@ class Context:
     message = None
     called_command = None
     user: telegram.User
+    user_db = {}
     chat: telegram.Chat
+    chat_db = {}
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         if Context == type(self):
@@ -89,15 +91,7 @@ class Context:
             loc_sep = "-"
         self.locale = babel.Locale.parse(self.locale_str, sep=loc_sep)
         self.user = update.effective_user
-        if self.user is not None:
-            self.user_db = database[self.user.id]
-        else:
-            self.user_db = None
         self.chat = update.effective_chat
-        if self.chat is None and self.user is not None:
-            self.chat_db = database[self.user.id]
-        if self.chat is not None:
-            self.chat_db = database[self.chat.id]
         if self.text is None:
             self.text = ''
         self.query = " ".join(self.text.split(" ")[1:])
@@ -323,7 +317,7 @@ class MessageContext(Context):
             octobot.database.redis.expire(
                 octobot.utils.generate_edit_id(update.message), 30)
         if message.reply_to_message:
-            self.reply_to_message = Context.create_context(
+            self.reply_to_message = MessageContext(
                 update, bot, update.message.reply_to_message)
         super(MessageContext, self).__init__(update, bot, message)
 

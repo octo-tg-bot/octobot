@@ -3,48 +3,25 @@ import logging
 import os
 
 import fakeredis.aioredis
-import redis
+import aioredis as redis
 
 logger = logging.getLogger("Redis")
 
 
-class RedisData:
+class RedisData(dict):
     """
     Redis chat/user data class. Can be accessed like dictionary.
     """
+    _pending = {}
 
     def __init__(self, redis_db, chat_id):
         self._redis = redis_db
         self.chat_id = chat_id
+        super(RedisData, self).__init__()
 
     @property
     def hashmap_name(self):
         return f"settings:{self.chat_id}"
-
-    def get(self, key, default=None, dont_decode=False):
-        """
-        Gets key from database. If database cant be accessed or key cant be found, will return value of `default` param
-
-        :param item: Key to lookup
-        :type item: str
-        :param default: "Default" value
-        :param dont_decode: If value should be decoded from bytes or not. Defaults to False
-        :type dont_decode: bool
-        :return: The lookup results.
-        """
-        if self._redis is None:
-            return default
-        else:
-            res = self._redis.hget(self.hashmap_name, key)
-            if res is None:
-                return default
-            elif dont_decode:
-                return res
-            else:
-                return res.decode()
-
-    def __getitem__(self, item):
-        return self.get(item)
 
     def set(self, key, value):
         """
@@ -57,16 +34,24 @@ class RedisData:
         :raises: :exc:`octobot.exceptions.DatabaseNotAvailable` if database is not accessible
         :return:
         """
-        if self._redis is None:
-            raise DatabaseNotAvailable
-        else:
-            return self._redis.hset(self.hashmap_name, key, value)
+        self._pending[key] = value
+        self[key] = value
 
     def __setitem__(self, key, value):
-        return self.set(key, value)
+        self._pending[key] = value
+        super(RedisData, self).__setitem__(key, value)
 
-    def __contains__(self, key):
-        return self._redis.hexists(self.hashmap_name, key)
+    async def refresh(self):
+        self.clear()
+        self.update(await self._redis.hgetall(self.hashmap_name))
+    __aenter__ = refresh
+
+    async def flush(self, *_):
+        logger.debug("flushing database changes for %s", self.hashmap_name)
+        for key, value in self._pending.items():
+            await self._redis.hset(self.hashmap_name, key, value)
+        self._pending.clear()
+    __aexit__ = flush
 
 
 def request_create_id(request_type, request_args, request_kwargs):
@@ -90,14 +75,14 @@ class Database:
     Base database class.
 
     Usage:
-    database[chat_id] to get :class:`RedisData` for chat_id
+    `async with database[chat_id] as chat_db:` to get :class:`RedisData` for chat_id
     """
     redis: redis.Redis
 
     def __init__(self, Settings):
         if not os.environ.get("ob_testing", False):
             self.redis = redis.Redis(
-                host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
+                host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"], decode_responses=True)
             try:
                 self.redis.ping()
             except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):

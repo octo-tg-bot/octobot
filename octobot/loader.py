@@ -12,7 +12,7 @@ import octobot.exceptions
 import octobot.handlers
 import logging
 
-from octobot import settings
+from octobot import settings, database
 from octobot import PluginInfo, PluginStates, MessageContext
 from octobot.exceptions import handle_exception
 from octobot.utils import path_to_module, current_context
@@ -184,42 +184,45 @@ class OctoBot(telegram.ext.ExtBot):
     async def handle_update(self, context: octobot.Context):
         bot = self
         ctx = context
+        ctx.chat_db = database[ctx.chat.id]
+        ctx.user_db = database[ctx.user.id]
         current_context.set(context)
         disabled_plugins = []
-        if octobot.database.redis is not None and isinstance(context, MessageContext) and context.chat.type == "supergroup":
-            disabled_plugins = octobot.database.redis.smembers(
-                f"plugins_disabled{context.chat.id}")
-        if isinstance(ctx, octobot.CallbackContext) and isinstance(ctx.callback_data, octobot.Callback):
-            return ctx.callback_data.execute(bot, ctx)
-        for priority in sorted(self.handlers.keys()):
-            handlers = self.handlers[priority]
-            logger.debug(f"handling priority level {priority}")
-            try:
-                for handler in handlers:
-                    if handler.plugin.module.__name__.encode() in disabled_plugins or handler.plugin.state == PluginStates.disabled:
-                        continue
-                    try:
-                        ctx._plugin = handler.plugin
-                        ctx._handler = handler
-                        await handler.handle_update(bot, ctx)
-                    except octobot.exceptions.Halt as e:
-                        raise e
-                    except octobot.exceptions.StopHandling as e:
-                        raise e
-                    except octobot.exceptions.PassExceptionToDebugger as e:
-                        raise e
-                    except telegram.error.TimedOut:
-                        pass
-                    except Exception as e:
-                        logger.error(
-                            "Handler threw an exception!", exc_info=True)
-                        handle_exception(self, ctx, e, notify=False)
-            except octobot.exceptions.StopHandling:
-                break
-            except octobot.exceptions.PassExceptionToDebugger as e:
-                raise e.exception
-        # if update.inline_query and not ctx.replied:
-        #     update.inline_query.answer([], switch_pm_text=ctx.localize("Click here for command list"), switch_pm_parameter="help")
+        async with ctx.chat_db, ctx.user_db:
+            if octobot.database.redis is not None and isinstance(context, MessageContext) and context.chat.type == "supergroup":
+                disabled_plugins = octobot.database.redis.smembers(
+                    f"plugins_disabled{context.chat.id}")
+            if isinstance(ctx, octobot.CallbackContext) and isinstance(ctx.callback_data, octobot.Callback):
+                return ctx.callback_data.execute(bot, ctx)
+            for priority in sorted(self.handlers.keys()):
+                handlers = self.handlers[priority]
+                logger.debug(f"handling priority level {priority}")
+                try:
+                    for handler in handlers:
+                        if handler.plugin.module.__name__.encode() in disabled_plugins or handler.plugin.state == PluginStates.disabled:
+                            continue
+                        try:
+                            ctx._plugin = handler.plugin
+                            ctx._handler = handler
+                            await handler.handle_update(bot, ctx)
+                        except octobot.exceptions.Halt as e:
+                            raise e
+                        except octobot.exceptions.StopHandling as e:
+                            raise e
+                        except octobot.exceptions.PassExceptionToDebugger as e:
+                            raise e
+                        except telegram.error.TimedOut:
+                            pass
+                        except Exception as e:
+                            logger.error(
+                                "Handler threw an exception!", exc_info=True)
+                            handle_exception(self, ctx, e, notify=False)
+                except octobot.exceptions.StopHandling:
+                    break
+                except octobot.exceptions.PassExceptionToDebugger as e:
+                    raise e.exception
+            # if update.inline_query and not ctx.replied:
+            #     update.inline_query.answer([], switch_pm_text=ctx.localize("Click here for command list"), switch_pm_parameter="help")
 
     def generate_startlink(self, command):
         command = f"b64-{base64.urlsafe_b64encode(command.encode()).decode()}"

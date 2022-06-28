@@ -1,3 +1,4 @@
+import json
 import telegram
 
 import octobot
@@ -80,6 +81,17 @@ def test_catalogarticle(query, index, max_amount, bot, context):
 @CommandFilter(command="helloworld", description=localizable("Hello, World!"))
 async def hello_world(bot, ctx):
     await ctx.reply(ctx.localize("This is a test"))
+
+
+@CommandFilter(command="wchat", description=localizable("Write data into chat db."), required_args=2)
+async def wchat(bot, ctx):
+    ctx.chat_db[ctx.args[0]] = ctx.args[1]
+    await ctx.reply(ctx.localize("Written"))
+
+
+@CommandFilter(command="rchat", description=localizable("Write data into chat db."))
+async def rchat(bot, ctx):
+    await ctx.reply(json.dumps(ctx.chat_db))
 
 
 @CommandFilter(command="pmtest")
