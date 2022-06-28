@@ -7,15 +7,16 @@ import logging
 
 LOGGER = logging.getLogger("Settings")
 
-FOLDER = os.path.abspath(os.path.dirname(__file__))
+FOLDER = os.path.abspath(os.getcwd())
 
 
-class _Settings():
+class Settings():
     _settings: dict = {}
 
-    def __init__(self, settings_folder=FOLDER):
+    def __init__(self, settings_folder=FOLDER, load_now=True):
         self.settings_folder = settings_folder
-        self.reload_settings()
+        if load_now:
+            self.reload_settings()
 
     def reload_settings(self) -> None:
         settings_backup = self._settings.copy()
@@ -84,6 +85,3 @@ class dotdict(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
-
-
-Settings: _Settings = _Settings()

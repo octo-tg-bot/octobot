@@ -2,33 +2,21 @@ import telegram
 
 import octobot
 from octobot.classes.catalog import CatalogPhoto
-from octobot.handlers import CommandHandler, InlineButtonHandler
+from octobot.filters import CommandFilter
 from octobot.localization import localizable
-from settings import Settings
+from octobot import settings
 info = octobot.PluginInfo("Test plugin")
 
-if Settings.production:
+if settings.production:
     raise octobot.DontLoadPlugin
 
 
-@CommandHandler(command="ptest", description="Permissions test")
-@octobot.permissions(can_restrict_members=True)
-@octobot.my_permissions(can_delete_messages=True)
-def test_perm(bot, context):
-    context.reply("Hello world!",
-                  reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(
-                          callback_data="test:", text="Change text")]
-                  ])
-                  )
-
-
-@CommandHandler(command="exception", description="Test exception")
+@CommandFilter(command="exception", description="Test exception")
 def test_exception(*_):
     1/0
 
 
-@CommandHandler(command="inline_exc", description="Test exception in inline buttons")
+@CommandFilter(command="inline_exc", description="Test exception in inline buttons")
 def test_inline_exception_c(bot, context):
     context.reply("Hello world! " + context.query,
                   reply_markup=telegram.InlineKeyboardMarkup([
@@ -38,44 +26,7 @@ def test_inline_exception_c(bot, context):
                   )
 
 
-@InlineButtonHandler("inlineexc")
-def test_inline_exception(*_):
-    1/0
-
-
-@CommandHandler(command="test", description="Test")
-def test(bot, context):
-    context.reply("Hello world! " + context.query,
-                  reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(
-                          callback_data="test:", text="Change text")]
-                  ])
-                  )
-
-
-@CommandHandler(command="imgtest", description="Test image handling")
-def imgtest(bot, context):
-    context.reply("Test!", photo_url="https://picsum.photos/seed/test/200/200",
-                  reply_markup=telegram.InlineKeyboardMarkup([
-                      [telegram.InlineKeyboardButton(
-                          callback_data="imgtest:", text="Change image and text")]
-                  ]))
-
-
-@InlineButtonHandler(prefix="imgtest:")
-def imgtest_button(bot, context):
-    context.edit(
-        "Test! Test!", photo_url="https://picsum.photos/seed/test2/200/200")
-    context.reply("Changed image!")
-
-
-@InlineButtonHandler(prefix="test:")
-def test_button(bot, context):
-    context.edit("Test! Test!")
-    context.reply("Changed text!")
-
-
-CATALOG_MAX = 10
+CATALOG_MAX = 50
 
 
 @octobot.catalogs.CatalogHandler(command="catalogtest", description="Test CatalogHandler")
@@ -126,12 +77,12 @@ def test_catalogarticle(query, index, max_amount, bot, context):
                            previous_offset=index - max_amount)
 
 
-@CommandHandler(command="helloworld", description=localizable("Hello, World!"))
-def hello_world(bot, ctx):
-    ctx.reply(ctx.localize("This is a test"))
+@CommandFilter(command="helloworld", description=localizable("Hello, World!"))
+async def hello_world(bot, ctx):
+    await ctx.reply(ctx.localize("This is a test"))
 
 
-@CommandHandler(command="pmtest")
+@CommandFilter(command="pmtest")
 def pmtest(bot, ctx: octobot.Context):
     ctx.reply("Check your PMs!")
     ctx.reply("Test", to_pm=True)

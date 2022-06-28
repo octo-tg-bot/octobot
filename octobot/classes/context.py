@@ -1,11 +1,10 @@
-from settings import Settings
+from octobot.__system import settings, database
 from octobot.utils import add_photo_to_text
 import gettext
 import html
 import logging
 import re
 import shlex
-import warnings
 from functools import wraps
 import time
 
@@ -14,11 +13,7 @@ import telegram
 import telegram.ext
 from telegram import InputMediaPhoto
 
-import octobot
 import octobot.exceptions
-from octobot import database
-
-Database = database.Database
 
 logger = logging.getLogger("Context")
 
@@ -61,8 +56,6 @@ class Context:
     :vartype chat_db: :class:`octobot.database.RedisData`
     :var locale: User/Chat locale
     :vartype locale: :class:`babel.Locale`
-    :var update_type: DEPRECATED: Type of update
-    :vartype update_type: :class:`octobot.UpdateType`
     :var query: Command query
     :vartype query: :class:`str`
     :var args: Command arguments, parsed like sys.argv
@@ -81,7 +74,6 @@ class Context:
     called_command = None
     user: telegram.User
     chat: telegram.Chat
-    _update_type = 'unknown'
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         if Context == type(self):
@@ -98,14 +90,14 @@ class Context:
         self.locale = babel.Locale.parse(self.locale_str, sep=loc_sep)
         self.user = update.effective_user
         if self.user is not None:
-            self.user_db = Database[self.user.id]
+            self.user_db = database[self.user.id]
         else:
             self.user_db = None
         self.chat = update.effective_chat
         if self.chat is None and self.user is not None:
-            self.chat_db = Database[self.user.id]
+            self.chat_db = database[self.user.id]
         if self.chat is not None:
-            self.chat_db = Database[self.chat.id]
+            self.chat_db = database[self.chat.id]
         if self.text is None:
             self.text = ''
         self.query = " ".join(self.text.split(" ")[1:])
@@ -113,12 +105,6 @@ class Context:
             self.args = shlex.split(self.query)
         except ValueError:
             self.args = self.query.split(" ")
-
-    @property
-    def update_type(self):
-        warnings.warn("Context.update_type is deprecated! Use isinstance on context instead to check update type.",
-                      DeprecationWarning, 2)
-        return self._update_type
 
     @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
@@ -168,15 +154,15 @@ class Context:
                            title, to_pm, failed, editable, inline_description, photo_primary,
                            file_url)
 
-    def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
-               no_preview=False,
-               title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
-               file_url=None):
+    async def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
+                     no_preview=False,
+                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+                     file_url=None):
         raise RuntimeError(f"Override _reply in {type(self)}!")
 
     def edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         """
-        Edits message. Works only if update_type == :obj:`UpdateType.button_press`
+        Edits message.
 
         :param text: Text to replace with
         :type text: :class:`str`
@@ -194,7 +180,7 @@ class Context:
             text = add_photo_to_text(text, photo_url)
         return self._edit(text, photo_url, reply_markup, parse_mode, photo_primary)
 
-    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         raise RuntimeError(f"Override _edit in {type(self)}!")
 
     def localize(self, text: str) -> str:
@@ -229,25 +215,6 @@ class Context:
 
         return gt.ngettext(singular, plural, n)
 
-    @staticmethod
-    def create_context(update, bot, message=None):
-        if message is None and update.message is not None:
-            message = update.message
-
-        if update.inline_query:
-            return InlineQueryContext(update, bot, message)
-        elif update.callback_query:
-            return CallbackContext(update, bot, message)
-        elif message:
-            return MessageContext(update, bot, message)
-        elif update.edited_message:
-            return EditedMessageContext(update, bot, message)
-        elif update.chosen_inline_result:
-            return ChosenInlineResultContext(update, bot, message)
-        else:
-            raise octobot.exceptions.UnknownUpdate(
-                "Failed to determine update type for update %s", update.to_dict())
-
 
 class InlineQueryContext(Context):
     """
@@ -256,7 +223,6 @@ class InlineQueryContext(Context):
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         self.text = update.inline_query.query
-        self._update_type = octobot.UpdateType.inline_query
         super(InlineQueryContext, self).__init__(update, bot, message)
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
@@ -275,8 +241,8 @@ class InlineQueryContext(Context):
                                                    input_message_content=inline_content,
                                                    reply_markup=reply_markup,
                                                    thumb_url=photo_url)
-        self.update.inline_query.answer(
-            [result], cache_time=(360 if Settings.production else 0))
+        return self.update.inline_query.answer(
+            [result], cache_time=(360 if settings.production else 0))
 
 
 class CallbackContext(Context):
@@ -292,16 +258,15 @@ class CallbackContext(Context):
         elif isinstance(self.callback_data, telegram.ext.InvalidCallbackData):
             self.callback_data = octobot.InvalidCallback
         logger.debug("text: %s" % self.text)
-        self._update_type = octobot.UpdateType.button_press
         super(CallbackContext, self).__init__(update, bot, message)
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
                no_preview=False,
                title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
                file_url=None):
-        self.update.callback_query.answer(text)
+        return self.update.callback_query.answer(text)
 
-    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         kwargs = dict(parse_mode=parse_mode,
                       reply_markup=reply_markup)
         if photo_url is not None and photo_primary:
@@ -318,25 +283,25 @@ class CallbackContext(Context):
                 kwargs["chat_id"] = self.update.callback_query.message.chat_id
                 kwargs["message_id"] = self.update.callback_query.message.message_id
             try:
-                self.bot.edit_message_media(**kwargs)
+                await self.bot.edit_message_media(**kwargs)
             except telegram.error.TelegramError:
                 if parse_mode.lower() != 'html':
                     text = html.escape(text)
                 text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
                 kwargs["media"] = InputMediaPhoto(
-                    media=Settings.no_image, caption=text, parse_mode=parse_mode)
-                self.bot.edit_message_media(**kwargs)
+                    media=settings.no_image, caption=text, parse_mode=parse_mode)
+                await self.bot.edit_message_media(**kwargs)
         elif text is not None and not photo_primary:
-            self.update.callback_query.edit_message_text(
+            await self.update.callback_query.edit_message_text(
                 text=text, **kwargs
             )
         elif text is not None and photo_primary:
-            self.update.callback_query.edit_message_caption(
+            await self.update.callback_query.edit_message_caption(
                 caption=text, **kwargs
             )
         elif reply_markup is not None:
             logger.debug("updating reply markup to %s", reply_markup)
-            self.update.callback_query.edit_message_reply_markup(reply_markup)
+            await self.update.callback_query.edit_message_reply_markup(reply_markup)
         logger.debug("Delete callback data result: %s",
                      self.bot.callback_data_cache.drop_data(self.update.callback_query))
 
@@ -351,22 +316,21 @@ class MessageContext(Context):
             self.text = message.caption
         else:
             self.text = message.text
-        self._update_type = octobot.UpdateType.message
         is_reply = message is not None
-        if octobot.Database.redis is not None and not is_reply:
-            octobot.Database.redis.set(
+        if octobot.database.redis is not None and not is_reply:
+            octobot.database.redis.set(
                 octobot.utils.generate_edit_id(update.message), 0)
-            octobot.Database.redis.expire(
+            octobot.database.redis.expire(
                 octobot.utils.generate_edit_id(update.message), 30)
         if message.reply_to_message:
             self.reply_to_message = Context.create_context(
                 update, bot, update.message.reply_to_message)
         super(MessageContext, self).__init__(update, bot, message)
 
-    def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
-               no_preview=False,
-               title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
-               file_url=None):
+    async def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
+                     no_preview=False,
+                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+                     file_url=None):
         if reply_to_previous and (self.update.message.reply_to_message is not None):
             target_msg: telegram.Message = self.update.message.reply_to_message
         else:
@@ -381,35 +345,35 @@ class MessageContext(Context):
             try:
                 if "disable_web_page_preview" in kwargs:
                     del kwargs["disable_web_page_preview"]
-                message = self.bot.send_photo(
+                message = await self.bot.send_photo(
                     caption=text, photo=photo_url[0], **kwargs)
             except telegram.error.TelegramError:
                 if parse_mode.lower() != 'html':
                     text = html.escape(text)
                 text = f'<b><a href="{photo_url[0]}">Link to image</a></b>\n\n' + text
-                message = self.bot.send_photo(
-                    caption=text, photo=Settings.no_image, **kwargs)
+                message = await self.bot.send_photo(
+                    caption=text, photo=settings.no_image, **kwargs)
         elif file_url:
             if "disable_web_page_preview" in kwargs:
                 del kwargs["disable_web_page_preview"]
             try:
-                message = self.bot.send_document(
+                message = await self.bot.send_document(
                     caption=text, document=file_url, **kwargs)
             except telegram.error.TelegramError:
                 text = f'<b>Failed to send file. <a href="{photo_url[0]}">Link to file</a></b>\n\n' + text
-                message = self.bot.send_message(text=text, **kwargs)
+                message = await self.bot.send_message(text=text, **kwargs)
         else:
-            message = self.bot.send_message(text=text, **kwargs)
+            message = await self.bot.send_message(text=text, **kwargs)
 
-        if octobot.Database.redis is not None and editable:
-            octobot.Database.redis.set(octobot.utils.generate_edit_id(
+        if octobot.database.redis is not None and editable:
+            octobot.database.redis.set(octobot.utils.generate_edit_id(
                 self.update.message), message.message_id)
-            octobot.Database.redis.expire(
+            octobot.database.redis.expire(
                 octobot.utils.generate_edit_id(self.update.message), 30)
         self.edit_tgt = message.message_id
         return message
 
-    def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
         if self.edit_tgt is not None:
             if text is not None:
                 return self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
@@ -427,16 +391,15 @@ class EditedMessageContext(MessageContext):
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
         self.update = update
         self.update.message = self.update.edited_message
-        if octobot.Database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
-            self.edit_tgt = int(octobot.Database.redis.get(
+        if octobot.database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
+            self.edit_tgt = int(octobot.database.redis.get(
                 octobot.utils.generate_edit_id(self.update.message)))
             if self.edit_tgt == 0:
                 logger.debug(
                     "Not handling update %s cause invalid edit target", update.update_id)
                 raise octobot.StopHandling
-            octobot.Database.redis.delete(
+            octobot.database.redis.delete(
                 octobot.utils.generate_edit_id(self.update.message))
-            self._update_type = octobot.UpdateType.edited_message
             if update.message.caption is not None:
                 self.text = update.message.caption
             else:
@@ -449,10 +412,10 @@ class EditedMessageContext(MessageContext):
         # super(EditedMessageContext, self).__init__(update, bot, message)
         Context.__init__(self, update, bot, message)
 
-    def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
-               no_preview=False,
-               title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
-               file_url=None):
+    async def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
+                     no_preview=False,
+                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+                     file_url=None):
         return self.edit(text=text, photo_url=photo_url, reply_markup=reply_markup, parse_mode=parse_mode)
 
 
@@ -462,6 +425,5 @@ class ChosenInlineResultContext(Context):
     """
 
     def __init__(self, update: telegram.Update, bot: "octobot.OctoBot", message: telegram.Message = None):
-        self._update_type = octobot.UpdateType.chosen_inline_result
         self.text = update.chosen_inline_result.query
         super(ChosenInlineResultContext, self).__init__(update, bot, message)

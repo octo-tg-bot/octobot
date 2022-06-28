@@ -25,9 +25,9 @@ class BaseFilter(BaseHandler):
     def validate(self, bot, context):
         raise RuntimeError(f"{type(self)}.validate isn't overridden!")
 
-    def handle_update(self, bot, context):
+    async def handle_update(self, bot, context):
         if self.validate(bot, context):
-            self.function(bot, context)
+            await self.function(bot, context)
 
     def __and__(self, other):
         return AndFilter(self, other)

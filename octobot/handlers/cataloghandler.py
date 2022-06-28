@@ -3,12 +3,11 @@ import html
 import octobot
 from octobot.exceptions import CatalogCantGoDeeper, CatalogNotFound, CatalogCantGoBackwards, handle_exception
 from octobot.classes.context import Context
-from octobot.handlers import CommandHandler
 import re
 import telegram
 
 from octobot.utils import add_photo_to_text
-from settings import Settings
+from octobot import settings
 
 BUTTON_REGEX = re.compile(r"(\w*):(.*(?<!\\)):(.*)$")
 BUTTON_LEFT = "◀️"
@@ -33,7 +32,7 @@ def create_inline_buttons(command, query, current_index, max_results, previous_o
     ]
 
 
-class CatalogHandler(octobot.CommandFilter):
+class CatalogHandler(octobot.filters.CommandFilter):
     """
     Catalog handler. Handles catalogs, surprisingly enough.
 
@@ -146,10 +145,10 @@ class CatalogHandler(octobot.CommandFilter):
                         parse_mode=item.parse_mode
                     )
                 ))
-        context.update.inline_query.answer(inline_res, cache_time=(360 if Settings.production else 0),
+        context.update.inline_query.answer(inline_res, cache_time=(360 if settings.production else 0),
                                            next_offset=res.next_offset)
 
-    def handle_update(self, bot, context):
+    async def handle_update(self, bot, context):
         try:
             chk_cmd = self.check_command(bot, context)
             if chk_cmd:

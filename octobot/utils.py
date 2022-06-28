@@ -1,10 +1,8 @@
+import contextvars
 import logging
-import threading
-import warnings
-import functools
-from octobot.classes.catalog import CatalogPhoto
-import types
-thread_local = threading.local()
+
+
+current_context = contextvars.ContextVar('Current context data.')
 
 
 def add_photo_to_text(text, photo_url):
@@ -12,7 +10,8 @@ def add_photo_to_text(text, photo_url):
         photo_url = [photo_url]
     photos = ""
     for photo in photo_url:
-        if isinstance(photo, CatalogPhoto):
+        # i hate fixing circular imports...
+        if not isinstance(photo, str):
             photo = photo.url
         photos += f'<a href="{photo}">\u200b</a>'
     text = photos + text
@@ -30,7 +29,7 @@ def path_to_module(path: str):
 class AddContextDataToLoggingRecord(logging.Filter):
 
     def filter(self, record):
-        ctx: "Context" = getattr(thread_local, "current_context", None)
+        ctx: "octobot.Context" = current_context.get(None)
         if ctx is not None:
             record.update_type = type(ctx).__name__
             if ctx.chat:
@@ -39,24 +38,3 @@ class AddContextDataToLoggingRecord(logging.Filter):
         else:
             record.context_not_available = True
         return True
-
-
-def deprecated(reason):
-    def decorator(func):
-        if isinstance(func, types.FunctionType):
-            @functools.wraps(func)
-            def wrapper(*args, **kw):
-                warnings.warn(reason,
-                              DeprecationWarning, 2)
-                return func(*args, **kw)
-            return wrapper
-        else:
-            og_init = func.__init__
-
-            def new_init(*args, **kwargs):
-                warnings.warn(reason,
-                              DeprecationWarning, 2)
-                og_init(*args, **kwargs)
-            func.__init__ = new_init
-            return func
-    return decorator

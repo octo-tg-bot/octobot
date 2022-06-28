@@ -16,10 +16,12 @@ def create_vnode(setting_name, setting_value, generator, children=None):
     else:
         setting_type = setting_type.__name__
     if children is None:
-        children = next(filter(lambda x: type(x) == pygenstub.ClassNode, generator.root.children))
+        children = next(filter(lambda x: type(
+            x) == pygenstub.ClassNode, generator.root.children))
     children.add_child(pygenstub.VariableNode(setting_name, setting_type))
     if isdict:
-        node = pygenstub.ClassNode(setting_type, bases=("dotdict",))
+        node = pygenstub.ClassNode(
+            setting_type, bases=("dotdict",))
         for key, value in setting_value.items():
             create_vnode(key, value, generator, node)
         generator.root.add_child(node)
@@ -28,18 +30,19 @@ def create_vnode(setting_name, setting_value, generator, children=None):
 def create_stub_for_settings():
     with open("settings.base.toml") as f:
         settings = toml.load(f)
-    with open("settings.py") as f:
+    with open("octobot/__system/settings.py") as f:
         generator = pygenstub.StubGenerator(f.read(), generic=True)
         for setting_name in settings:
             print("Creating node for", setting_name)
             create_vnode(setting_name, settings[setting_name], generator)
-        generator.root.add_child(pygenstub.VariableNode("Settings", "_Settings"))
+        generator.root.add_child(
+            pygenstub.VariableNode("Settings", "Settings"))
         out = StringIO()
         with redirect_stdout(out):
             generator.print_stub()
         stub = out.getvalue()
 
-    with open("settings.pyi", 'w') as f:
+    with open("octobot/__system/settings.pyi", 'w') as f:
         print("Writing settings stub")
         f.write(stub)
 

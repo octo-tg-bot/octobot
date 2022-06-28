@@ -4,7 +4,7 @@ import re
 import telegram
 
 import octobot
-from octobot.database import DatabaseNotAvailable
+from octobot.__system.database import DatabaseNotAvailable
 from octobot.handlers import ExceptionHandler
 import sys
 
@@ -80,7 +80,7 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
     logger.info("handling %s", e)
     if isinstance(e, LoaderCommand) or isinstance(e, CatalogBaseException):
         raise e
-    elif isinstance(e, telegram.error.Unauthorized):
+    elif isinstance(e, telegram.error.Forbidden):
         if "bot was kicked" or "bot was blocked" in e.message:
             return
     elif isinstance(e, telegram.error.BadRequest) and e.message in ("Cancelled by new editmessagemedia request",

@@ -1,9 +1,8 @@
-from settings import Settings
 from typing import Union
 import octobot
 from .basefilters import BaseFilter
+from .permissionfilter import check_permissions
 import logging
-import warnings
 
 logger = logging.getLogger('commandfilter')
 
@@ -13,12 +12,11 @@ class CommandFilter(BaseFilter):
 
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  long_description: str = "Additional info not specified by developer",
-                 hidden=False, prefix="/", inline_support=True, service: bool = False, required_args: int = 0, suggestion=None, *args,
+                 hidden=False, prefix="/", service: bool = False, required_args: int = 0, suggestion=None, *args,
                  **kwargs):
         super(CommandFilter, self).__init__(*args, **kwargs)
         if isinstance(command, str):
             command = [command]
-        self.inline_support = inline_support
         self.command = command
         self.description = description
         self.long_description = long_description
@@ -27,27 +25,20 @@ class CommandFilter(BaseFilter):
         self.service = service
         self.required_args = required_args
         self.suggestion = suggestion
-        if inline_support is not True:
-            warnings.warn("inline_support argument is left over in CommandFilter "
-                          "only for backwards compatibility and will be removed in future. "
-                          "Use Not(ContextFilter(InlineQueryContext)) instead.",
-                          DeprecationWarning, 2)
 
     def check_command(self, bot, context):
         if isinstance(context, octobot.InlineQueryContext):
-            if not self.inline_support:
-                return False
             prefix = ''
         else:
             prefix = self.prefix
         incmd = context.text
-        ratelimit_enabled = Settings.ratelimit.enabled and type(
+        ratelimit_enabled = octobot.settings.ratelimit.enabled and type(
             context) == octobot.MessageContext
         if ratelimit_enabled:
-            admin = octobot.check_permissions(chat=context.chat, user=context.user,
-                                              permissions_to_check={"is_admin"})[
+            admin = check_permissions(chat=context.chat, user=context.user,
+                                      permissions_to_check={"is_admin"})[
                 0] and context.chat.type == "supergroup"
-            rl_state = octobot.Database.redis.get(
+            rl_state = octobot.database.redis.get(
                 f"ratelimit_state:{context.chat.id}")
             if rl_state == b"user_abuse" and \
                     not admin:
@@ -66,13 +57,13 @@ class CommandFilter(BaseFilter):
                     logger.info("%s called %s using, ctx type is %s",
                                 context.user.name, context.called_command, type(context))
                     if ratelimit_enabled:
-                        if admin and Settings.ratelimit.adm_abuse_leave:
+                        if admin and octobot.settings.ratelimit.adm_abuse_leave:
                             key = f"ratelimit_adm:{context.chat.id}"
                         else:
                             key = f"ratelimit:{context.chat.id}"
-                        octobot.Database.redis.incr(key)
-                        octobot.Database.redis.expire(
-                            key, Settings.ratelimit.messages_timeframe)
+                        octobot.database.redis.incr(key)
+                        octobot.database.redis.expire(
+                            key, octobot.settings.ratelimit.messages_timeframe)
                     return True
         return False
 

@@ -16,9 +16,9 @@ The key-value database can be accessed manually, per chat_id:
 
     import octobot
 
-    octobot.Database[777000]["key"] = "value"
+    octobot.database[777000]["key"] = "value"
 
-    print(octobot.Database[777000]["key"])
+    print(octobot.database[777000]["key"])
 
 Key-value database classes
 __________________________
@@ -26,5 +26,5 @@ __________________________
 .. autoclass:: octobot.database.RedisData
     :members:
 
-.. autoclass:: octobot.database._Database
+.. autoclass:: octobot.database._database
     :members:

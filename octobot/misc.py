@@ -1,3 +1,4 @@
+from enum import Enum
 from dataclasses import dataclass
 from typing import Union
 
@@ -15,3 +16,13 @@ class Suggestion:
     icon: Union[str, None]
     title: str
     example_command: str
+
+
+class PluginStates(Enum):
+    loaded = 0
+    unknown = 1
+    error = 2
+    notfound = 3
+    skipped = 4
+    warning = 5
+    disabled = 6

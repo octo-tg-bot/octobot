@@ -1,9 +1,19 @@
-from octobot.handlers.basehandler import BaseHandler
-from octobot.handlers.choseninlineresulthandle import ChosenInlineResultHandler
-from octobot.handlers.commandhandle import CommandHandler
-from octobot.handlers.buttonhandle import InlineButtonHandler
-from octobot.handlers.inlinequeryhandle import InlineQueryHandler
-from octobot.handlers.messagehandler import MessageHandler
+from octobot.classes.plugininfo import PluginInfo
+
+
+class BaseHandler:
+    """Base class for all handlers"""
+    plugin = {"plugin_info": PluginInfo("unknown")}
+
+    def __init__(self, priority=0):
+        self.priority = priority
+
+    async def handle_update(self, bot, update):
+        raise RuntimeError("handle_update in handler not overridden!")
+
+    def __call__(self, *args, **kwargs):
+        self.function = args[0]
+        return
 
 
 class ExceptionHandler:

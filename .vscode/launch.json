@@ -8,7 +8,6 @@
             "name": "OctoBot: Normal start",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
             "args": [],
             "console": "integratedTerminal"
         },
@@ -16,7 +15,8 @@
             "name": "OctoBot: Current plugin",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
+            "module": "octobot",
+
             "args": ["${relativeFileDirname}.${fileBasenameNoExtension}"],
             "console": "integratedTerminal"
         },
@@ -24,7 +24,8 @@
             "name": "OctoBot: Test plugin",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
+            "module": "octobot",
+
             "args": ["plugins.test"],
             "console": "integratedTerminal"
         },
@@ -32,7 +33,8 @@
             "name": "OctoBot: Filter test plugin",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
+            "module": "octobot",
+
             "args": ["plugins.filter_test"],
             "console": "integratedTerminal"
         }

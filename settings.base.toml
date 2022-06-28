@@ -1,3 +1,6 @@
+# Log level
+# See https://docs.python.org/3/library/logging.html#logging-levels
+log_level = 10
 # Telegram bot API token
 telegram_token = ""
 
@@ -44,6 +47,23 @@ disallowed_chat_reason = "I am sorry, I can't work in this chat cause it is not 
 
 # Fallback image when bot failed to send image
 no_image = "https://gitlab.com/OctoNezd/octonezd.gitlab.io/-/raw/master/public/no_image.png"
+
+
+[webhook]
+  # Use ngrok for webhook.
+  # Do this if you don't have web port forwarded and/or don't want to bother with it and/or this is dev version.
+  # It overrides all other parameters in this section.
+  ngrok = true
+  # Webhook server address. Do note that bot will set webhook to <address>/api/<v1>/webhook/<updateType>, so preserve the https and stuff.
+  external_address = ""
+  # Webhook server port that will be sent to Telegram.
+  # Allowed values: 80, 88, 443, 8443 (https://core.telegram.org/bots/api#setwebhook)
+  external_port = 443
+  # Webhook (and API) server port
+  internal_port = 41615
+  # Secret key for validating updates
+  # Generate it in interpreter: secrets.token_urlsafe(64) 
+  secret = ""
 
 [sentry]
   # If sentry exception reporting should be enabled or not
