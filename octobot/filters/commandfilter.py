@@ -9,6 +9,7 @@ logger = logging.getLogger('commandfilter')
 
 class CommandFilter(BaseFilter):
     _filterWeight = 10
+    loud_exceptions = True
 
     def __init__(self, command: Union[list, str], description: str = "Command description not specified by developer",
                  long_description: str = "Additional info not specified by developer",
@@ -36,7 +37,7 @@ class CommandFilter(BaseFilter):
             context) == octobot.MessageContext
         if ratelimit_enabled:
             admin = (await check_permissions(chat=context.chat, user=context.user,
-                                             permissions_to_check={"is_admin"}) )[
+                                             permissions_to_check={"is_admin"}))[
                 0] and context.chat.type == "supergroup"
             rl_state = await octobot.database.redis.get(
                 f"ratelimit_state:{context.chat.id}")

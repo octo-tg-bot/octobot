@@ -6,6 +6,7 @@ from aiohttp_client_cache import CachedSession, RedisBackend
 
 import fakeredis.aioredis
 import redis.asyncio as redispy
+from redis import exceptions as rediserr
 from .settings import settings
 
 logger = logging.getLogger("Redis")
@@ -80,7 +81,7 @@ class Database:
                 settings.redis_url, decode_responses=True)
             try:
                 await redis.ping()
-            except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
+            except (rediserr.ConnectionError, rediserr.TimeoutError):
                 logger.error(
                     "Error: Redis is not available. That might break the bot in some places.")
             else:

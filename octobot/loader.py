@@ -9,7 +9,6 @@ import telegram.ext
 import telegram.error
 
 import octobot.exceptions
-import octobot.handlers
 import logging
 
 from octobot import settings, database
@@ -93,9 +92,9 @@ class OctoBot(telegram.ext.ExtBot):
             module = plugin["module"]
             for var_name in dir(module):
                 var = getattr(module, var_name)
-                if isinstance(var, octobot.handlers.ExceptionHandler):
+                if isinstance(var, octobot.exceptions.ExceptionHandler):
                     self.error_handlers.append(var)
-                if isinstance(var, octobot.handlers.BaseHandler):
+                if isinstance(var, octobot.filters.BaseFilter):
                     var.plugin = plugin
                     if var.priority not in self.handlers:
                         self.handlers[var.priority] = []
@@ -103,8 +102,7 @@ class OctoBot(telegram.ext.ExtBot):
                         for k, v in plugin.handler_kwargs[type(var).__name__].items():
                             setattr(var, k, v)
                     self.handlers[var.priority].append(var)
-        logger.info("Handlers update complete, priority levels: %s",
-                    self.handlers.keys())
+        logger.info("Handlers update complete")
         logger.debug("Running post-load functions...")
         for plugin in self.plugins.values():
             func = plugin.after_load
@@ -141,8 +139,6 @@ class OctoBot(telegram.ext.ExtBot):
             res = "skipped"
         except Exception as e:
             logger.error("Failed to load plugin %s", exc_info=True)
-            if octobot.exceptions.IS_DEBUG:
-                raise e
             plugin.state = PluginStates.error
             plugin.state_description = str(e)
             res = f"crashed, {e}"
@@ -216,7 +212,7 @@ class OctoBot(telegram.ext.ExtBot):
                         except Exception as e:
                             logger.error(
                                 "Handler threw an exception!", exc_info=True)
-                            handle_exception(self, ctx, e, notify=False)
+                            await handle_exception(self, ctx, e, notify=False)
                 except octobot.exceptions.StopHandling:
                     break
                 except octobot.exceptions.PassExceptionToDebugger as e:

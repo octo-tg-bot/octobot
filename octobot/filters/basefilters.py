@@ -1,20 +1,21 @@
-from ..handlers import BaseHandler
+from octobot import PluginInfo
 import logging
+
+from octobot.exceptions import handle_exception
 logger = logging.getLogger("basefilters")
 
 
-class BaseFilter(BaseHandler):
+class BaseFilter():
     _filterWeight = 0
     priority = 0
-    allowed_types = ['filter', 'handler', 'function']
+    allowed_types = ['filter', 'function']
+    plugin = PluginInfo(name="not set")
+    loud_exceptions = False
 
     def __call__(self, func):
         if isinstance(func, BaseFilter) and 'filter' in self.allowed_types:
             self.function = func.function
             return self & func
-        elif isinstance(func, BaseHandler) and 'handler' in self.allowed_types:
-            self.function = func.handle_update
-            return self
         elif callable(func) and 'function' in self.allowed_types:
             self.function = func
             return self
@@ -27,7 +28,10 @@ class BaseFilter(BaseHandler):
 
     async def handle_update(self, bot, context):
         if await self.validate(bot, context):
-            await self.function(bot, context)
+            try:
+                await self.function(bot, context)
+            except Exception as e:
+                await handle_exception(bot, context, e, self.loud_exceptions)
 
     def __and__(self, other):
         return AndFilter(self, other)

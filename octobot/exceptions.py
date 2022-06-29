@@ -5,12 +5,14 @@ import telegram
 
 import octobot
 from octobot.__system.database import DatabaseNotAvailable
-from octobot.handlers import ExceptionHandler
 import sys
 
-IS_DEBUG = True if sys.gettrace() is not None else False
-
 logger = logging.getLogger("Exceptions")
+
+
+class ExceptionHandler:
+    def handle_exception(self, bot, context, exception):
+        return
 
 
 class UnknownUpdate(ValueError):
@@ -76,7 +78,7 @@ class Halt(LoaderCommand):
     pass
 
 
-def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
+async def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
     logger.info("handling %s", e)
     if isinstance(e, LoaderCommand) or isinstance(e, CatalogBaseException):
         raise e
@@ -94,24 +96,20 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
         logger.info(
             "Chat %s probably restricted or kicked bot. Attempting to leave...", chat.id)
         try:
-            chat.leave()
+            await chat.leave()
         except telegram.error.TelegramError:
             pass
         return
     elif isinstance(e, telegram.error.TimedOut):
         return
     else:
-        logger.error("Exception got thrown somewhere", exc_info=True)
         message = context.localize(
             "🐞 Failed to execute command due to unknown error.")
         err_handlers_msgs = [message]
         err_handlers_markup = []
-        if IS_DEBUG:
-            err_handlers_msgs.append(context.localize(
-                "Exception will be raised to trigger debugger."))
         for err_handler in bot.error_handlers:
             err_handler: ExceptionHandler
-            values = err_handler.handle_exception(bot, context, e)
+            values = await err_handler.handle_exception(bot, context, e)
             if values is None:
                 continue
             elif len(values) == 2:
@@ -127,15 +125,12 @@ def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
                 err_handlers_markup = telegram.InlineKeyboardMarkup(
                     err_handlers_markup)
             message = "\n".join(err_handlers_msgs)
-            logger.debug(message)
+            logger.debug("message: %s, ctx: %s", message, context)
             if isinstance(context, octobot.MessageContext) or isinstance(context, octobot.InlineQueryContext):
-                context.reply(message, parse_mode="HTML",
-                              title=context.localize("Error occured"),
-                              reply_markup=err_handlers_markup)
+                await context.reply(message, parse_mode="HTML",
+                                    title=context.localize("Error occured"),
+                                    reply_markup=err_handlers_markup)
             elif isinstance(context, octobot.CallbackContext):
                 message = re.sub(r"<[^>]*>", '', message)
-                context.update.callback_query.answer(
+                await context.update.callback_query.answer(
                     message[0], show_alert=True)
-                # context.edit(message)
-    if IS_DEBUG:
-        raise PassExceptionToDebugger(e)
