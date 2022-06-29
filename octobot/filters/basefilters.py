@@ -48,7 +48,7 @@ class BaseFilter():
 
 
 class LogicalBaseFilter(BaseFilter):
-    allowed_types = ["filter"]
+    # allowed_types = ["filter"]
 
     def __init__(self, *filters):
         self.filters = []
@@ -72,7 +72,7 @@ class LogicalBaseFilter(BaseFilter):
 class AndFilter(LogicalBaseFilter):
     async def validate(self, bot, context):
         for filter in self.filters:
-            if not filter.validate(bot, context):
+            if not await filter.validate(bot, context):
                 return False
         return True
 
@@ -80,7 +80,7 @@ class AndFilter(LogicalBaseFilter):
 class OrFilter(LogicalBaseFilter):
     async def validate(self, bot, context):
         for filter in self.filters:
-            if filter.validate(bot, context):
+            if await filter.validate(bot, context):
                 return True
         return False
 
@@ -92,4 +92,4 @@ class NotFilter(LogicalBaseFilter):
         self.filter = filter
 
     async def validate(self, bot, context):
-        return not self.filter.validate(bot, context)
+        return not await self.filter.validate(bot, context)
