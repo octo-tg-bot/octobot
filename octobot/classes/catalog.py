@@ -4,6 +4,8 @@ from typing import Union, List, Any
 from dataclasses import dataclass, field
 
 import telegram
+import logging
+logger = logging.getLogger("catalog_class")
 
 
 @dataclass
@@ -22,24 +24,21 @@ class CatalogPhoto:
 
 
 class CatalogKeyArticle:
-    """
-    :param text: Text to include in result
-    :type text: :class:`str`
-    :param photo: Photo to include in text as preview and in inline mode as icon for result
-    :type photo: :class:`CatalogPhoto` or class:`list` of :class:`CatalogPhoto`, optional
-    :param parse_mode: Parse mode of messages. Become 'html' if `photo` is passed.
-    :type parse_mode: :class:`str`, optional
-    :param title: Item title for inline mode, defaults to first line of text
-    :type title: :class:`str`, optional
-    :param description: Description for inline mode, defaults to first 100 symbols of text
-    :type description: :class:`str`, optional
-    :param reply_markup: Inline keyboard that will appear in message
-    :type reply_markup: :class:`telegram.InlineKeyboardMarkup`
-    """
-
     def __init__(self, text: str, photo: Union[List[CatalogPhoto], CatalogPhoto] = None, parse_mode: str = None,
                  title: str = None, description: str = None, item_id: str = None,
                  reply_markup: telegram.InlineKeyboardMarkup = None):
+        """Catalog key
+
+        Args:
+            text (str): Text to send
+            photo (Union[List[CatalogPhoto], CatalogPhoto], optional): Photo to send. Defaults to None.
+            parse_mode (str, optional): Telegram parse mode. Defaults to None.
+            title (str, optional): Title in inline mode. Defaults to None.
+            description (str, optional): Description in inline mode. Defaults to None.
+            item_id (str, optional): Item unique id. Defaults to None.
+            reply_markup (telegram.InlineKeyboardMarkup, optional): Reply markup. Defaults to None.
+            context (Context, optional): Context. Defaults to None.
+        """
         self.reply_markup = reply_markup
         if self.reply_markup is None:
             self.reply_markup = telegram.InlineKeyboardMarkup([])
@@ -73,20 +72,28 @@ class CatalogKeyArticle:
                 "photo_url": self.photo_msgmode,
                 "send_as_photo": type(self) == CatalogKeyPhoto}
 
+    @property
+    def inline(self):
+        article = {"id": self.item_id,
+                   "parse_mode": self.parse_mode,
+                   "reply_markup": self.reply_markup,
+                   "title": self.title,
+                   "description": self.description}
+        article["caption" if isinstance(
+            self, CatalogKeyPhoto) else "text"] = self.text
+        if self.photo is not None:
+            article.update(dict(
+                photo_url=self.photo[0].url,
+                photo_width=self.photo[0].width,
+                photo_height=self.photo[0].height,
+                thumb_url=self.photo[-1].url,
+            ))
+        logger.debug(article)
+        return article
+
 
 class CatalogKeyPhoto(CatalogKeyArticle):
-    """
-    :param text: Text to include in result
-    :type text: :class:`str`
-    :param photo: Photo to include in text as preview and in inline mode
-    :type photo: :class:`CatalogPhoto` or class:`list` of :class:`CatalogPhoto`, optional
-    :param parse_mode: Parse mode of messages. Become 'html' if `photo` is passed.
-    :type parse_mode: :class:`str`, optional
-    :param title: Item title for inline mode, defaults to first line of text
-    :type title: :class:`str`, optional
-    :param description: Description for inline mode, defaults to first 100 symbols of text
-    :type description: :class:`str`, optional
-    """
+    pass
 
 
 @dataclass

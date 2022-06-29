@@ -48,10 +48,15 @@ def pmtest(bot, ctx: octobot.Context):
     ctx.reply("Test", to_pm=True)
 
 
+CATALOG_TOTAL = 150
+
+
 @octobot.helpers.CatalogHelper(command="catalogtest", description="Test CatalogHandler")
 async def test_catalog(bot, context, slice, query):
     res = []
-    plugin.logger.debug("slice: %s", slice)
+    plugin.logger.debug("slice: %s (%s, %s)", slice, slice.start, slice.stop)
+    if slice.stop > CATALOG_TOTAL:
+        raise octobot.catalogs.CatalogCantGoDeeper()
     for i in range(slice.start, slice.stop):
         res.append(octobot.catalogs.CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i}</i>",
                                                     title=f"Title for {query}",
@@ -63,4 +68,4 @@ async def test_catalog(bot, context, slice, query):
                                                         url=f"https://picsum.photos/seed/{query}{i}/200/300",
                                                     )]))
     return octobot.catalogs.CatalogResult(res, current_index=slice.stop, next_offset=slice.stop,
-                                          previous_offset=None if slice.start == 0 else slice.start - 1, total=150)
+                                          previous_offset=None if slice.start == 0 else slice.start - 1, total=CATALOG_TOTAL)

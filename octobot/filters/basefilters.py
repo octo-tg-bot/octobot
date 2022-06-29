@@ -1,6 +1,6 @@
 from octobot import PluginInfo
 import logging
-
+from typing import Any
 from octobot.exceptions import handle_exception
 logger = logging.getLogger("basefilters")
 

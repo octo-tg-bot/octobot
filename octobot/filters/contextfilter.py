@@ -1,9 +1,9 @@
 from .basefilters import BaseFilter
 from octobot.classes import Context
-
+from typing import Type
 
 class ContextFilter(BaseFilter):
-    def __init__(self, contextType: Context, *args, **kwargs):
+    def __init__(self, contextType: Type[Context], *args, **kwargs):
         if not issubclass(contextType, Context):
             raise TypeError(f"{contextType} is not a subclass of Context!")
         self.contextType = contextType
