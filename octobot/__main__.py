@@ -1,13 +1,6 @@
 import octobot as ob
 
-
-import fakeredis
-import asyncio
-# logging.basicConfig(
-#     level=logging.DEBUG)
-# logging.captureWarnings(True)
-
-# logging.getLogger().setLevel(ob.settings.log_level)
+import logging
 
 
 if __name__ == '__main__':
@@ -20,5 +13,7 @@ if __name__ == '__main__':
         from uvicorn.config import LOGGING_CONFIG
         LOGGING_CONFIG["loggers"] = {"": {"handlers": [
             "default"], "level": ob.settings.log_level}}
+        LOGGING_CONFIG["formatters"]["default"]["()"] = "octobot.logger.CustomFormatter"
+        del LOGGING_CONFIG["formatters"]["default"]["use_colors"]
         uvicorn.run("octobot.web:app", host=host,
                     port=ob.settings.webhook.internal_port, log_level=ob.settings.log_level, reload=True)
