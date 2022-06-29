@@ -180,7 +180,7 @@ class OctoBot(telegram.ext.ExtBot):
     async def handle_update(self, context: octobot.Context):
         bot = self
         ctx = context
-        ctx.chat_db = database[(ctx.chat or ctx.user).id]
+        ctx.chat_db = database[ctx.chat.id]
         ctx.user_db = database[ctx.user.id]
         current_context.set(context)
         disabled_plugins = []

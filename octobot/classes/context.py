@@ -92,6 +92,10 @@ class Context:
         self.locale = babel.Locale.parse(self.locale_str, sep=loc_sep)
         self.user = update.effective_user
         self.chat = update.effective_chat
+        if self.chat is None:
+            self.chat = telegram.Chat(update.effective_user.id, type=telegram.Chat.PRIVATE,
+                                      title=update.effective_user.name, username=update.effective_user.username,
+                                      first_name=update.effective_user.first_name, last_name=update.effective_user.last_name)
         if self.text is None:
             self.text = ''
         self.query = " ".join(self.text.split(" ")[1:])
