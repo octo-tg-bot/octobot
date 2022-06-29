@@ -106,7 +106,7 @@ class Context:
 
     @pluginfo_kwargs("reply_kwargs")
     def reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None, no_preview=False,
-              title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+              title=None, to_pm=False, failed=False, editable=True, inline_description=None, send_as_photo=False,
               file_url=None):
         """
         Replies to a message/shows a popup in inline keyboard/sends out inline query result
@@ -137,7 +137,7 @@ class Context:
         :type inline_description: :class:`str`
         """
         self.replied = True
-        if photo_url and not photo_primary:
+        if photo_url and not send_as_photo:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
@@ -146,19 +146,19 @@ class Context:
             title = self.text[:20]
         if to_pm:
             return MessageContext._reply(text, photo_url, reply_to_previous, reply_markup, parse_mode, no_preview,
-                                         title, to_pm, failed, editable, inline_description, photo_primary,
+                                         title, to_pm, failed, editable, inline_description, send_as_photo,
                                          file_url)
         return self._reply(text, photo_url, reply_to_previous, reply_markup, parse_mode, no_preview,
-                           title, to_pm, failed, editable, inline_description, photo_primary,
+                           title, to_pm, failed, editable, inline_description, send_as_photo,
                            file_url)
 
     async def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
                      no_preview=False,
-                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, send_as_photo=False,
                      file_url=None):
         raise RuntimeError(f"Override _reply in {type(self)}!")
 
-    def edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    def edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, send_as_photo=False):
         """
         Edits message.
 
@@ -171,14 +171,14 @@ class Context:
         :param parse_mode: Parse mode of messages. Become 'html' if photo_url is passed. Available values are `markdown`, `html` and None
         :type parse_mode: :class:`str`, optional
         """
-        if photo_url and not photo_primary:
+        if photo_url and not send_as_photo:
             if parse_mode is None or parse_mode.lower() != "html":
                 parse_mode = "html"
                 text = html.escape(text)
             text = add_photo_to_text(text, photo_url)
-        return self._edit(text, photo_url, reply_markup, parse_mode, photo_primary)
+        return self._edit(text, photo_url, reply_markup, parse_mode, send_as_photo)
 
-    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, send_as_photo=False):
         raise RuntimeError(f"Override _edit in {type(self)}!")
 
     def localize(self, text: str) -> str:
@@ -225,7 +225,7 @@ class InlineQueryContext(Context):
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
                no_preview=False,
-               title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+               title=None, to_pm=False, failed=False, editable=True, inline_description=None, send_as_photo=False,
                file_url=None):
         inline_content = telegram.InputTextMessageContent(
             text,
@@ -260,14 +260,14 @@ class CallbackContext(Context):
 
     def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
                no_preview=False,
-               title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+               title=None, to_pm=False, failed=False, editable=True, inline_description=None, send_as_photo=False,
                file_url=None):
         return self.update.callback_query.answer(text)
 
-    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, send_as_photo=False):
         kwargs = dict(parse_mode=parse_mode,
                       reply_markup=reply_markup)
-        if photo_url is not None and photo_primary:
+        if photo_url is not None and send_as_photo:
             kwargs = dict(
                 media=InputMediaPhoto(media=photo_url[0], caption=text,
                                       parse_mode=parse_mode),
@@ -289,11 +289,11 @@ class CallbackContext(Context):
                 kwargs["media"] = InputMediaPhoto(
                     media=settings.no_image, caption=text, parse_mode=parse_mode)
                 await self.bot.edit_message_media(**kwargs)
-        elif text is not None and not photo_primary:
+        elif text is not None and not send_as_photo:
             await self.update.callback_query.edit_message_text(
                 text=text, **kwargs
             )
-        elif text is not None and photo_primary:
+        elif text is not None and send_as_photo:
             await self.update.callback_query.edit_message_caption(
                 caption=text, **kwargs
             )
@@ -321,7 +321,7 @@ class MessageContext(Context):
 
     async def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
                      no_preview=False,
-                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, send_as_photo=False,
                      file_url=None):
         if reply_to_previous and (self.update.message.reply_to_message is not None):
             target_msg: telegram.Message = self.update.message.reply_to_message
@@ -333,7 +333,7 @@ class MessageContext(Context):
         if to_pm:
             kwargs["chat_id"] = self.user.id
             del kwargs["reply_to_message_id"]
-        if photo_url and photo_primary:
+        if photo_url and send_as_photo:
             try:
                 if "disable_web_page_preview" in kwargs:
                     del kwargs["disable_web_page_preview"]
@@ -365,7 +365,7 @@ class MessageContext(Context):
         self.edit_tgt = message.message_id
         return message
 
-    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, photo_primary=False):
+    async def _edit(self, text=None, photo_url=None, reply_markup=None, parse_mode=None, send_as_photo=False):
         if self.edit_tgt is not None:
             if text is not None:
                 return self.bot.edit_message_text(chat_id=self.update.message.chat.id, message_id=self.edit_tgt,
@@ -388,7 +388,7 @@ class EditedMessageContext(MessageContext):
 
     async def _reply(self, text, photo_url=None, reply_to_previous=False, reply_markup=None, parse_mode=None,
                      no_preview=False,
-                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, photo_primary=False,
+                     title=None, to_pm=False, failed=False, editable=True, inline_description=None, send_as_photo=False,
                      file_url=None):
         if await octobot.database.redis.exists(octobot.utils.generate_edit_id(self.update.message)):
             self.edit_tgt = await octobot.database.redis.get(

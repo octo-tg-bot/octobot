@@ -11,8 +11,10 @@ class BaseFilter():
     allowed_types = ['filter', 'function']
     plugin = PluginInfo(name="not set")
     loud_exceptions = False
+    function = None
 
     def __call__(self, func):
+        assert self.function is None
         if isinstance(func, BaseFilter) and 'filter' in self.allowed_types:
             self.function = func.function
             return self & func
@@ -22,6 +24,8 @@ class BaseFilter():
         else:
             raise TypeError(
                 f"{func} is unsupported, this handler supports {self.allowed_types}")
+
+    insert_func = __call__
 
     async def validate(self, bot, context):
         raise RuntimeError(f"{type(self)}.validate isn't overridden!")

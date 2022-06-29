@@ -2,7 +2,6 @@ import json
 import telegram
 
 import octobot
-from octobot.classes.catalog import CatalogPhoto
 from octobot.filters import CommandFilter
 from octobot.localization import localizable
 from octobot import settings
@@ -47,3 +46,21 @@ async def rchat(bot, ctx):
 def pmtest(bot, ctx: octobot.Context):
     ctx.reply("Check your PMs!")
     ctx.reply("Test", to_pm=True)
+
+
+@octobot.helpers.CatalogHelper(command="catalogtest", description="Test CatalogHandler")
+async def test_catalog(bot, context, slice, query):
+    res = []
+    plugin.logger.debug("slice: %s", slice)
+    for i in range(slice.start, slice.stop):
+        res.append(octobot.catalogs.CatalogKeyPhoto(text=f"<b>{query}</b> <i>{i}</i>",
+                                                    title=f"Title for {query}",
+                                                    description=f"Description for {query}",
+                                                    parse_mode="HTML",
+                                                    reply_markup=telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(
+                                                        url="https://example.com", text="Test")]]),
+                                                    photo=[octobot.catalogs.CatalogPhoto(
+                                                        url=f"https://picsum.photos/seed/{query}{i}/200/300",
+                                                    )]))
+    return octobot.catalogs.CatalogResult(res, current_index=slice.stop, next_offset=slice.stop,
+                                          previous_offset=None if slice.start == 0 else slice.start - 1, total=150)

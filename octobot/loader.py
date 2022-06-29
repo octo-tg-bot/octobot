@@ -83,6 +83,15 @@ class OctoBot(telegram.ext.ExtBot):
 
         return load_list
 
+    def add_filter(self, filter, plugin):
+        filter.plugin = plugin
+        if filter.priority not in self.handlers:
+            self.handlers[filter.priority] = []
+        if type(filter).__name__ in plugin.handler_kwargs:
+            for k, v in plugin.handler_kwargs[type(filter).__name__].items():
+                setattr(filter, k, v)
+        self.handlers[filter.priority].append(filter)
+
     async def update_handlers(self):
         """
         Updates handlers from self.plugins. Usually gets called after :meth:`load_plugins` or :meth:`load_plugin` (if `single_load=True`)
@@ -95,13 +104,10 @@ class OctoBot(telegram.ext.ExtBot):
                 if isinstance(var, octobot.exceptions.ExceptionHandler):
                     self.error_handlers.append(var)
                 if isinstance(var, octobot.filters.BaseFilter):
-                    var.plugin = plugin
-                    if var.priority not in self.handlers:
-                        self.handlers[var.priority] = []
-                    if type(var).__name__ in plugin.handler_kwargs:
-                        for k, v in plugin.handler_kwargs[type(var).__name__].items():
-                            setattr(var, k, v)
-                    self.handlers[var.priority].append(var)
+                    self.add_filter(var, plugin)
+                if isinstance(var, octobot.helpers.BaseHelper):
+                    for filter in var.filters:
+                        self.add_filter(filter, plugin)
         logger.info("Handlers update complete")
         logger.debug("Running post-load functions...")
         for plugin in self.plugins.values():
@@ -189,7 +195,8 @@ class OctoBot(telegram.ext.ExtBot):
                 disabled_plugins = await octobot.database.redis.smembers(
                     f"plugins_disabled{context.chat.id}")
             if isinstance(ctx, octobot.CallbackContext) and isinstance(ctx.callback_data, octobot.Callback):
-                return ctx.callback_data.execute(bot, ctx)
+                logger.debug("Executing callback %s", ctx.callback_data)
+                return await ctx.callback_data.execute(bot, ctx)
             for priority in sorted(self.handlers.keys()):
                 handlers = self.handlers[priority]
                 logger.debug(f"handling priority level {priority}")

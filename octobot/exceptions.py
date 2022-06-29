@@ -79,7 +79,7 @@ class Halt(LoaderCommand):
 
 
 async def handle_exception(bot: "octobot.OctoBot", context, e, notify=True):
-    logger.info("handling %s", e)
+    logger.info("handling %s", e, exc_info=True)
     if isinstance(e, LoaderCommand) or isinstance(e, CatalogBaseException):
         raise e
     elif isinstance(e, telegram.error.Forbidden):

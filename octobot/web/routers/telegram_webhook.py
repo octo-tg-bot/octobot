@@ -25,10 +25,11 @@ logger = logging.getLogger("octobot.web.webhook")
 
 
 @router.post("/webhook")
-async def webhook(bot=Depends(obweb.get_bot), update_dict=Body(), x_telegram_bot_api_secret_token=Header()):
+async def webhook(bot: ob.OctoBot = Depends(obweb.get_bot), update_dict=Body(), x_telegram_bot_api_secret_token=Header()):
     if x_telegram_bot_api_secret_token != ob.settings.webhook.secret:
         raise HTTPException(403, "Invalid secret token.")
     update = telegram.Update.de_json(update_dict, bot)
+    bot.insert_callback_data(update)
     context_type = list(update_dict.keys())[-1]
     if context_type not in WEBHOOK_TYPES:
         raise HTTPException(400, f"Unknown update type: {context_type}")

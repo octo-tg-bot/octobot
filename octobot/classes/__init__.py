@@ -1,5 +1,5 @@
 from octobot.classes.callback import Callback, EmptyCallback, InvalidCallback, PopupCallback
-from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, Catalog, CatalogPhoto
+from octobot.classes.catalog import CatalogKeyPhoto, CatalogKeyArticle, CatalogResult, CatalogPhoto
 from octobot.classes.context import Context, CallbackContext, MessageContext, ChosenInlineResultContext, \
     EditedMessageContext, InlineQueryContext
 from enum import Enum

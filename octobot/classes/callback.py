@@ -8,13 +8,13 @@ class Callback:
         return self.function(bot, context, *self.args, **self.kwargs)
 
 
-def invalid_callback(bot, ctx):
-    ctx.reply(ctx.localize(
+async def invalid_callback(bot, ctx):
+    await ctx.reply(ctx.localize(
         "I can't understand what this inline button does. The keyboard here is probably outdated."))
 
 
-def empty_callback(bot, ctx):
-    ctx.reply(ctx.localize("You saw nothing"))
+async def empty_callback(bot, ctx):
+    await ctx.reply(ctx.localize("🥷You saw nothing"))
 
 
 InvalidCallback = Callback(invalid_callback)
@@ -25,5 +25,5 @@ class PopupCallback(Callback):
     def __init__(self, popup_text):
         self.popup_text = popup_text
 
-    def execute(self, bot, context):
-        context.update.callback_query.answer(self.popup_text, show_alert=True)
+    async def execute(self, bot, context):
+        await context.update.callback_query.answer(self.popup_text, show_alert=True)

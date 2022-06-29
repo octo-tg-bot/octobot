@@ -1,7 +1,7 @@
 import random
 import string
-from typing import Union, List
-from dataclasses import dataclass
+from typing import Union, List, Any
+from dataclasses import dataclass, field
 
 import telegram
 
@@ -45,7 +45,8 @@ class CatalogKeyArticle:
             self.reply_markup = telegram.InlineKeyboardMarkup([])
         self.item_id = item_id
         if self.item_id is None:
-            self.item_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            self.item_id = ''.join(random.choices(
+                string.ascii_uppercase + string.digits, k=8))
         self.text = text
         self.parse_mode = parse_mode
         self.title = title
@@ -66,6 +67,12 @@ class CatalogKeyArticle:
                 photos.append(photo.url)
             return photos
 
+    @property
+    def message(self):
+        return {"text": self.text, "parse_mode": self.parse_mode, "reply_markup": self.reply_markup,
+                "photo_url": self.photo_msgmode,
+                "send_as_photo": type(self) == CatalogKeyPhoto}
+
 
 class CatalogKeyPhoto(CatalogKeyArticle):
     """
@@ -81,31 +88,21 @@ class CatalogKeyPhoto(CatalogKeyArticle):
     :type description: :class:`str`, optional
     """
 
-@dataclass()
-class Catalog:
-    """
-    Base catalog class
 
-    :param results: Results found by function
-    :type results: :class:`list` of :class:`CatalogKeyPhoto` or :class:`CatalogKeyArticle`
-    :param max_count: Total amount of results function can return
-    :type max_count: :class:`int`
-    :param current_index: Current index
-    :type current_index: :class:`int`
-    :param next_offset: Next offset
-    :type next_offset: :class:`str` or :class:`int`
-    :param previous_offset: Previous offset
-    :type previous_offset: :class:`str` or :class:`int`
-    """
-    results: Union[List[CatalogKeyPhoto], List[CatalogKeyArticle]]
-    current_index: int
-    next_offset: Union[str, int]
-    current_index: int
-    previous_offset: Union[str, int]
-    max_count: Union[str, int] = "?"
-    photo_primary: bool = False
+@dataclass
+class CatalogResult:
+    results: List[CatalogKeyArticle] | List[CatalogKeyPhoto] = field(
+        default_factory=list)
+    current_index: Any = None
+    next_offset: Any = None
+    previous_offset: Any = None
+    total: int = None
+    query: str = "Anything written here will be overwritten by CatalogHelper."
+
+    @property
     def __iter__(self):
-        return self.results.__iter__()
+        return self.results.__iter__
 
-    def __getitem__(self, key):
-        return self.results.__getitem__(key)
+    @property
+    def __getitem__(self):
+        return self.results.__getitem__

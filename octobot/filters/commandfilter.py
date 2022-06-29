@@ -73,13 +73,13 @@ class CommandFilter(BaseFilter):
             return False
         elif await self.check_command(bot, context):
             if getattr(self.plugin, 'state', 'ok') == octobot.PluginStates.disabled:
-                context.reply(
+                await context.reply(
                     context.localize("Sorry, this command is unavailable. Please contact the bot administrator."))
                 return False
             if len(context.args) >= self.required_args:
                 return True
             else:
-                context.reply(context.localize(
+                await context.reply(context.localize(
                     'Not enough arguments! This command takes {args_amount} arguments. ' +
                     'Consider reading <a href="{help_url}">help for this command</a>').format(
                     args_amount=self.required_args,

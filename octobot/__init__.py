@@ -6,8 +6,8 @@ from .__system import settings
 from .__system import database
 from octobot.localization import localizable
 from octobot.classes import UpdateType, PluginInfo, Context, CallbackContext, MessageContext, ChosenInlineResultContext, \
-    EditedMessageContext, InlineQueryContext
-from octobot import filters, catalogs, exceptions
+    EditedMessageContext, InlineQueryContext, Callback, EmptyCallback, InvalidCallback, PopupCallback
+from octobot import filters, catalogs, helpers, exceptions
 from octobot.misc import Suggestion, PluginStates
 from octobot.loader import OctoBot
 
