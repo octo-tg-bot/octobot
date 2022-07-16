@@ -23,7 +23,7 @@ spamwatch = "~=0.3.0"
 cachetools = "4.2.2"
 sentry-sdk = "~=1.7.2"
 pygelf = "~=0.4.0"
-bleach = "~=5.0.0"
+bleach = "~=5.0.1"
 fakeredis = "~=1.8.1"
 
 [tool.poetry.dev-dependencies]
