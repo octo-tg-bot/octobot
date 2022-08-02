@@ -194,7 +194,7 @@ test = ["setuptools", "emoji", "pytest"]
 
 [[package]]
 name = "fakeredis"
-version = "1.8.2"
+version = "1.9.0"
 description = "Fake implementation of redis API for testing purposes."
 category = "main"
 optional = false
@@ -805,7 +805,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "7f84af25d5f5e7bd4ac2931aacd3d3caad2dfae886a13e44dc796c03b3992150"
+content-hash = "1dd84116ef921fac38553f593fef7dff4260c3f845eabb564215bfea74e9ac33"
 
 [metadata.files]
 alabaster = [
@@ -877,8 +877,8 @@ emoji-country-flag = [
     {file = "emoji_country_flag-1.3.0-py2.py3-none-any.whl", hash = "sha256:5de298f7454cb6b838bebf7b001523e53c06b7d08de2fe38ab14770a91ea314c"},
 ]
 fakeredis = [
-    {file = "fakeredis-1.8.2-py3-none-any.whl", hash = "sha256:5e85a480c41b2a46edd6ba67f44197acc6603c59427fdf4456ebb89e56e77fa5"},
-    {file = "fakeredis-1.8.2.tar.gz", hash = "sha256:3564fbaed1eaec890eff96ee9088c1d30ee5fba2b81c97c72143f809d9c60c74"},
+    {file = "fakeredis-1.9.0-py3-none-any.whl", hash = "sha256:868467ff399520fc77e37ff002c60d1b2a1674742982e27338adaeebcc537648"},
+    {file = "fakeredis-1.9.0.tar.gz", hash = "sha256:60639946e3bb1274c30416f539f01f9d73b4ea68c244c1442f5524e45f51e882"},
 ]
 googletrans = [
     {file = "googletrans-4.0.0rc1.tar.gz", hash = "sha256:74df47b092e2d566522019d149e3f1d75732570ad76eaf8e14aebeffc126c372"},
