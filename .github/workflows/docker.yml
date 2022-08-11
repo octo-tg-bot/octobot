@@ -115,6 +115,7 @@ jobs:
         with:
           environment: prod
           ignore_missing: true
+          ignore_empty: true
 
       - name: Send request to Watchtower HTTP API
         run: 'curl -H "Authorization: Bearer ${{ secrets.WT_TOKEN }}" http://${{ secrets.WT_HOST }}:${{ secrets.WT_PORT }}/v1/update'
