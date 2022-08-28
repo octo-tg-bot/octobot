@@ -27,7 +27,10 @@ logger = logging.getLogger("Bot")
 
 
 def update_loop(bot, queue):
-    update_id = bot.get_updates()[-1].update_id
+    updates = bot.get_updates()
+    update_id = None
+    if len(updates) > 0:
+        update_id = [-1].update_id
     bot.deleteWebhook()
     conflict_count = 0
     try:
