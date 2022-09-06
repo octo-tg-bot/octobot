@@ -30,7 +30,7 @@ def update_loop(bot, queue):
     updates = bot.get_updates()
     update_id = None
     if len(updates) > 0:
-        update_id = [-1].update_id
+        update_id = updates[-1].update_id
     bot.deleteWebhook()
     conflict_count = 0
     try:
