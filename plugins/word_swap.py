@@ -23,7 +23,7 @@
 Word swap module
 """
 import html
-import re
+import re2 as re
 import string
 
 import octobot
@@ -70,17 +70,16 @@ def wordsw(bot, context):
                     print("not ready for replacement")
                     return
                 replacement = groups[2 + offset]
-                # if len(groups) > 3+offset:
-                #     flags = groups[3+offset]
-                # else:
-                #     flags = ""
-                # find_re = re.compile("{}{}".format("(?{})".format(flags.replace("g", "")) if flags.replace("g", "") != "" else "", find))
-                # mod_msg = html.escape(find_re.sub(replacement, msg.reply_to_message.text, count=100))
-                mod_msg = html.escape(msg.reply_to_message.text.replace(find, replacement))
-                if msg.reply_to_message.text.replace(find, replacement) == msg.reply_to_message.text:
+                if len(groups) > 3+offset:
+                    flags = groups[3+offset]
+                else:
+                    flags = ""
+                find_re = re.compile("{}{}".format("(?{})".format(flags.replace("g", "")) if flags.replace("g", "") != "" else "", find))
+                mod_msg = find_re.sub(replacement, msg.reply_to_message.text, count=100)
+                if mod_msg == msg.reply_to_message.text:
                     # Nothing changed.
                     return
-                mod_msg = appendCodeChanges(html.escape(msg.reply_to_message.text), mod_msg)
+                mod_msg = appendCodeChanges(html.escape(msg.reply_to_message.text), html.escape(mod_msg))
                 text = context.localize("Hi, {username}!\nDid you mean:\n{text}").format(username=msg.reply_to_message.from_user.mention_html(),
                                                                                          text=mod_msg)
                 return context.reply(text=text, parse_mode="HTML", reply_to_previous=True)
