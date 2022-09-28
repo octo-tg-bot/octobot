@@ -12,7 +12,7 @@ COPY locales locales
 RUN /venv/bin/pybabel compile -d locales
 
 FROM alpine:3 AS release
-RUN apk add --no-cache python3 libwebp jpeg
+RUN apk add --no-cache python3 libwebp jpeg re2
 COPY --from=venv-create /venv /venv
 COPY --from=venv-create /workdir/locales /app/locales
 WORKDIR /app
