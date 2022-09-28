@@ -31,6 +31,7 @@ jobs:
       - uses: actions/setup-python@v2
       - name: Install dependencies
         run: |
+          sudo apt install libre2-dev
           python -m pip install poetry
           poetry install --no-interaction --no-ansi
       - name: Run tests
