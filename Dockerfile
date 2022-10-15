@@ -5,7 +5,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 RUN python3 -m venv /venv
 COPY pyproject.toml poetry.lock ./
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip \
-    /root/.local/bin/poetry export -f requirements.txt --without-hashes | /venv/bin/pip install -r /dev/stdin
+  /root/.local/bin/poetry export -f requirements.txt --without-hashes --without dev -E pyre2 | /venv/bin/pip install -r /dev/stdin
 ENV PYTHONPATH=/packages
 WORKDIR /workdir
 COPY locales locales
@@ -21,9 +21,9 @@ ARG CI
 ARG DESCRIBE
 RUN if [ $CI = "true" ]; then \
   echo $DESCRIBE > .git-version; \
- else \
+  else \
   echo "Built outside CI, unknown ver" >  .git-version; \
- fi
+  fi
 ENV SENTRY_RELEASE=$GITHUB_SHA
 CMD /venv/bin/python3 /app/main.py
 LABEL org.opencontainers.image.source https://github.com/octo-tg-bot/octobotv4
