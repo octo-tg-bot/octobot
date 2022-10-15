@@ -102,13 +102,16 @@ class _Database:
 
     def __init__(self):
         self.request_session = requests.Session()
-        self.request_session.headers.update({"User-Agent": Settings.user_agent})
+        self.request_session.headers.update(
+            {"User-Agent": Settings.user_agent})
         if not os.environ.get("ob_testing", False):
-            self.redis = redis.Redis(host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
+            self.redis = redis.Redis(
+                host=Settings.redis["host"], port=Settings.redis["port"], db=Settings.redis["db"])
             try:
                 self.redis.ping()
             except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
-                logger.error("Error: Redis is not available. That might break the bot in some places.")
+                logger.error(
+                    "Error: Redis is not available. That might break the bot in some places.")
                 self.redis = fakeredis.FakeRedis()
             else:
                 logger.info("Redis connection successful")
@@ -141,14 +144,16 @@ class _Database:
             r = self._do_request(request_type, request_args, request_kwargs)
             return r
         else:
-            db_entry = request_create_id(request_type, request_args, request_kwargs)
+            db_entry = request_create_id(
+                request_type, request_args, request_kwargs)
             logger.debug("Searching for request ID %s", db_entry)
             if self.redis.exists(db_entry) == 1:
                 logger.debug("Using cached result")
                 req = self.redis.get(db_entry)
                 return pickle.loads(req)
             else:
-                req = self._do_request(request_type, request_args, request_kwargs)
+                req = self._do_request(
+                    request_type, request_args, request_kwargs)
                 if req.status_code == requests.codes.ok:
                     logger.debug("Status code is 200, saving to redis")
                     self.redis.set(db_entry, pickle.dumps(req))
@@ -160,9 +165,12 @@ class _Database:
             @wraps(function)
             def wrapper(*args, **kwargs):
                 if self.redis is not None:
-                    key = b"func_cache:" + pickle.dumps({"args": args, "kwargs": kwargs, "func_name": function.__name__})
+                    key = b"func_cache:" + \
+                        pickle.dumps(
+                            {"args": args, "kwargs": kwargs, "func_name": function.__name__})
                     if self.redis.exists(key):
-                        logger.debug("Using cached result for %s", function.__name__)
+                        logger.debug("Using cached result for %s",
+                                     function.__name__)
                         res = pickle.loads(self.redis.get(key))
                     else:
                         res = function(*args, **kwargs)
@@ -171,7 +179,8 @@ class _Database:
                         logger.debug("Created cache for %s", function.__name__)
                 else:
                     res = function(*args, **kwargs)
-                    logger.warning("Redis cache is N/A, function %s is not cached", function.__name__)
+                    logger.warning(
+                        "Redis cache is N/A, function %s is not cached", function.__name__)
                 return res
 
             return wrapper

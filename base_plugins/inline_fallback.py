@@ -34,6 +34,12 @@ def inline_handler(bot: octobot.OctoBot, context: octobot.InlineQueryContext):
     supplied_command = query.query.split(" ")[0]
     if supplied_command in inline_commands:
         return
+    if len(suggestions) == 0:
+        suggestions = [
+            octobot.Suggestion(
+                icon=None,
+                title="No suggestions installed.", example_command="no")
+        ]
     selected_suggestion = random.choice(suggestions)
     suggestion = telegram.InlineQueryResultArticle(f"suggestion-{selected_suggestion.title}",
                                                    title=context.localize("Maybe try {suggestionCommandTitle}?").format(

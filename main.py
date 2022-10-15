@@ -27,7 +27,6 @@ logger = logging.getLogger("Bot")
 
 
 def update_loop(bot, queue):
-    updates = bot.get_updates()
     update_id = None
     bot.deleteWebhook(drop_pending_updates=True)
     conflict_count = 0
@@ -48,7 +47,8 @@ def update_loop(bot, queue):
             except telegram.error.Conflict:
                 logger.error("Got Conflict during getUpdates")
                 if conflict_count > 3:
-                    logger.critical("Exceeded allowed conflict count - stopping")
+                    logger.critical(
+                        "Exceeded allowed conflict count - stopping")
                     return
                 conflict_count += 1
             except (telegram.error.RetryAfter) as e:

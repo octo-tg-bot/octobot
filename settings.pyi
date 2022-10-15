@@ -24,6 +24,7 @@ class _Settings:
     allowed_chats: list
     disallowed_chat_reason: str
     no_image: str
+    spoiler_ttl: int
     sentry: dict_sentry
     redis: dict_redis
     spamwatch: dict_spamwatch

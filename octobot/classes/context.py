@@ -1,3 +1,4 @@
+from uuid import uuid4
 from settings import Settings
 from octobot.utils import add_photo_to_text
 import gettext
@@ -77,7 +78,6 @@ class Context:
     reply_to_message = None
     text = None
     replied = False
-    message = None
     called_command = None
     user: telegram.User
     chat: telegram.Chat
@@ -268,7 +268,7 @@ class InlineQueryContext(Context):
             parse_mode=parse_mode,
             disable_web_page_preview=no_preview
         )
-        result = telegram.InlineQueryResultArticle(self.update.inline_query.query + str(time.time()),
+        result = telegram.InlineQueryResultArticle(uuid4(),
                                                    title=title,
                                                    description=cleanhtml(text)[
                                                        :500] if inline_description is None else inline_description,
