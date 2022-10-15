@@ -33,7 +33,7 @@ jobs:
         run: |
           sudo apt install libre2-dev
           python -m pip install poetry
-          poetry install --no-interaction --no-ansi --without dev -E pyre2
+          poetry install --no-interaction --no-ansi -E pyre2
       - name: Run tests
         run: poetry run pytest tests/ --junitxml=pytest_rep.xml
       - name: Publish Unit Test Results
