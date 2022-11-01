@@ -486,7 +486,7 @@ socks = ["PySocks"]
 
 [[package]]
 name = "pytz"
-version = "2022.4"
+version = "2022.6"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
@@ -830,7 +830,7 @@ pyre2 = ["pyre2"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "0676ac0cf1fce42f1dc8d419ba2bfd6abeaa569086340a4843c72e8d7f218184"
+content-hash = "32244253568884b085cd59cee9921c5d9ee97316493a9147b6e62e0f9f78f09c"
 
 [metadata.files]
 alabaster = [
@@ -1113,8 +1113,8 @@ python-telegram-bot = [
     {file = "python_telegram_bot-13.14-py3-none-any.whl", hash = "sha256:79abc66355af2310bbaaf7f41746230b996434e287f21f27070c92978dc0964f"},
 ]
 pytz = [
-    {file = "pytz-2022.4-py2.py3-none-any.whl", hash = "sha256:2c0784747071402c6e99f0bafdb7da0fa22645f06554c7ae06bf6358897e9c91"},
-    {file = "pytz-2022.4.tar.gz", hash = "sha256:48ce799d83b6f8aab2020e369b627446696619e79645419610b9facd909b3174"},
+    {file = "pytz-2022.6-py2.py3-none-any.whl", hash = "sha256:222439474e9c98fced559f1709d89e6c9cbf8d79c794ff3eb9f8800064291427"},
+    {file = "pytz-2022.6.tar.gz", hash = "sha256:e89512406b793ca39f5971bc999cc538ce125c0e51c27941bef4568b460095e2"},
 ]
 pytz-deprecation-shim = [
     {file = "pytz_deprecation_shim-0.1.0.post0-py2.py3-none-any.whl", hash = "sha256:8314c9692a636c8eb3bda879b9f119e350e93223ae83e70e80c31675a0fdc1a6"},
