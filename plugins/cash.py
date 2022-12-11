@@ -26,7 +26,6 @@ import requests
 from babel.numbers import format_currency, format_decimal, get_currency_name
 from octobot.dataclass import Suggestion
 
-from settings import Settings
 
 import octobot
 
