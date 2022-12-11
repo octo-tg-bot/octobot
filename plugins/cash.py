@@ -34,31 +34,9 @@ plugin = octobot.PluginInfo(name="Currency Converter")
 CURR_TEMPLATE = octobot.localizable("""
 %(in)s = %(out)s
 
-<a href="http://free.currencyconverterapi.com/">Powered by Currency convert API</a>
+<a href="http://exchangerate.host/">Powered by exchangerate.host</a>
 """)
 LOGGER = plugin.logger
-if Settings.currency_converter_apikey == "":
-    plugin.state = octobot.PluginStates.disabled
-    plugin.state_description = "API Key is not set. Get it @ https://free.currencyconverterapi.com/"
-
-
-def get_currency_data():
-    r = octobot.Database.get_cache("https://free.currconv.com/api/v7/currencies", params={
-        "apiKey": Settings.currency_converter_apikey
-    })
-    if not r.ok:
-        LOGGER.warning(
-            "Failed to get currency list, conversion using symbols won't work")
-        return {}, {}
-    data, aliases = r.json()["results"], dict()
-    for currency_name, currency_inf in data.items():
-        if currency_inf.get("currencySymbol", False):
-            aliases[currency_inf["currencySymbol"]] = currency_name
-    aliases["$"] = "USD"
-    return data, aliases
-
-
-CURRENCY_DATA, CURRENCY_ALIASES = get_currency_data()
 
 
 def number_conv(amount):
@@ -71,17 +49,16 @@ def number_conv(amount):
 
 def get_rate(in_c, out_c):
     rate_r = octobot.Database.get_cache(
-        "https://free.currconv.com/api/v7/convert?compact=ultra",
+        "https://api.exchangerate.host/convert",
         params={
-            "q": in_c + "_" + out_c,
-            "apiKey": Settings.currency_converter_apikey
+            "from": in_c,
+            "to": out_c
         }
     )
     rate_r.raise_for_status()
-    rate = rate_r.json()
+    rate = rate_r.json()["result"]
     LOGGER.debug(rate)
-
-    if rate == {}:
+    if rate is None:
         raise NameError("Invalid currency")
     return rate
 
@@ -89,7 +66,7 @@ def get_rate(in_c, out_c):
 def convert(in_c, out_c, count, ctx):
     rate = get_rate(in_c, out_c)
     out = {}
-    result = round(number_conv(count) * float(list(rate.values())[0]), 2)
+    result = round(number_conv(count) * rate, 2)
     out['in'] = "<b>{}</b> <i>{}</i>".format(
         format_decimal(number_conv(count), locale=ctx.locale),
         get_currency_name(in_c.upper(), locale=ctx.locale, count=number_conv(count)))
@@ -99,7 +76,7 @@ def convert(in_c, out_c, count, ctx):
     return out
 
 
-long_desc = octobot.localizable("""Powered by The Free Currency Converter API
+long_desc = octobot.localizable("""Powered by exchangerate.host
 Example usage:
 
     User:
@@ -107,10 +84,6 @@ Example usage:
 
     OctoBot:
     100 RUB = 1.66 USD""")
-
-
-def get_currency_id(currency: str):
-    return CURRENCY_ALIASES.get(currency, currency)
 
 
 @octobot.CommandHandler(command=["cash", "currency", "stonks"],
@@ -125,7 +98,7 @@ def currency(bot, context):
         except ValueError:
             return context.reply(context.localize("{} is not a valid number").format(context.args[0]))
         else:
-            rate = convert(get_currency_id(context.args[1]), get_currency_id(context.args[-1]), context.args[0],
+            rate = convert(context.args[1], context.args[-1], context.args[0],
                            context)
     except NameError:
         return context.reply(context.localize('Unknown currency specified'))
