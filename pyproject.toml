@@ -24,7 +24,7 @@ cachetools = "4.2.2"
 sentry-sdk = "~=1.11.1"
 pygelf = "~=0.4.0"
 bleach = "~=5.0.1"
-fakeredis = "~=1.9.3"
+fakeredis = "~=2.2.0"
 pyre2 = {version="^0.3.6", optional=true}
 
 [tool.poetry.extras]
