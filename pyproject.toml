@@ -9,7 +9,7 @@ classifiers = ["Private :: Do Not Upload"]
 python = "^3.10"
 python-telegram-bot = "~=13.14"
 toml = "^0.10.2"
-redis = "~=4.3.4"
+redis = "~=4.4.0"
 Babel = "~=2.10.3"
 jstyleson = "~=0.0.2"
 pytz = "~=2022.2"
