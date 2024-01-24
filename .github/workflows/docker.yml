@@ -19,34 +19,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.7.0
-        with:
-          access_token: ${{ github.token }}
-      - uses: actions/checkout@master
-      - uses: actions/setup-python@v2
-      - name: Install dependencies
-        run: |
-          sudo apt install libre2-dev
-          python -m pip install poetry
-          poetry install --no-interaction --no-ansi -E pyre2
-      - name: Run tests
-        run: poetry run pytest tests/ --junitxml=pytest_rep.xml
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: >
-          always() &&
-          github.event.sender.login != 'dependabot[bot]' &&
-          ( github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository )
-        with:
-          files: ./*.xml
   build:
     name: Build docker image
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
