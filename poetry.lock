@@ -704,13 +704,13 @@ socks = ["PySocks"]
 
 [[package]]
 name = "pytz"
-version = "2022.6"
+version = "2023.4"
 description = "World timezone definitions, modern and historical"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pytz-2022.6-py2.py3-none-any.whl", hash = "sha256:222439474e9c98fced559f1709d89e6c9cbf8d79c794ff3eb9f8800064291427"},
-    {file = "pytz-2022.6.tar.gz", hash = "sha256:e89512406b793ca39f5971bc999cc538ce125c0e51c27941bef4568b460095e2"},
+    {file = "pytz-2023.4-py2.py3-none-any.whl", hash = "sha256:f90ef520d95e7c46951105338d918664ebfd6f1d995bd7d153127ce90efafa6a"},
+    {file = "pytz-2023.4.tar.gz", hash = "sha256:31d4583c4ed539cd037956140d695e42c033a19e984bfce9964a3f7d59bc2b40"},
 ]
 
 [[package]]
@@ -1163,4 +1163,4 @@ pyre2 = ["pyre2"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "97696bb74ba0823c86b7bf9e8f01c4d27176b99c77ccc0de0a7b4fd1d96c0a5d"
+content-hash = "527b07b454cb43b70527310df1602a054415aadf7bfcab1b4f2625fbf3abfb3d"
